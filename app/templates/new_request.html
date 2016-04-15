@@ -1,0 +1,91 @@
+<!-- This template is to initiate a new request. -->
+{% extends "base.html" %} {% block title %}Records Procurement Form{% endblock title %}
+
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+		
+{% block content %}
+
+    <div class="row-fluid">
+        <!-- <div class="span8"> -->
+						<h3><strong>PURCHASE REQUEST</strong></h3>
+						<p><i>Purchase Information</i></p>
+				<!-- </div> -->
+		</div>
+
+		<script type="text/javascript">
+
+	var currentDate = new Date()
+	var day = currentDate.getDate()
+	var month = currentDate.getMonth() + 1
+	var year = currentDate.getFullYear()
+	document.write("<b>" + "Date: " + month + "/" + day + "/" + year + "</b>")
+
+</script>
+
+		<div class="row-fluid" id="request">
+		<br>		
+		<form name="newrequest" class="form-inline" id="submitRequest" method="post" action="/new">
+    		<div class="form-group row">
+    				<label class="col-sm-5" for="request_name">Name:</label>
+    				<div class="col-sm-5">
+    						<input type="text" id="request_name" class="form-control">
+    				</div><br><br><br>
+				</div>
+
+				<div class="row">
+    				<label class="form-control-label col-sm-2" for "request_division">Division:</label>
+    				<div class="col-sm-5">
+    						<select class="form-control" id="division">
+    								<option>MRMD</option>
+    								<option>Archives</option>
+    								<option>Grants</option>
+    								<option>Library</option>
+    								<option>Executive</option>
+    								<option>MIS/Web</option>
+    								<option>Administration</option>
+    						</select>
+    						<!-- {{ form.request_division(id="request_division", class="form-control") }} -->
+    				</div>
+    		</div>
+
+<!--     		<div class="form-group row">
+    				<label class="form-control-label col-sm-3" for "request_item">Item:</label>
+    				<div class="col-sm-8">
+    						<textarea class="form-control" rows="2" id="request_item"></textarea>
+    								<div class="small">Please insert FULL description</div>
+    				</div>
+    		</div>
+
+    		<div class="form-group row">
+    				<label class="form-control-label col-sm-3" for "request_quantity">Quantity:</label>
+    				<div class="col-sm-5">
+    						<input type="text" id="request_quantity" class="form-control">
+    				<div class="small">i.e. Quantity of boxes, cases, singles</div>
+    				</div>
+    		</div>
+
+				<div class="form-group row">
+    				<label class="form-control-label col-sm-3" for "request_price_per_item">Price per Item:</label>
+    				<div class="col-sm-3">
+    						<div class="input-group">
+    						<span class="input-group-addon">$</span>
+    						<input type="text" id="request_price_per_item" class="form-control">
+    						</div>
+    				</div>
+    		</div>
+
+				<div class="form-group row">
+    				<label class="form-control-label col-sm-3" for "request_total">Total: $</label>
+    				<div class="col-sm-3">
+    						<div class="input-group">
+    						<span class="input-group-addon">$</span>
+    						<input type="text" id="request_total" class="form-control">
+    						</div>
+    						<div class="small">Please include all additional costs, i.e. S&H</div>
+    				</div>
+    		</div> -->
+    </form>
+
+{% endblock %}
