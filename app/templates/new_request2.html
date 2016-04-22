@@ -6,7 +6,7 @@
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 		
 {% block content %}
-
+    <!-- start of static form -->
     <div class="row-fluid">
         <!-- <div class="span8"> -->
 						<h3><strong>PURCHASE REQUEST</strong></h3>
@@ -14,15 +14,14 @@
 				<!-- </div> -->
 		</div>
 
+    <!-- javascript to display current date -->
 		<script type="text/javascript">
-
-	var currentDate = new Date()
-	var day = currentDate.getDate()
-	var month = currentDate.getMonth() + 1
-	var year = currentDate.getFullYear()
-	document.write("<b>" + "Date: " + month + "/" + day + "/" + year + "</b>")
-
-</script>
+        var currentDate = new Date()
+        var day = currentDate.getDate()
+        var month = currentDate.getMonth() + 1
+        var year = currentDate.getFullYear()
+        document.write("<b>" + "Date: " + month + "/" + day + "/" + year + "</b>")
+    </script>
 
 		<div class="row-fluid" id="request">
 		<br>		
@@ -211,5 +210,5 @@
         <button type="submit" class="btn btn-primary btn-block">Submit request</button>
         {{ form.submit }}
     </form>
-
+    <!-- end of static form -->
 {% endblock %}
