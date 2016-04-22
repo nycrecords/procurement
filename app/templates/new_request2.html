@@ -24,14 +24,14 @@
 
 </script>
 
-	{% for message in form.request_name.errors %}
-    	<div class="flash">{{ message }}</div>
-  {% endfor %}
-
 		<div class="row-fluid" id="request">
 		<br>		
 		<form name="newrequest" class="form-horizontal" id="submitRequest" method="POST" action="">
 				{{ form.hidden_tag() }}
+
+        {% for message in form.request_name.errors %}
+            <div class="alert alert-danger" id="missing_name">{{ message }}</div>
+        {% endfor %}
 
     		<div class="form-group">
     				<label class="col-sm-3" for="request_name">Name:</label>
@@ -40,84 +40,97 @@
     				</div>
 				</div>
 
+        {% for message in form.request_division.errors %}
+            <div class="alert alert-danger" id="missing_division">{{message}}</div>
+        {% endfor %}
+
 				<div class="form-group">
     				<label class="form-control-label col-sm-3" for "request_division">Division:</label>
     				<div class="col-sm-5">
-    						<select class="form-control" id="division">
-    								<option selected value></option>
-    								<option>MRMD</option>
-    								<option>Archives</option>
-    								<option>Grants</option>
-    								<option>Library</option>
-    								<option>Executive</option>
-    								<option>MIS/Web</option>
-    								<option>Administration</option>
-    						</select>
+                {{ form.request_division(id="request_division", class="form-control") }}
     				</div>
     		</div>
+
+        {% for message in form.request_item.errors %}
+            <div class="alert alert-danger" id="missing_item">{{message}}</div>
+        {% endfor %}
 
     		<div class="form-group">
     				<label class="form-control-label col-sm-3" for "request_item">Item:</label>
     				<div class="col-sm-8">
-    						<textarea class="form-control" rows="2" id="request_item"></textarea>
+                {{ form.request_item(id="request_item", class="form-control", rows="2", maxlength="100") }}
     								<div class="small">Please insert FULL description</div>
     				</div>
     		</div>
 
+        {% for message in form.request_quantity.errors %}
+            <div class="alert alert-danger" id="missing_quantity">{{message}}</div>
+        {% endfor %}
+
     		<div class="form-group">
     				<label class="form-control-label col-sm-3" for "request_quantity">Quantity:</label>
     				<div class="col-sm-5">
-    						<input type="text" id="request_quantity" class="form-control">
+                {{ form.request_quantity(id="request_quantity", class="form-control", type="text")}}
     				<div class="small">i.e. Quantity of boxes, cases, singles</div>
     				</div>
     		</div>
+
+        {% for message in form.request_price_per_item.errors %}
+            <div class="alert alert-danger" id="missing_price_per_item">{{message}}</div>
+        {% endfor %}
 
 				<div class="form-group">
     				<label class="form-control-label col-sm-3" for "request_price_per_item">Price per Item:</label>
     				<div class="col-sm-3">
     						<div class="input-group">
     						<span class="input-group-addon">$</span>
-    						<input type="text" id="request_price_per_item" class="form-control">
+                {{ form.request_price_per_item(id="request_price_per_item", class="form-control", type="text")}}
     						</div>
     				</div>
     		</div>
+
+        {% for message in form.request_total.errors %}
+            <div class="alert alert-danger" id="missing_total">{{message}}</div>
+        {% endfor %}
 
 				<div class="form-group">
     				<label class="form-control-label col-sm-3" for "request_total">Total:</label>
     				<div class="col-sm-3">
     						<div class="input-group">
     						<span class="input-group-addon">$</span>
-    						<input type="text" id="request_total" class="form-control">
+                {{ form.request_total(id="request_total", class="form-control", type="text")}}
     						</div>
     						<div class="small">Please include all additional costs, i.e. S&H</div>
     				</div>
     		</div>
 
+        {% for message in form.request_funding_source.errors %}
+            <div class="alert alert-danger" id="missing_funding_source">{{message}}</div>
+        {% endfor %}
+
 				<div class="form-group">
     				<label class="form-control-label col-sm-3" for "request_funding_source">Funding Source:</label>
     				<div class="col-sm-5">
-    						<select class="form-control" id="funding">
-    								<option selected value></option>
-          					<option>Expense</option>
-         						<option>MAARRF</option>
-          					<option>SARA</option>
-          					<option>KOCH</option>
-          					<option>Other</option>
-    						</select>
-    				</div>
+    						{{ form.request_funding_source(id="request_funding_source", class="form-control") }}
+            </div>
     		</div>
 
     		<div class="form-group">
     				<label class="form-control-label col-sm-offset-1 col-sm-3" for "request_funding_other">If Other, specify:</label>
     				<div class="col-sm-5">
-    						<input type="text" id="request_funding_other" class="form-control">
+                {{ form.request_funding_other(id="request_funding_other", class="form-control") }}
     				</div>
     		</div>
+
+        {% for message in form.request_justification.errors %}
+            <div class="alert alert-danger" id="missing_justification">{{message}}</div>
+        {% endfor %}
 
     		<div class="form-group">
     				<label class="form-control-label col-sm-3" for "request_justification">Justification:</label>
     				<div class="col-sm-8">
-    						<textarea class="form-control" rows="3" id="request_justification"></textarea>
+                {{ form.request_justification(id="request_justification", rows="3", class="form-control", maxlength="255") }}
+    						<!-- <textarea class="form-control" rows="3" id="request_justification"></textarea> -->
     				</div>
     		</div>
 
@@ -126,7 +139,7 @@
     				<label class="form-control-label col-sm-3 sr-only" for "request_vendor">Vendor Information:</label>
     				<div class="col-sm-10">
     						<select class="form-control" id="vendor">
-    								<option selected value></option>
+    								<option selected value>Select Vendor or Enter New Vendor Below</option>
     						</select>
     				</div>
     		</div>
