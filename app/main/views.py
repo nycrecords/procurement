@@ -46,5 +46,4 @@ def new_request():
         else:
             print form.errors
 
-    return render_template('new_request2.html', form=form)
-
+    return render_template('new_request.html', form=form)
