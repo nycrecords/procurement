@@ -44,8 +44,7 @@ class NewRequestForm(Form):
         DataRequired('Please enter the total price')])
     funding_source = SelectField(u'Funding*', choices=funding,
                                  validators=[DataRequired('Please select the funding source')])
-    funding_source_description = StringField(u'Funding Other', validators=[
-        Length(1, 100)])
+    funding_source_description = StringField(u'Funding Other')
     justification = TextAreaField(u'Justification*(required)', validators=[
         DataRequired('You must enter a justification for your request'),
         Length(1, 255, 'The justification must be less than 255 characters')])
