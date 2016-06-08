@@ -1,8 +1,8 @@
 from flask import Flask
-from flask.ext.wtf import Form
+from flask_wtf import Form
 from wtforms import StringField, SelectField, TextAreaField, DateField, \
-    BooleanField, PasswordField, SubmitField, RadioField, DecimalField
-from wtforms.validators import DataRequired, Length, Email
+    BooleanField, PasswordField, SubmitField, RadioField, DecimalField, IntegerField
+from wtforms.validators import DataRequired, Length, Email, Optional
 from wtforms_alchemy import PhoneNumberField
 app = Flask(__name__)
 
@@ -36,7 +36,7 @@ class NewRequestForm(Form):
     item = TextAreaField(u'Item*(required)', validators=[
         DataRequired('You must enter a FULL item description of your request'),
         Length(1, 100, 'The item description must be less than 100 characters')])
-    quantity = StringField(u'Quantity*', validators=[
+    quantity = IntegerField(u'Quantity*', validators=[
         DataRequired('Please enter the quantity')])
     unit_price = DecimalField(u'Price per item*', validators=[
         DataRequired('Please enter the price per item')])
@@ -54,5 +54,5 @@ class NewRequestForm(Form):
     request_vendor_fax = PhoneNumberField(region='US', display_format='national')
     request_vendor_email = StringField(u'Email')
     request_vendor_taxid = StringField(u'Vendor Tax ID')
-    request_MWBE = RadioField(u'MWBE', choices=[('True', 'Yes'), ('False', 'No')])
+    request_MWBE = RadioField(u'MWBE', choices=[('True', 'Yes'), ('False', 'No')], validators=[Optional()])
     submit = SubmitField(u'Submit Request')

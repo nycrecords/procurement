@@ -1,4 +1,4 @@
-from flask.ext.login import UserMixin
+from flask_login import UserMixin
 from datetime import datetime
 from . import db
 
@@ -80,7 +80,7 @@ class Vendor(db.Model):
     fax = db.Column(db.String())
     email = db.Column(db.String(100))
     tax_id = db.Column(db.String(100))
-    mwbe = db.Column(db.Boolean)
+    mwbe = db.Column(db.Boolean, nullable=True)
     request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
 
     def __init__(
