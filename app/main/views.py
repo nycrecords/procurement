@@ -1,6 +1,7 @@
+from datetime import datetime
 from flask import render_template, request
 from .. import db
-from ..models import Request
+from ..models import Request, Vendor
 from . import main
 from .forms import NewRequestForm
 
@@ -16,8 +17,25 @@ def new_request():
 
     if request.method == 'POST':
         if form.validate_on_submit():
-            newrequest = Request(form.name.data, form.division.data, form.item.data, form.quantity.data)
+            date_submitted = datetime.now()
+
+            # name = form.request_name.data
+            newrequest = Request(form.request_name.data, date_submitted, form.item.data,
+                                 form.quantity.data, form.unit_price.data,
+                                 form.total_cost.data, form.funding_source.data,
+                                 form.funding_source_description.data, form.justification.data
+                                 )
             db.session.add(newrequest)
+            db.session.commit()
+
+            request_vendor_phone = str(form.request_vendor_phone.data)
+            request_vendor_fax = str(form.request_vendor_fax.data)
+            newvendor = Vendor(form.request_vendor_name.data, form.request_vendor_address.data,
+                               request_vendor_phone, request_vendor_fax,
+                               form.request_vendor_email.data, form.request_vendor_taxid.data,
+                               form.request_MWBE.data, request_id=newrequest.id)
+
+            db.session.add(newvendor)
             db.session.commit()
         else:
             print form.errors
