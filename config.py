@@ -1,4 +1,5 @@
 import os
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
@@ -6,7 +7,7 @@ class Config:
     WTF_CSRF_ENABLED = True
     SECRET_KEY = 'you-will-never-guess'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
-    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
+    SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/procurement'
 
     @staticmethod
     def init_app(app):
@@ -25,6 +26,7 @@ class TestingConfig(Config):
 
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/procurement'
+
 
 config = {
     'development': DevelopmentConfig,
