@@ -1,8 +1,8 @@
 from flask import Flask
 from flask_wtf import Form
-from wtforms import StringField, SelectField, TextAreaField, DateField, \
-    BooleanField, PasswordField, SubmitField, RadioField, DecimalField, IntegerField
-from wtforms.validators import DataRequired, Length, Email, Optional
+from wtforms import StringField, SelectField, TextAreaField, SubmitField, \
+     RadioField, DecimalField, IntegerField
+from wtforms.validators import DataRequired, Length, Optional
 from wtforms_alchemy import PhoneNumberField
 app = Flask(__name__)
 
