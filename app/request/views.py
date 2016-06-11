@@ -1,4 +1,8 @@
-"""Manage a specific request."""
+"""
+.. module:: views.
+
+   :synopsis: Provides routes for managing a specific request.
+"""
 from flask import render_template, request, abort
 from .. import db
 from ..models import Request, Vendor
@@ -23,8 +27,10 @@ def edit_request(request_id):
     if request:
         if request.method == 'GET':
             pass
+            # TODO: Implement GET handler
         if request.method == 'POST':
             pass
+            # TODO: Implement POST handler
         else:
             abort(400)
     else:
