@@ -47,3 +47,10 @@ def new_request():
             print form.errors
 
     return render_template('new_request.html', form=form)
+
+
+@main.route('/requests', methods=['GET'])
+def display_request():
+    """Display Procurement requests stored in db"""
+    requests = Request.query.all()
+    return render_template('display_request.html', requests=requests)
