@@ -1,5 +1,6 @@
 from flask_login import UserMixin
 from . import db
+from datetime import datetime
 
 
 class User(UserMixin, db.Model):
@@ -12,7 +13,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
 
     def __repr__(self):
-        return '<id {}>'.format(self.id)
+        return '<User {}>'.format(self.id)
 
 
 class Request(db.Model):
@@ -68,7 +69,7 @@ class Request(db.Model):
         self.vendor_id = vendor_id
 
     def __repr__(self):
-        return '<id {}>'.format(self.id)
+        return '<Request {}>'.format(self.id)
 
 
 class Vendor(db.Model):
@@ -102,16 +103,43 @@ class Vendor(db.Model):
         self.mwbe = mwbe
 
     def __repr__(self):
-        return '<id {}>'.format(self.id)
+        return '<Vendor {}>'.format(self.id)
 
 
 class Comment(db.Model):
+
+    """Comment and/or file that can be added to a specific request"""
     __tablename__ = 'comment'
-    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     timestamp = db.Column(db.DateTime)
     content = db.Column(db.String())
     filepath = db.Column(db.String())
-    # Each comment has a foreign key to a request.
-    request = db.Column(db.Integer, db.ForeignKey('request.id'))
-    # Each comment has a foreign key to a user.
-    user = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __init__(
+        self,
+        request_id,
+        user_id,
+        content,
+        filepath=None
+    ):
+        """
+        Create a comment.
+
+        :param request_id: Request where comment was posted.
+        :param user_id: User ID of poster.
+        :param content: Content for the comment.
+        :param filepath: Filepath of uploaded file (if any).
+
+        :return: ID of created comment.
+        """
+        self.request_id = request_id
+        self.user_id = user_id
+        self.timestamp = datetime.now()
+        self.content = content
+        self.filepath = filepath
+
+    def __repr__(self):
+        """Return string representation of Comment. """
+        return '<Comment {}>'.format(self.id)

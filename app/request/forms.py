@@ -19,12 +19,10 @@ funding = [
 ]
 
 
-class NewRequestForm(Form):
+class EditRequestForm(Form):
     '''A form class for procurement new purchase requests'''
     request_name = StringField(u'Name*(required)', validators=[
         DataRequired('Please enter the requestor\'s name'), Length(1, 100)])
-    division = SelectField(u'Division*', choices=divisions,
-                           validators=[DataRequired('Please select the division')], default='')
     item = TextAreaField(u'Item*(required)', validators=[
         DataRequired('You must enter a FULL item description of your request'),
         Length(1, 100, 'The item description must be less than 100 characters')])

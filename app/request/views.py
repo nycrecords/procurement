@@ -1,11 +1,11 @@
 """
-.. module:: views.
+.. module:: request.views.
 
    :synopsis: Provides routes for managing a specific request.
 """
 from flask import render_template, request, abort
 from .. import db
-from ..models import Request, Vendor
+from ..models import Request, Vendor, Comment
 from . import request
 from .forms import EditRequestForm
 
