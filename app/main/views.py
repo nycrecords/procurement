@@ -50,7 +50,7 @@ def new_request():
             db.session.commit()
 
         else:
-            print form.errors
+            print (form.errors)
 
     return render_template('new_request.html', form=form)
 

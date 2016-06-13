@@ -24,7 +24,7 @@ def upgrade():
     sa.Column('content', sa.String(), nullable=True),
     sa.Column('filepath', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['request_id'], ['request.id'], ),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.drop_table('note')
@@ -40,7 +40,7 @@ def downgrade():
     sa.Column('date', postgresql.TIMESTAMP(), autoincrement=False, nullable=True),
     sa.Column('content', sa.VARCHAR(), autoincrement=False, nullable=True),
     sa.ForeignKeyConstraint(['request_id'], [u'request.id'], name=u'note_request_id_fkey'),
-    sa.ForeignKeyConstraint(['user_id'], [u'users.id'], name=u'note_user_id_fkey'),
+    sa.ForeignKeyConstraint(['user_id'], [u'user.id'], name=u'note_user_id_fkey'),
     sa.PrimaryKeyConstraint('id', name=u'note_pkey')
     )
     op.drop_table('comment')
