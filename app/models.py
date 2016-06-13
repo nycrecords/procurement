@@ -32,7 +32,8 @@ class Request(db.Model):
     funding_source = db.Column(db.String(100))
     funding_source_description = db.Column(db.String(100), nullable=True)
     justification = db.Column(db.String(255))
-    vendor_id = db.relationship('Vendor', backref='request', lazy='dynamic')
+    vendor_id = db.Column(db.Integer, db.ForeignKey('vendor.id'))
+    vendor = db.relationship('Vendor', backref='request')
     note_id = db.relationship('Note', backref='request', lazy='dynamic')
     status = db.Column(db.String(100))
 
@@ -59,6 +60,9 @@ class Request(db.Model):
         self.funding_source_description = funding_source_description
         self.justification = justification
 
+    def set_vendor_id(self, vendor_id):
+        self.vendor_id = vendor_id
+
     def __repr__(self):
         return '<id {}>'.format(self.id)
 
@@ -73,7 +77,6 @@ class Vendor(db.Model):
     email = db.Column(db.String(100), nullable=True)
     tax_id = db.Column(db.String(100), nullable=True)
     mwbe = db.Column(db.Boolean, nullable=True)
-    request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
 
     def __init__(
             self,
@@ -84,7 +87,6 @@ class Vendor(db.Model):
             email,
             tax_id,
             mwbe,
-            request_id,
     ):
         self.name = name
         self.address = address
@@ -93,7 +95,6 @@ class Vendor(db.Model):
         self.email = email
         self.tax_id = tax_id
         self.mwbe = mwbe
-        self.request_id = request_id
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
