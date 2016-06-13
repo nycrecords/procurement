@@ -22,15 +22,14 @@ def new_request():
             newrequest = Request(form.request_name.data, date_submitted, form.item.data,
                                  form.quantity.data, form.unit_price.data,
                                  form.total_cost.data, form.funding_source.data,
-                                 form.funding_source_description.data, form.justification.data
-                                 )
-            db.session.add(newrequest)
-            db.session.commit()
+                                 form.funding_source_description.data, form.justification.data)
 
+            request_vendor_name = str(form.request_vendor_name.data)
             request_vendor_phone = str(form.request_vendor_phone.data)
             request_vendor_fax = str(form.request_vendor_fax.data)
             request_vendor_mwbe = str(form.request_MWBE.data)
-            request_vendor_name = str(form.request_vendor_name.data)
+
+            newvendor = None
 
             if request_vendor_name != '':
                 if request_vendor_mwbe == "None":
@@ -39,9 +38,14 @@ def new_request():
                 newvendor = Vendor(request_vendor_name, form.request_vendor_address.data,
                                    request_vendor_phone, request_vendor_fax,
                                    form.request_vendor_email.data, form.request_vendor_taxid.data,
-                                   request_vendor_mwbe, request_id=newrequest.id)
+                                   request_vendor_mwbe)
                 db.session.add(newvendor)
                 db.session.commit()
+
+            if newvendor is not None:
+                newrequest.set_vendor_id(newvendor.id)
+            db.session.add(newrequest)
+            db.session.commit()
 
         else:
             print form.errors
