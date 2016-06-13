@@ -1,3 +1,9 @@
+"""
+.. module:: request.forms.
+
+    :synopsis: Defines forms used to create Procurement requests.
+"""
+
 from flask import Flask
 from flask_wtf import Form
 from wtforms import StringField, SelectField, TextAreaField, SubmitField, \
@@ -28,7 +34,7 @@ funding = [
 
 
 class NewRequestForm(Form):
-    """A form class for new procurement requests"""
+    """Form for creating a new request"""
     request_name = StringField(u'Name*(required)', validators=[
         DataRequired('Please enter the requestor\'s name'), Length(1, 100)])
     division = SelectField(u'Division*', choices=divisions,
