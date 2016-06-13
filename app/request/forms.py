@@ -1,7 +1,7 @@
 """
-.. module:: forms.
+.. module:: request.forms.
 
-   :synopsis: Defines edit forms for Procurement requests.
+   :synopsis: Defines forms used to manage Procurement requests.
 """
 from flask_wtf import Form
 from wtforms import StringField, SelectField, TextAreaField, SubmitField, \
@@ -18,31 +18,54 @@ funding = [
     ('Other', 'Other')
 ]
 
+statuses = [
+    ('', ''),
+    ('Submitted', 'Submitted'),
+    ('Needs Division Approval', 'Needs Division Approval')
+    ('Needs Commissioner Approval', 'Needs Commissioner Approval'),
+    ('Pending - Approved', 'Pending - Approved'),
+    ('Denied', 'Denied'),
+    ('Resolved', 'Resolved'),
+    ('Hold', 'Hold')
+]
+
 
 class EditRequestForm(Form):
-    '''A form class for procurement new purchase requests'''
-    request_name = StringField(u'Name*(required)', validators=[
-        DataRequired('Please enter the requestor\'s name'), Length(1, 100)])
-    item = TextAreaField(u'Item*(required)', validators=[
+    """Form for editing a request."""
+
+    status = SelectField(u'Status', choices=statuses)
+    item = TextAreaField(u'Item', validators=[
         DataRequired('You must enter a FULL item description of your request'),
-        Length(1, 100, 'The item description must be less than 100 characters')])
-    quantity = IntegerField(u'Quantity*', validators=[
+        Length(1, 100, 'The item description must be less than 100 characters')
+        ])
+    quantity = IntegerField(u'Quantity', validators=[
         DataRequired('Please enter the quantity')])
-    unit_price = DecimalField(u'Price per item*', validators=[
+    unit_price = DecimalField(u'Price per item', validators=[
         DataRequired('Please enter the price per item')])
-    total_cost = DecimalField(u'Total price*', validators=[
+    total_cost = DecimalField(u'Total price', validators=[
         DataRequired('Please enter the total price')])
-    funding_source = SelectField(u'Funding*', choices=funding,
+    funding_source = SelectField(u'Funding', choices=funding,
                                  validators=[DataRequired('Please select the funding source')])
     funding_source_description = StringField(u'Funding Other')
-    justification = TextAreaField(u'Justification*(required)', validators=[
+    justification = TextAreaField(u'Justification', validators=[
         DataRequired('You must enter a justification for your request'),
         Length(1, 255, 'The justification must be less than 255 characters')])
     request_vendor_name = StringField(u'Vendor Name')
     request_vendor_address = StringField(u'Vendor Address')
-    request_vendor_phone = PhoneNumberField(region='US', display_format='national')
-    request_vendor_fax = PhoneNumberField(region='US', display_format='national')
+    request_vendor_phone = PhoneNumberField(
+                                            region='US',
+                                            display_format='national'
+                                            )
+    request_vendor_fax = PhoneNumberField(
+                                            region='US',
+                                            display_format='national'
+                                            )
     request_vendor_email = StringField(u'Email')
     request_vendor_taxid = StringField(u'Vendor Tax ID')
-    request_MWBE = RadioField(u'MWBE', choices=[('True', 'Yes'), ('False', 'No')], validators=[Optional()])
-    submit = SubmitField(u'Submit Request')
+    request_MWBE = RadioField(u'MWBE',
+                              choices=[
+                                  ('True', 'Yes'),
+                                  ('False', 'No')
+                              ],
+                              validators=[Optional()])
+    save = SubmitField(u'Save Changes')
