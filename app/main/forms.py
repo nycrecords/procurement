@@ -28,7 +28,7 @@ funding = [
 
 
 class NewRequestForm(Form):
-    '''A form class for procurement new purchase requests'''
+    """A form class for new procurement requests"""
     request_name = StringField(u'Name*(required)', validators=[
         DataRequired('Please enter the requestor\'s name'), Length(1, 100)])
     division = SelectField(u'Division*', choices=divisions,

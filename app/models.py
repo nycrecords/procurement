@@ -1,7 +1,9 @@
 from flask_login import UserMixin
 from . import db
 
+
 class User(UserMixin, db.Model):
+    """The User class"""
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100))
@@ -16,8 +18,7 @@ class User(UserMixin, db.Model):
 
 
 class Request(db.Model):
-    # The procurement request
-
+    """The procurement request class"""
     __tablename__ = 'request'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
@@ -63,6 +64,7 @@ class Request(db.Model):
 
 
 class Vendor(db.Model):
+    """The vendor class"""
     __tablename__ = 'vendor'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
@@ -99,6 +101,7 @@ class Vendor(db.Model):
 
 
 class Note(db.Model):
+    """The note class"""
     __tablename__ = 'note'
     id = db.Column(db.Integer, primary_key=True)
     request_id = db.Column(db.Integer, db.ForeignKey('request.id'))

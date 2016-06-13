@@ -8,11 +8,17 @@ from .forms import NewRequestForm
 
 @main.route('/')
 def index():
+    """
+    Return the homepage with a button that links to the procurement request form.
+    """
     return render_template('index.html')
 
 
 @main.route('/new', methods=['GET', 'POST'])
 def new_request():
+    """
+    Return the page for creating a new procurement request.
+    """
     form = NewRequestForm()
 
     if request.method == 'POST':
@@ -51,6 +57,8 @@ def new_request():
 
 @main.route('/requests', methods=['GET'])
 def display_request():
-    """Display Procurement requests stored in db"""
+    """
+    Return the page which displays the procurement requests
+    """
     requests = Request.query.all()
     return render_template('display_request.html', requests=requests)
