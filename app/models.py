@@ -3,7 +3,7 @@ from . import db
 
 
 class User(UserMixin, db.Model):
-    """The User class"""
+    """The User class containing user and login information"""
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100))
@@ -64,7 +64,7 @@ class Request(db.Model):
 
 
 class Vendor(db.Model):
-    """The vendor class"""
+    """The vendor class containing vendor information"""
     __tablename__ = 'vendor'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
