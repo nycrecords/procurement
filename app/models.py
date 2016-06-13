@@ -80,7 +80,7 @@ class Vendor(db.Model):
     fax = db.Column(db.String(), nullable=True)
     email = db.Column(db.String(100), nullable=True)
     tax_id = db.Column(db.String(100), nullable=True)
-    mwbe = db.Column(db.Boolean, nullable=True)
+    mwbe = db.Column(db.Boolean, nullable=False, default=False)
 
     def __init__(
             self,
