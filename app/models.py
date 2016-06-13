@@ -10,7 +10,7 @@ class User(UserMixin, db.Model):
     division = db.Column(db.String(100))
     password_hash = db.Column(db.String(128))
     request_id = db.relationship('Request', backref='users', lazy='dynamic')
-    note_id = db.relationship('Note', backref='users', lazy='dynamic')
+    comment_id = db.relationship('Comment', backref='users', lazy='dynamic')
 
     # def __repr__(self):
     #     return '<id {}>'.format(self.id)
@@ -34,7 +34,7 @@ class Request(db.Model):
     justification = db.Column(db.String(255))
     vendor_id = db.Column(db.Integer, db.ForeignKey('vendor.id'))
     vendor = db.relationship('Vendor', backref='request')
-    note_id = db.relationship('Note', backref='request', lazy='dynamic')
+    comment_id = db.relationship('Comment', backref='request', lazy='dynamic')
     status = db.Column(db.String(100))
 
     def __init__(
@@ -61,6 +61,10 @@ class Request(db.Model):
         self.justification = justification
 
     def set_vendor_id(self, vendor_id):
+        """Sets vendor_id in request table
+
+            :param: vendor_id: Vendor ID
+        """
         self.vendor_id = vendor_id
 
     def __repr__(self):
@@ -100,10 +104,11 @@ class Vendor(db.Model):
         return '<id {}>'.format(self.id)
 
 
-class Note(db.Model):
-    __tablename__ = 'note'
-    id = db.Column(db.Integer, primary_key=True)
+class Comment(db.Model):
+    __tablename__ = 'comment'
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
     request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    date = db.Column(db.DateTime)
+    timestamp = db.Column(db.DateTime)
     content = db.Column(db.String())
+    filepath = db.Column(db.String())
