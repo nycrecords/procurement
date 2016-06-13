@@ -34,8 +34,6 @@ class Request(db.Model):
     vendor_id = db.Column(db.Integer, db.ForeignKey('vendor.id'))
     # Each request has a foreign key to a creator in the User table. Each request can only have ONE creator.
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    # Each request has a foreign key to many comments in the Comment table. Each request can have many comments.
-    comment_id = db.Column(db.Integer, db.ForeignKey('comment.id'))
     status = db.Column(db.String(100))
 
     def __init__(
