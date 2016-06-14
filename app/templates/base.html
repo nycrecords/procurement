@@ -3,8 +3,8 @@
 
 <head>
     <title>{% block title %}{% endblock title %}</title>
-
-    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/test.css') }}">
     <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
 
     {% block custom_css_links %}
@@ -12,30 +12,36 @@
     {% endblock custom_css_links %}
 
 </head>
-
 <body>
-<div class="container">
-    <div class="header">
-        <nav>
-            <ul class="nav nav-pills pull-right">
-                <li role="presentation" class="active"><a href="/">Home</a>
-                </li>
-                <li role="presentation"><a href="#">Sign In</a>
-                </li>
-                <li role="presentation"><a href="new">Procurement</a>
-                </li>
-            </ul>
-        </nav>
-        <h3 class="text-muted">Procurement Flask App</h3>
+<nav class="navbar navbar-default navbar-static-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">Records Procurement</a>
+        <ul class="nav navbar-nav pull-right">
+            <li class="nav-item">
+                <a class="nav-link" href="#">Sign In</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/new">Make a Request</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/requests">View Requests</a>
+            </li>
+        </ul>
     </div>
-
-    {% block content %}
-    {% endblock %}
-
-    <footer class="footer">
-        <p>&copy; City of New York 2015</p>
-    </footer>
-
-</div>
+</nav>
 </body>
+
+{% block content %}
+{% endblock %}
+
+
+<footer class="footer">
+    <div class="container">
+        <p>&copy; City of New York 2015</p>
+    </div>
+</footer>
+
+{% block scripts %}
+{% endblock %}
+
 </html>

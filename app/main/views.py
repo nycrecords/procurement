@@ -8,11 +8,13 @@ from .forms import NewRequestForm
 
 @main.route('/')
 def index():
+    """Homepage with button that links to the procurement request form."""
     return render_template('index.html')
 
 
 @main.route('/new', methods=['GET', 'POST'])
 def new_request():
+    """Create a new procurement request."""
     form = NewRequestForm()
 
     if request.method == 'POST':
@@ -48,6 +50,13 @@ def new_request():
             db.session.commit()
 
         else:
-            print form.errors
+            print (form.errors)
 
     return render_template('new_request.html', form=form)
+
+
+@main.route('/requests', methods=['GET'])
+def display_request():
+    """View the page for all the requests."""
+    requests = Request.query.all()
+    return render_template('display_request.html', requests=requests)

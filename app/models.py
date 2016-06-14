@@ -3,25 +3,22 @@ from . import db
 
 
 class User(UserMixin, db.Model):
-    __tablename__ = 'users'
+    """The User class containing user and login information"""
+    __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100))
     email = db.Column(db.String(100), unique=True, index=True)
     division = db.Column(db.String(100))
     password_hash = db.Column(db.String(128))
-    request_id = db.relationship('Request', backref='users', lazy='dynamic')
-    comment_id = db.relationship('Comment', backref='users', lazy='dynamic')
 
-    # def __repr__(self):
-    #     return '<id {}>'.format(self.id)
+    def __repr__(self):
+        return '<id {}>'.format(self.id)
 
 
 class Request(db.Model):
-    # The procurement request
-
+    """The procurement request class"""
     __tablename__ = 'request'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     date_submitted = db.Column(db.DateTime)
     date_closed = db.Column(db.DateTime)
     name = db.Column(db.String(100))
@@ -32,9 +29,12 @@ class Request(db.Model):
     funding_source = db.Column(db.String(100))
     funding_source_description = db.Column(db.String(100), nullable=True)
     justification = db.Column(db.String(255))
+    # Each request has a foreign key to a vendor in the Vendor table. Each request can only have ONE vendor.
     vendor_id = db.Column(db.Integer, db.ForeignKey('vendor.id'))
-    vendor = db.relationship('Vendor', backref='request')
-    comment_id = db.relationship('Comment', backref='request', lazy='dynamic')
+    # Each request has a foreign key to a creator in the User table. Each request can only have ONE creator.
+    creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    # Each request has a foreign key to many comments in the Comment table. Each request can have many comments.
+    comment_id = db.Column(db.Integer, db.ForeignKey('comment.id'))
     status = db.Column(db.String(100))
 
     def __init__(
@@ -72,6 +72,7 @@ class Request(db.Model):
 
 
 class Vendor(db.Model):
+    """The vendor class containing vendor information"""
     __tablename__ = 'vendor'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
@@ -107,8 +108,10 @@ class Vendor(db.Model):
 class Comment(db.Model):
     __tablename__ = 'comment'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     timestamp = db.Column(db.DateTime)
     content = db.Column(db.String())
     filepath = db.Column(db.String())
+    # Each comment has a foreign key to a request.
+    request = db.Column(db.Integer, db.ForeignKey('request.id'))
+    # Each comment has a foreign key to a user.
+    user = db.Column(db.Integer, db.ForeignKey('user.id'))

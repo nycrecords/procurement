@@ -1,85 +1,84 @@
 <!-- This template is to initiate a new request. -->
 {% extends "base.html" %} {% block title %}Records Procurement Form{% endblock title %}
 {% block custom_css_links %}
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/test.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/new_request.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/bootstrap.min.css') }}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 {% endblock custom_css_links %}
 {% block content %}
-    <!-- start of static form -->
-    <div class="row-fluid">
+    <div class="container-fluid-content">
+        <!-- start of static form -->
+        {#        <div class="row-fluid">#}
         <h3><strong>PURCHASE REQUEST</strong></h3>
         <p><i><strong>Purchase Information</strong></i></p>
+        {#        </div>#}
+        <!-- javascript to display current date -->
+        <script type="text/javascript">
+            var currentDate = new Date()
+            var day = currentDate.getDate()
+            var month = currentDate.getMonth() + 1
+            var year = currentDate.getFullYear()
+            document.write("<b>" + "Date: " + month + "/" + day + "/" + year + "</b>")
+        </script>
     </div>
 
-    <!-- javascript to display current date -->
-    <script type="text/javascript">
-        var currentDate = new Date()
-        var day = currentDate.getDate()
-        var month = currentDate.getMonth() + 1
-        var year = currentDate.getFullYear()
-        document.write("<b>" + "Date: " + month + "/" + day + "/" + year + "</b>")
-    </script>
-
-    <div class="row-fluid" id="request">
-        <br>
-        <form name="newrequest" class="form-horizontal" id="submitRequest" method="POST" action="">
+    <br>
+    <form name="newrequest" class="form-horizontal" id="submitRequest" method="POST" action="">
+        <div class="container-fluid-content">
             {{ form.hidden_tag() }}
+            <div class="form-group row">
+                {% for message in form.request_name.errors %}
+                    <div class="alert alert-danger" id="missing_name">{{ message }}</div>
+                {% endfor %}
 
-            {% for message in form.request_name.errors %}
-                <div class="alert alert-danger" id="missing_name">{{ message }}</div>
-            {% endfor %}
-
-            <div class="form-group">
-                <label class="col-sm-3" for="request_name">Name:</label>
+                <label for="request_name" class="col-sm-3 form-control-label">Name</label>
                 <div class="col-sm-5">
                     {{ form.request_name(id="request_name", class="form-control", type="text") }}
                 </div>
             </div>
 
-            {% for message in form.division.errors %}
-                <div class="alert alert-danger" id="missing_division">{{ message }}</div>
-            {% endfor %}
+            <div class="form-group row">
+                {% for message in form.division.errors %}
+                    <div class="alert alert-danger" id="missing_division">{{ message }}</div>
+                {% endfor %}
 
-            <div class="form-group">
-                <label class="form-control-label col-sm-3" for "division">Division:</label>
+                <label for="division" class="col-sm-3 form-control-label">Division</label>
                 <div class="col-sm-5">
                     {{ form.division(id="division", class="form-control") }}
                 </div>
             </div>
 
-            {% for message in form.item.errors %}
-                <div class="alert alert-danger" id="missing_item">{{ message }}</div>
-            {% endfor %}
+            <div class="form-group row">
+                {% for message in form.item.errors %}
+                    <div class="alert alert-danger" id="missing_item">{{ message }}</div>
+                {% endfor %}
 
-            <div class="form-group">
-                <label class="form-control-label col-sm-3" for "item">Item:</label>
+                <label for="item" class="col-sm-3 form-control-label">Item</label>
                 <div class="col-sm-8">
                     {{ form.item(id="item", class="form-control", rows="2", maxlength="100", type="text") }}
                     <div class="small">Please insert FULL description</div>
                 </div>
             </div>
 
-            {% for message in form.quantity.errors %}
-                <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
-            {% endfor %}
+            <div class="form-group row">
+                {% for message in form.quantity.errors %}
+                    <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
+                {% endfor %}
 
-            <div class="form-group">
-                <label class="form-control-label col-sm-3" for "quantity">Quantity:</label>
+                <label for="quantity" class="col-sm-3 form-control-label">Quantity</label>
                 <div class="col-sm-5">
                     {{ form.quantity(id="quantity", class="form-control", type="text") }}
                     <div class="small">i.e. Quantity of boxes, cases, singles</div>
                 </div>
             </div>
 
-            {% for message in form.unit_price.errors %}
-                <div class="alert alert-danger" id="missing_price_per_item">{{ message }}</div>
-            {% endfor %}
+            <div class="form-group row">
+                {% for message in form.unit_price.errors %}
+                    <div class="alert alert-danger" id="missing_unit_price">{{ message }}</div>
+                {% endfor %}
 
-            <div class="form-group">
-                <label class="form-control-label col-sm-3" for "unit_price">Price per Item:</label>
+                <label for="unit_price" class="col-sm-3 form-control-label">Price per Item:</label>
                 <div class="col-sm-3">
                     <div class="input-group">
                         <span class="input-group-addon">$</span>
@@ -88,12 +87,12 @@
                 </div>
             </div>
 
-            {% for message in form.total_cost.errors %}
-                <div class="alert alert-danger" id="missing_total">{{ message }}</div>
-            {% endfor %}
+            <div class="form-group row">
+                {% for message in form.total_cost.errors %}
+                    <div class="alert alert-danger" id="missing_total_cost">{{ message }}</div>
+                {% endfor %}
 
-            <div class="form-group">
-                <label class="form-control-label col-sm-3" for "total_cost">Total:</label>
+                <label for="total_cost" class="col-sm-3 form-control-label">Total:</label>
                 <div class="col-sm-3">
                     <div class="input-group">
                         <span class="input-group-addon">$</span>
@@ -103,40 +102,41 @@
                 </div>
             </div>
 
-            {% for message in form.funding_source.errors %}
-                <div class="alert alert-danger" id="missing_funding_source">{{ message }}</div>
-            {% endfor %}
+            <div class="form-group row">
+                {% for message in form.funding_source.errors %}
+                    <div class="alert alert-danger" id="missing_funding_source">{{ message }}</div>
+                {% endfor %}
 
-            <div class="form-group">
-                <label class="form-control-label col-sm-3" for "funding_source">Funding Source:</label>
+                <label for="funding_source" class="col-sm-3 form-control-label">Funding Source</label>
                 <div class="col-sm-5">
                     {{ form.funding_source(id="funding_source", class="form-control") }}
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="form-control-label col-sm-offset-1 col-sm-3" for
-                "funding_source_description">If Other, specify:</label>
+            <div class="form-group row">
+                <label for="funding_source_description" class="col-sm-offset-1 col-sm-3 form-control-label">
+                    If Other, specify:</label>
                 <div class="col-sm-5">
                     {{ form.funding_source_description(id="funding_source_description", class="form-control",
                             text="text", maxlength="100") }}
                 </div>
             </div>
 
-            {% for message in form.justification.errors %}
-                <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
-            {% endfor %}
+            <div class="form-group row">
+                {% for message in form.justification.errors %}
+                    <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
+                {% endfor %}
 
-            <div class="form-group">
-                <label class="form-control-label col-sm-3" for "justification">Justification:</label>
+                <label for="justification" class="col-sm-3 form-control-label">Justification:</label>
                 <div class="col-sm-8">
                     {{ form.justification(id="justification", rows="3", class="form-control", maxlength="255") }}
                 </div>
             </div>
 
             <p><i><strong>Vendor Information</strong></i></p>
-            <div class="form-group">
-                <label class="form-control-label col-sm-3 sr-only" for "request_vendor">Vendor Information:</label>
+
+            <div class="form-group row">
+                <label for="request_vendor" class="col-sm-3 sr-only form-control-label">Vendor Information:</label>
                 <div class="col-sm-10">
                     <select class="form-control" id="vendor">
                         <option selected value>Select Vendor or Enter New Vendor Below</option>
@@ -144,59 +144,61 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="form-control-label col-sm-3" for "request_vendor_name">Vendor Name:</label>
+            <div class="form-group row">
+                <label for="request_vendor_name" class="col-sm-3 form-control-label">Vendor Name:</label>
                 <div class="col-sm-5">
                     {{ form.request_vendor_name(id="vendor_name", class="form-control", maxlength="100") }}
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="form-control-label col-sm-3" for "request_vendor_address">Address:</label>
+            <div class="form-group row">
+                <label for="request_vendor_address" class="col-sm-3 form-control-label">Vendor Address:</label>
                 <div class="col-sm-5">
                     {{ form.request_vendor_address(id="vendor_address", class="form-control", maxlength="100") }}
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="form-control-label col-sm-3" for "request_vendor_phone">Phone:</label>
+            <div class="form-group row">
+                <label for="request_vendor_phone" class="col-sm-3 form-control-label">Vendor Phone:</label>
                 <div class="col-sm-5">
                     {{ form.request_vendor_phone(id="vendor_phone", class="form-control", type="tel") }}
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="form-control-label col-sm-3" for "request_vendor_fax">Fax:</label>
+            <div class="form-group row">
+                <label for="request_vendor_fax" class="col-sm-3 form-control-label">Vendor Fax:</label>
                 <div class="col-sm-5">
                     {{ form.request_vendor_fax(id="vendor_fax", class="form-control", type="tel") }}
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="form-control-label col-sm-3" for "request_vendor_email">Email:</label>
+            <div class="form-group row">
+                <label for="request_vendor_email" class="col-sm-3 form-control-label">Vendor Email:</label>
                 <div class="col-sm-5">
-                    {{ form.request_vendor_email(id="vendor_email", class="form-control", type="tel",
-                            maxlength="100") }}
+                    {{ form.request_vendor_email(id="vendor_email", class="form-control", maxlength="100") }}
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="form-control-label col-sm-3" for "request_vendor_taxid">Vendor/Tax ID:</label>
+            <div class="form-group row">
+                <label for="request_vendor_taxid" class="col-sm-3 form-control-label">Vendor/Tax ID:</label>
                 <div class="col-sm-5">
                     {{ form.request_vendor_taxid(id="vendor_taxid", class="form-control", maxlength="100") }}
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="form-control-label col-sm-3" for "request_MWBE">M/WBE:</label>
+            <div class="form-group row">
+                <label for="request_request_MWBE" class="col-sm-3 form-control-label">M/WBE:</label>
                 <div class="col-sm-5">
                     {{ form.request_MWBE(id="request_MWBE", class="radio-inline") }}
                 </div>
             </div>
 
-            <div class="spacer">
-                <button type="submit" class="btn btn-primary btn-lg btn-block">Submit request</button>
+            <div class="form-group row">
+                <div class="spacer">
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">Submit request</button>
+                </div>
             </div>
-        </form>
-        <!-- end of static form -->
+        </div>
+    </form>
+    <!-- end of static form -->
 {% endblock %}
