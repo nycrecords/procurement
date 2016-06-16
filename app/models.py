@@ -3,10 +3,7 @@ from . import db
 
 
 class User(UserMixin, db.Model):
-<<<<<<< dc2ce178f8915c3843a1934004e5401fec6ca8be
     """The User class containing user and login information"""
-=======
->>>>>>> Working on implementing edit form
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100))
@@ -22,10 +19,7 @@ class Request(db.Model):
     """The procurement request class"""
     __tablename__ = 'request'
     id = db.Column(db.Integer, primary_key=True)
-<<<<<<< dc2ce178f8915c3843a1934004e5401fec6ca8be
-=======
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
->>>>>>> Working on implementing edit form
     date_submitted = db.Column(db.DateTime)
     date_closed = db.Column(db.DateTime)
     name = db.Column(db.String(100))
@@ -36,15 +30,10 @@ class Request(db.Model):
     funding_source = db.Column(db.String(100))
     funding_source_description = db.Column(db.String(100), nullable=True)
     justification = db.Column(db.String(255))
-<<<<<<< dc2ce178f8915c3843a1934004e5401fec6ca8be
     # Each request has a foreign key to a vendor in the Vendor table. Each request can only have ONE vendor.
     vendor_id = db.Column(db.Integer, db.ForeignKey('vendor.id'))
     # Each request has a foreign key to a creator in the User table. Each request can only have ONE creator.
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-=======
-    vendor_id = db.Column(db.Integer, db.ForeignKey('vendor.id'))
-    comment_id = db.relationship('Comment', backref='request', lazy='dynamic')
->>>>>>> Working on implementing edit form
     status = db.Column(db.String(100))
 
     def __init__(
