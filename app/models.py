@@ -1,10 +1,12 @@
 from flask_login import UserMixin
 from . import db
-from datetime import datetime
 
 
 class User(UserMixin, db.Model):
+<<<<<<< dc2ce178f8915c3843a1934004e5401fec6ca8be
     """The User class containing user and login information"""
+=======
+>>>>>>> Working on implementing edit form
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100))
@@ -20,6 +22,10 @@ class Request(db.Model):
     """The procurement request class"""
     __tablename__ = 'request'
     id = db.Column(db.Integer, primary_key=True)
+<<<<<<< dc2ce178f8915c3843a1934004e5401fec6ca8be
+=======
+    creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+>>>>>>> Working on implementing edit form
     date_submitted = db.Column(db.DateTime)
     date_closed = db.Column(db.DateTime)
     name = db.Column(db.String(100))
@@ -30,10 +36,15 @@ class Request(db.Model):
     funding_source = db.Column(db.String(100))
     funding_source_description = db.Column(db.String(100), nullable=True)
     justification = db.Column(db.String(255))
+<<<<<<< dc2ce178f8915c3843a1934004e5401fec6ca8be
     # Each request has a foreign key to a vendor in the Vendor table. Each request can only have ONE vendor.
     vendor_id = db.Column(db.Integer, db.ForeignKey('vendor.id'))
     # Each request has a foreign key to a creator in the User table. Each request can only have ONE creator.
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+=======
+    vendor_id = db.Column(db.Integer, db.ForeignKey('vendor.id'))
+    comment_id = db.relationship('Comment', backref='request', lazy='dynamic')
+>>>>>>> Working on implementing edit form
     status = db.Column(db.String(100))
 
     def __init__(
@@ -105,39 +116,15 @@ class Vendor(db.Model):
 
 
 class Comment(db.Model):
+<<<<<<< dc2ce178f8915c3843a1934004e5401fec6ca8be
 
     """Comment and/or file that can be added to a specific request"""
+=======
+>>>>>>> Working on implementing edit form
     __tablename__ = 'comment'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
     request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     timestamp = db.Column(db.DateTime)
     content = db.Column(db.String())
     filepath = db.Column(db.String())
-
-    def __init__(
-        self,
-        request_id,
-        user_id,
-        content,
-        filepath=None
-    ):
-        """
-        Create a comment.
-
-        :param request_id: Request where comment was posted.
-        :param user_id: User ID of poster.
-        :param content: Content for the comment.
-        :param filepath: Filepath of uploaded file (if any).
-
-        :return: ID of created comment.
-        """
-        self.request_id = request_id
-        self.user_id = user_id
-        self.timestamp = datetime.now()
-        self.content = content
-        self.filepath = filepath
-
-    def __repr__(self):
-        """Return string representation of Comment. """
-        return '<Comment {}>'.format(self.id)

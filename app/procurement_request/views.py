@@ -29,9 +29,21 @@ def edit_request(request_id):
     procurement_request = Request.query.filter_by(id=request_id).first()
     if procurement_request:
         if request.method == 'GET':
-            vendor = Vendor.query.filter_by(id=request.vendor_id).first()
             form.item.data = procurement_request.item
-            form.request_vendor_MWBE.data = vendor.mwbe
+            form.quantity.data = procurement_request.quantity
+            form.unit_price.data = procurement_request.unit_price
+            form.total_cost.data = procurement_request.total_cost
+            form.funding_source.data = procurement_request.funding_source
+            form.justification.data = procurement_request.justification
+            vendor = Vendor.query.filter_by(id=request.vendor_id).first()
+            if vendor:
+                form.request_vendor_name.data = vendor.name
+                form.request_vendor_address.data = vendor.address
+                form.request_vendor_phone.data = vendor.phone
+                form.request_vendor_fax.data = vendor.fax
+                form.request_vendor_email.data = vendor.email
+                form.request_vendor_taxid.data = vendor.tax_id
+                form.request_vendor_MWBE.data = vendor.mwbe
             return render_template('procurement_request/edit_request.html',
                                    request=procurement_request,
                                    form=form)
