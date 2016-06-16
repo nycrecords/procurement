@@ -1,6 +1,6 @@
 from flask_wtf import Form
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, ValidationError
-from wtforms.validators import DataRequired, Length, Email, EqualTo
+from wtforms.validators import DataRequired, Length, Email, EqualTo, Length
 from ..models import User
 
 
@@ -18,6 +18,7 @@ class ChangePasswordForm(Form):
         DataRequired(), EqualTo('password2', message='Passwords must match')])
     password2 = PasswordField('Confirm new password', validators=[DataRequired()])
     submit = SubmitField('Update Password')
+
 
 
 class PasswordResetRequestForm(Form):

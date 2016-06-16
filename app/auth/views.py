@@ -5,6 +5,8 @@ from .. import db
 from ..models import User
 from ..email import send_email
 from .forms import LoginForm, ChangePasswordForm, PasswordResetRequestForm, PasswordResetForm
+from .utils import check_password_requirements
+from werkzeug.security import generate_password_hash
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -16,6 +18,7 @@ def login():
         if user is not None and user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
             return redirect('new')
+
         flash('Invalid username or password.')
     return render_template('auth/login.html', form=form)
 
@@ -35,11 +38,14 @@ def change_password():
     """Password change page"""
     form = ChangePasswordForm()
     if form.validate_on_submit():
-        if current_user.verify_password(form.old_password.data):
+        if check_password_requirements(current_user.email,
+                                       form.old_password.data,
+                                       form.password.data,
+                                       form.password2.data):
             current_user.password = form.password.data
             db.session.add(current_user)
             flash('Your password has been updated.')
-            return redirect(url_for('main.index'))
+            return redirect(url_for('auth.login'))
         else:
             flash('Invalid password.')
     return render_template("auth/change_password.html", form=form)
