@@ -116,11 +116,7 @@ class Vendor(db.Model):
 
 
 class Comment(db.Model):
-<<<<<<< dc2ce178f8915c3843a1934004e5401fec6ca8be
-
     """Comment and/or file that can be added to a specific request"""
-=======
->>>>>>> Working on implementing edit form
     __tablename__ = 'comment'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
