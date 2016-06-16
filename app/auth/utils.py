@@ -1,7 +1,7 @@
 """
     ..module: utils
 
-
+    :synopsis: Defines the functions for auth directory
 """
 from werkzeug.security import check_password_hash
 from ..models import User
@@ -27,7 +27,7 @@ def check_password_requirements(email, old_password, password, password_confirma
     if password != password_confirmation:
         return False
 
-    if not re.match(r'[A-Za-z0-9@#$%^&+=]{8,128}', password):
+    if not re.match(r'^(?=.*?\d)(?=.*?[A-Z])(?=.*?[a-z])[A-Za-z\d]{8,128}$', password):
         return False
 
     return True

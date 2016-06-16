@@ -3,6 +3,7 @@ from flask_login import UserMixin
 from flask import current_app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from . import db, login_manager
+import re
 
 
 class User(UserMixin, db.Model):
@@ -38,6 +39,9 @@ class User(UserMixin, db.Model):
         except:
             return False
         if data.get('reset') != self.id:
+            return False
+        # checks if the new password is at least 8 characters with at least 1 UPPERCASE AND 1 NUMBER
+        if not re.match(r'^(?=.*?\d)(?=.*?[A-Z])(?=.*?[a-z])[A-Za-z\d]{8,128}$', new_password):
             return False
         self.password = new_password
         db.session.add(self)

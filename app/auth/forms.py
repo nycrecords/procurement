@@ -1,3 +1,10 @@
+"""
+.. module:: user_account.forms.
+
+    :synopsis: Defines for the functionality of user accounts.
+"""
+
+
 from flask_wtf import Form
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, ValidationError
 from wtforms.validators import DataRequired, Length, Email, EqualTo, Length
@@ -13,6 +20,7 @@ class LoginForm(Form):
 
 
 class ChangePasswordForm(Form):
+    """Form for changing password"""
     old_password = PasswordField('Old password', validators=[DataRequired()])
     password = PasswordField('New password', validators=[
         DataRequired(), EqualTo('password2', message='Passwords must match')])
@@ -20,14 +28,15 @@ class ChangePasswordForm(Form):
     submit = SubmitField('Update Password')
 
 
-
 class PasswordResetRequestForm(Form):
+    """Initial request form for password reset"""
     email = StringField('Email', validators=[DataRequired(), Length(1, 100),
                                              Email()])
     submit = SubmitField('Reset Password')
 
 
 class PasswordResetForm(Form):
+    """Password reset form after email confirmation"""
     email = StringField('Email', validators=[DataRequired(), Length(1, 100),
                                              Email()])
     password = PasswordField('New Password', validators=[

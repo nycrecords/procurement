@@ -1,3 +1,10 @@
+"""
+.. module:: Provides url endpoints for authentication and user management
+
+    :synopsis:
+"""
+
+
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, current_user, login_required
 from . import auth
@@ -6,7 +13,6 @@ from ..models import User
 from ..email import send_email
 from .forms import LoginForm, ChangePasswordForm, PasswordResetRequestForm, PasswordResetForm
 from .utils import check_password_requirements
-from werkzeug.security import generate_password_hash
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -18,7 +24,6 @@ def login():
         if user is not None and user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
             return redirect('new')
-
         flash('Invalid username or password.')
     return render_template('auth/login.html', form=form)
 
@@ -47,7 +52,7 @@ def change_password():
             flash('Your password has been updated.')
             return redirect(url_for('auth.login'))
         else:
-            flash('Invalid password.')
+            flash('Password must be at least 8 characters with at least 1 UPPERCASE and 1 NUMBER')
     return render_template("auth/change_password.html", form=form)
 
 
@@ -83,5 +88,5 @@ def password_reset(token):
             flash('Your password has been updated.')
             return redirect(url_for('auth.login'))
         else:
-            return redirect(url_for('main.index'))
+            flash('Password must be at least 8 characters with at least 1 UPPERCASE and 1 NUMBER')
     return render_template('auth/reset_password.html', form=form)

@@ -1,5 +1,11 @@
+"""
+.. module:: Provides url endpoints for the main application
+
+    :synopsis:
+"""
+
 from datetime import datetime
-from flask import render_template, request
+from flask import render_template, request, redirect, url_for
 from .. import db
 from ..models import Request, Vendor, User
 from . import main
@@ -45,12 +51,13 @@ def new_request():
                                    request_vendor_mwbe)
                 db.session.add(newvendor)
                 db.session.commit()
-
+            else:
+                print(form.errors)
             if newvendor is not None:
                 newrequest.set_vendor_id(newvendor.id)
             db.session.add(newrequest)
             db.session.commit()
-
+            return redirect(url_for('main.display_request'))
         else:
             print(form.errors)
 
