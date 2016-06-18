@@ -1,9 +1,16 @@
+"""
+.. module:: Provides url endpoints for the main application
+
+    :synopsis:
+"""
+
 from datetime import datetime
-from flask import render_template, request
+from flask import render_template, request, redirect, url_for
 from .. import db
-from ..models import Request, Vendor
+from ..models import Request, Vendor, User
 from . import main
 from .forms import NewRequestForm
+from flask_login import login_required, current_user
 
 
 @main.route('/')
@@ -13,6 +20,7 @@ def index():
 
 
 @main.route('/new', methods=['GET', 'POST'])
+@login_required
 def new_request():
     """Create a new procurement request."""
     form = NewRequestForm()
@@ -24,8 +32,8 @@ def new_request():
             newrequest = Request(form.request_name.data, date_submitted, form.item.data,
                                  form.quantity.data, form.unit_price.data,
                                  form.total_cost.data, form.funding_source.data,
-                                 form.funding_source_description.data, form.justification.data)
-
+                                 form.funding_source_description.data, form.justification.data,
+                                 creator_id=current_user.id)
             request_vendor_name = str(form.request_vendor_name.data)
             request_vendor_phone = str(form.request_vendor_phone.data)
             request_vendor_fax = str(form.request_vendor_fax.data)
@@ -43,12 +51,13 @@ def new_request():
                                    request_vendor_mwbe)
                 db.session.add(newvendor)
                 db.session.commit()
-
+            else:
+                print(form.errors)
             if newvendor is not None:
                 newrequest.set_vendor_id(newvendor.id)
             db.session.add(newrequest)
             db.session.commit()
-
+            return redirect(url_for('main.display_request'))
         else:
             print(form.errors)
 
@@ -56,6 +65,7 @@ def new_request():
 
 
 @main.route('/requests', methods=['GET'])
+@login_required
 def display_request():
     """View the page for all the requests."""
     requests = Request.query.all()

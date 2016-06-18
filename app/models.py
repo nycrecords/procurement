@@ -1,5 +1,9 @@
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
-from . import db
+from flask import current_app
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from . import db, login_manager
+import re
 
 
 class User(UserMixin, db.Model):
@@ -11,8 +15,45 @@ class User(UserMixin, db.Model):
     division = db.Column(db.String(100))
     password_hash = db.Column(db.String(128))
 
+    @property
+    def password(self):
+        raise AttributeError('password is not a readable attribute')
+
+    @password.setter
+    def password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def verify_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+    # generates token with default validity for 1 hour
+    def generate_reset_token(self, expiration=3600):
+        s = Serializer(current_app.config['SECRET_KEY'], expiration)
+        return s.dumps({'reset': self.id})
+
+    # verifies the token and if valid, resets password
+    def reset_password(self, token, new_password):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except:
+            return False
+        if data.get('reset') != self.id:
+            return False
+        # checks if the new password is at least 8 characters with at least 1 UPPERCASE AND 1 NUMBER
+        if not re.match(r'^(?=.*?\d)(?=.*?[A-Z])(?=.*?[a-z])[A-Za-z\d]{8,128}$', new_password):
+            return False
+        self.password = new_password
+        db.session.add(self)
+        return True
+
     def __repr__(self):
-        return '<User {}>'.format(self.id)
+        return '<User %r>' % self.username
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 
 class Request(db.Model):
@@ -47,6 +88,7 @@ class Request(db.Model):
             funding_source,
             funding_source_description,
             justification,
+            creator_id
     ):
         self.name = name
         self.date_submitted = date_submitted
@@ -58,6 +100,7 @@ class Request(db.Model):
         self.funding_source = funding_source
         self.funding_source_description = funding_source_description
         self.justification = justification
+        self.creator_id = creator_id
 
     def set_vendor_id(self, vendor_id):
         """Sets vendor_id in request table

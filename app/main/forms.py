@@ -7,8 +7,8 @@
 from flask import Flask
 from flask_wtf import Form
 from wtforms import StringField, SelectField, TextAreaField, SubmitField, \
-     RadioField, DecimalField, IntegerField
-from wtforms.validators import DataRequired, Length, Optional
+     BooleanField, DecimalField, IntegerField
+from wtforms.validators import DataRequired, Length
 from wtforms_alchemy import PhoneNumberField
 app = Flask(__name__)
 
@@ -60,5 +60,5 @@ class NewRequestForm(Form):
     request_vendor_fax = PhoneNumberField(region='US', display_format='national')
     request_vendor_email = StringField(u'Email')
     request_vendor_taxid = StringField(u'Vendor Tax ID')
-    request_MWBE = RadioField(u'MWBE', choices=[('True', 'Yes'), ('False', 'No')], validators=[Optional()])
+    request_MWBE = BooleanField(u'MWBE')
     submit = SubmitField(u'Submit Request')
