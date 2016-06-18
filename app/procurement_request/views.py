@@ -15,7 +15,7 @@ def view_request(request_id):
     """View the page for a specific request."""
     procurement_request = Request.query.filter_by(id=request_id).first()
     if procurement_request:
-        return render_template('request/request.html',
+        return render_template('procurement_request/request.html',
                                request=procurement_request)
     else:
         abort(404)

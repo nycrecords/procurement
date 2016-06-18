@@ -6,4 +6,15 @@ Records Procurement - View Request
 
 {% block content %}
 
+<div class="row-fluid">
+  <div class="span12">
+    Requester Information:
+  </div>
+  <div class="span6">Requester's Name:</div>
+  <div class="span6">
+    <span class="label" id='requester_alias'>{{ request.creator_id.username }}</span>
+  </div>
+</div>
+
+
 {% endblock %}

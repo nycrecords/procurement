@@ -56,7 +56,7 @@
                     </thead>
                     <tbody>
                     {% for request in requests %}
-                        <tr class="table-row" data-href="/request/<%= request.id %>">
+                        <tr class="table-row" data-href="/request/{{ request.id }}">
                             <td> {{ request.id }} </td>
                             <td> {{ request.date_submitted.date().strftime("%B %d, %Y") }} </td>
                             <td> {{ request.division }} </td>
