@@ -1,4 +1,4 @@
-"""MWBE is now boolean with a defualt value of False
+"""mwbe is now boolean with a defualt value of False
 
 Revision ID: 626d6071278c
 Revises: 54bdffeafe4f

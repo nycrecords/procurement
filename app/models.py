@@ -5,19 +5,35 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from . import db, login_manager
 import re
 
+divisions = [
+    ('', ''),
+    ('MRMD', 'MRMD'),
+    ('Archives', 'Archives'),
+    ('Grants', 'Grants'),
+    ('Library', 'Library'),
+    ('Executive', 'Executive'),
+    ('MIS/Web', 'MIS/Web'),
+    ('Administration', 'Administration')
+]
+
 
 class User(UserMixin, db.Model):
     """The User class containing user and login information"""
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100))
+    first_name = db.Column(db.String(100))
+    last_name = db.Column(db.String(100))
     email = db.Column(db.String(100), unique=True, index=True)
-    division = db.Column(db.String(100))
+    division = db.Column(db.Enum(divisions))
     password_hash = db.Column(db.String(128))
 
     @property
     def password(self):
         raise AttributeError('password is not a readable attribute')
+
+    @property
+    def name(self):
+        return '%s %s' % (self.first_name, self.last_name)
 
     @password.setter
     def password(self, password):

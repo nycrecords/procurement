@@ -2,7 +2,6 @@
 {% extends "base.html" %} {% block title %}Records Procurement Form{% endblock title %}
 {% block custom_css_links %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/new_request.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/bootstrap.min.css') }}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 {% endblock custom_css_links %}
@@ -29,27 +28,43 @@
     <form name="newrequest" class="form-horizontal" id="submitRequest" method="POST" action="">
         <div class="container-fluid-content">
             {{ form.hidden_tag() }}
-            <div class="form-group row">
-                {% for message in form.request_name.errors %}
-                    <div class="alert alert-danger" id="missing_name">{{ message }}</div>
-                {% endfor %}
 
-                <label for="request_name" class="col-sm-3 form-control-label">Name</label>
-                <div class="col-sm-5">
-                    {{ form.request_name(id="request_name", class="form-control", type="text") }}
-                </div>
+            {% if current_user.is_authenticated() %}
+            <div class="form-group row">
+              <label for="item" class="col-sm-3 form-control-label">Requester Name:</label>
+              <div class="col-sm-8">
+                {{ user.name }}
+              </div>
             </div>
 
             <div class="form-group row">
-                {% for message in form.division.errors %}
-                    <div class="alert alert-danger" id="missing_division">{{ message }}</div>
-                {% endfor %}
-
-                <label for="division" class="col-sm-3 form-control-label">Division</label>
-                <div class="col-sm-5">
-                    {{ form.division(id="division", class="form-control") }}
-                </div>
+              <label for="item" class="col-sm-3 form-control-label">Division:</label>
+              <div class="col-sm-8">
+                {{ user.division }}
+              </div>
             </div>
+            {% else %}
+            <div class="form-group row">
+              {% for message in form.request_name.errors %}
+                  <div class="alert alert-danger" id="missing_name">{{ message }}</div>
+              {% endfor %}
+
+              <label for="request_name" class="col-sm-3 form-control-label">Name</label>
+              <div class="col-sm-5">
+                  {{ form.request_name(id="request_name", class="form-control", type="text") }}
+              </div>
+          </div>
+
+          <div class="form-group row">
+              {% for message in form.division.errors %}
+                  <div class="alert alert-danger" id="missing_division">{{ message }}</div>
+              {% endfor %}
+
+              <label for="division" class="col-sm-3 form-control-label">Division</label>
+              <div class="col-sm-5">
+                  {{ form.division(id="division", class="form-control") }}
+              </div>
+          </div>
 
             <div class="form-group row">
                 {% for message in form.item.errors %}
@@ -195,9 +210,9 @@
             </div>
 
             <div class="form-group row">
-                <label for="request_request_MWBE" class="col-sm-3 form-control-label">M/WBE:</label>
+                <label for="request_request_vendor_mwbe" class="col-sm-3 form-control-label">M/WBE:</label>
                 <div class="col-sm-5">
-                    {{ form.request_MWBE(id="request_MWBE", class="radio-inline") }}
+                    {{ form.request_vendor_mwbe(id="request_vendor_mwbe", class="radio-inline") }}
                 </div>
             </div>
 

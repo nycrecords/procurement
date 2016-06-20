@@ -9,7 +9,7 @@ from flask import render_template, request, redirect, url_for
 from .. import db
 from ..models import Request, Vendor, User
 from . import main
-from .forms import NewRequestForm
+from .forms import RequestForm
 from flask_login import login_required, current_user
 
 
@@ -23,11 +23,13 @@ def index():
 @login_required
 def new_request():
     """Create a new procurement request."""
-    form = NewRequestForm()
+    form = RequestForm()
 
     if request.method == 'POST':
         if form.validate_on_submit():
             date_submitted = datetime.now()
+            requester_name = current_user.username
+            print(requester_name)
 
             newrequest = Request(form.request_name.data, date_submitted, form.item.data,
                                  form.quantity.data, form.unit_price.data,
@@ -37,7 +39,7 @@ def new_request():
             request_vendor_name = str(form.request_vendor_name.data)
             request_vendor_phone = str(form.request_vendor_phone.data)
             request_vendor_fax = str(form.request_vendor_fax.data)
-            request_vendor_mwbe = str(form.request_MWBE.data)
+            request_vendor_mwbe = str(form.request_mwbe.data)
 
             newvendor = None
 
@@ -61,7 +63,7 @@ def new_request():
         else:
             print(form.errors)
 
-    return render_template('new_request.html', form=form)
+    return render_template('new_request.html', form=form, user=current_user)
 
 
 @main.route('/requests', methods=['GET'])

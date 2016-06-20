@@ -33,7 +33,7 @@ funding = [
 ]
 
 
-class NewRequestForm(Form):
+class RequestForm(Form):
     """Form for creating a new request"""
     request_name = StringField(u'Name*(required)', validators=[
         DataRequired('Please enter the requestor\'s name'), Length(1, 100)])
@@ -60,5 +60,5 @@ class NewRequestForm(Form):
     request_vendor_fax = PhoneNumberField(region='US', display_format='national')
     request_vendor_email = StringField(u'Email')
     request_vendor_taxid = StringField(u'Vendor Tax ID')
-    request_MWBE = BooleanField(u'MWBE')
+    request_vendor_mwbe = BooleanField(u'mwbe')
     submit = SubmitField(u'Submit Request')

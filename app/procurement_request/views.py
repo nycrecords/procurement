@@ -7,7 +7,7 @@ from flask import render_template, request, abort
 from .. import db
 from ..models import Request, Vendor, Comment
 from . import procurement_request as procurement_request_blueprint
-from .forms import EditRequestForm
+from ..main.forms import RequestForm
 
 
 @procurement_request_blueprint.route('/<request_id>', methods=['GET', 'POST'])
@@ -25,25 +25,11 @@ def view_request(request_id):
                                      methods=['GET', 'POST'])
 def edit_request(request_id):
     """Edit a request."""
-    form = EditRequestForm()
+
     procurement_request = Request.query.filter_by(id=request_id).first()
     if procurement_request:
         if request.method == 'GET':
-            form.item.data = procurement_request.item
-            form.quantity.data = procurement_request.quantity
-            form.unit_price.data = procurement_request.unit_price
-            form.total_cost.data = procurement_request.total_cost
-            form.funding_source.data = procurement_request.funding_source
-            form.justification.data = procurement_request.justification
-            vendor = Vendor.query.filter_by(id=request.vendor_id).first()
-            if vendor:
-                form.request_vendor_name.data = vendor.name
-                form.request_vendor_address.data = vendor.address
-                form.request_vendor_phone.data = vendor.phone
-                form.request_vendor_fax.data = vendor.fax
-                form.request_vendor_email.data = vendor.email
-                form.request_vendor_taxid.data = vendor.tax_id
-                form.request_vendor_MWBE.data = vendor.mwbe
+            form = RequestForm(obj=procurement_request)
             return render_template('procurement_request/edit_request.html',
                                    request=procurement_request,
                                    form=form)

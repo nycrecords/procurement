@@ -62,7 +62,7 @@ class EditRequestForm(Form):
                                             )
     request_vendor_email = StringField(u'Email')
     request_vendor_taxid = StringField(u'Vendor Tax ID')
-    request_vendor_MWBE = RadioField(u'MWBE',
+    request_vendor_mwbe = RadioField(u'mwbe',
                                   choices=[
                                       ('True', 'Yes'),
                                       ('False', 'No')
