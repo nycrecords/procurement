@@ -27,7 +27,7 @@ funding = [
     ('', ''),
     ('Expense', 'Expense'),
     ('MAARF', 'MAARRF'),
-    ('SARA', 'SARA'),
+    ('Grant', 'Grant'),
     ('KOCH', 'KOCH'),
     ('Other', 'Other')
 ]
@@ -51,6 +51,8 @@ class NewRequestForm(Form):
     funding_source = SelectField(u'Funding*', choices=funding,
                                  validators=[DataRequired('Please select the funding source')])
     funding_source_description = StringField(u'Funding Other')
+    grant_name = StringField(u'Grant Name')
+    project_name = StringField(u'Project Name')
     justification = TextAreaField(u'Justification*(required)', validators=[
         DataRequired('You must enter a justification for your request'),
         Length(1, 255, 'The justification must be less than 255 characters')])
