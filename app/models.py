@@ -10,9 +10,60 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(100), unique=True, index=True)
     division = db.Column(db.String(100))
     password_hash = db.Column(db.String(128))
+    role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
+
+
+class Permission:
+    VIEW = 0x01
+    CREATE = 0x02
+    COMMENT = 0x04
+    CHANGE_STATUS = 0x08
+    ADMINISTER = 0x80
+
+
+class Role(db.Model):
+    __tablename__ = 'role'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True)
+    default = db.Column(db.Boolean, default=False, index=True)
+    permissions = db.Column(db.Integer)
+    users = db.relationship('User', backref='role', lazy='dynamic')
+
+    @staticmethod
+    def insert_roles():
+        """Insert permissions for each role: employee, director, and administrator."""
+        roles = {
+            'Regular User': (Permission.VIEW |
+                             Permission.CREATE |
+                             Permission.COMMENT | True),
+            'Division Head': (Permission.VIEW |
+                              Permission.CREATE |
+                              Permission.COMMENT |
+                              Permission.CHANGE_STATUS, False),
+            'Procurement Head': (Permission.VIEW |
+                                 Permission.CREATE |
+                                 Permission.COMMENT |
+                                 Permission.CHANGE_STATUS, False),
+            'Commissioner': (Permission.VIEW |
+                             Permission.CREATE |
+                             Permission.COMMENT |
+                             Permission.CHANGE_STATUS, False),
+            'Administrator': (0xff, False)
+        }
+        for r in roles:
+            role = Role.query.filter_by(name=r).first()
+            if role is None:
+                role = Role(name=r)
+            role.permissions = roles[r][0]
+            role.default = roles[r][1]
+            db.session.add(role)
+        db.session.commit()
+
+    def __repr__(self):
+        return '<Role %r>' % self.name
 
 
 class Request(db.Model):
