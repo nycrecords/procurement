@@ -24,6 +24,7 @@ def new_request():
             newrequest = Request(form.request_name.data, date_submitted, form.item.data,
                                  form.quantity.data, form.unit_price.data,
                                  form.total_cost.data, form.funding_source.data,
+                                 form.grant_name.data, form.project_name.data,
                                  form.funding_source_description.data, form.justification.data)
 
             request_vendor_name = str(form.request_vendor_name.data)
@@ -50,7 +51,7 @@ def new_request():
             db.session.commit()
 
         else:
-            print (form.errors)
+            print(form.errors)
 
     return render_template('new_request.html', form=form)
 

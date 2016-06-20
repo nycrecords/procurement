@@ -27,6 +27,8 @@ class Request(db.Model):
     unit_price = db.Column(db.Numeric)
     total_cost = db.Column(db.Numeric)
     funding_source = db.Column(db.String(100))
+    grant_name = db.Column(db.String(100))
+    project_name = db.Column(db.String(100))
     funding_source_description = db.Column(db.String(100), nullable=True)
     justification = db.Column(db.String(255))
     # Each request has a foreign key to a vendor in the Vendor table. Each request can only have ONE vendor.
@@ -46,6 +48,8 @@ class Request(db.Model):
             unit_price,
             total_cost,
             funding_source,
+            grant_name,
+            project_name,
             funding_source_description,
             justification,
     ):
@@ -57,6 +61,8 @@ class Request(db.Model):
         self.unit_price = unit_price
         self.total_cost = total_cost
         self.funding_source = funding_source
+        self.grant_name = grant_name
+        self.project_name = project_name
         self.funding_source_description = funding_source_description
         self.justification = justification
 

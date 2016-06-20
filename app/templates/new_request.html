@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/new_request.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/bootstrap.min.css') }}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
 {% endblock custom_css_links %}
 {% block content %}
     <div class="container-fluid-content">
@@ -113,12 +114,28 @@
                 </div>
             </div>
 
-            <div class="form-group row">
+            <div id="funding_source_description" class="form-group row" style="display:None;">
                 <label for="funding_source_description" class="col-sm-offset-1 col-sm-3 form-control-label">
-                    If Other, specify:</label>
+                    Specify:</label>
                 <div class="col-sm-5">
                     {{ form.funding_source_description(id="funding_source_description", class="form-control",
                             text="text", maxlength="100") }}
+                </div>
+            </div>
+
+            <div id="grant_name" class="form-group row required" style="display:None;">
+                <label for="grant_name" class="col-sm-offset-1 col-sm-3 form-control-label">
+                    Grant Name:</label>
+                <div class="col-sm-5">
+                    {{ form.grant_name(id="grant_name", class="form-control", text="text", maxlength="100") }}
+                </div>
+            </div>
+
+            <div id="project_name" class="form-group row required" style="display:None;">
+                <label for="project_name" class="col-sm-offset-1 col-sm-3 form-control-label">
+                    Project Name:</label>
+                <div class="col-sm-5">
+                    {{ form.project_name(id="project_name", class="form-control", text="text", maxlength="100") }}
                 </div>
             </div>
 
@@ -207,4 +224,26 @@
         </div>
     </form>
     <!-- end of static form -->
+
+    <!--Javascript function to show additional hidden forms when certain funding source is selected-->
+    <script type="text/javascript">
+        $('#funding_source').on('change', function () {
+            if ($('#funding_source').val() === 'Other') {
+                $('#funding_source_description').show()
+                $('#grant_name').hide()
+                $('#project_name').hide()
+            }
+            else if ($('#funding_source').val() === 'Grant') {
+                $('#grant_name').show()
+                $('#project_name').show()
+                $('#funding_source_description').hide()
+            }
+            else {
+                $('#funding_source_description').hide()
+                $('#grant_name').hide()
+                $('#project_name').hide()
+            }
+        })
+    </script>
 {% endblock %}
+
