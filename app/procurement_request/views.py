@@ -5,7 +5,7 @@
 """
 from flask import render_template, request, abort
 from .. import db
-from ..models import Request, Vendor, Comment
+from ..models import Request, User, Vendor, Comment
 from . import procurement_request as procurement_request_blueprint
 from ..main.forms import RequestForm
 
@@ -14,9 +14,11 @@ from ..main.forms import RequestForm
 def view_request(request_id):
     """View the page for a specific request."""
     procurement_request = Request.query.filter_by(id=request_id).first()
+    user = User.query.filter_by(id=procurement_request.creator_id).first()
+    vendor = Vendor.query.filter_by(id=procurement_request.vendor_id).first()
     if procurement_request:
         return render_template('procurement_request/request.html',
-                               request=procurement_request)
+                               request=procurement_request, user=user, vendor=vendor)
     else:
         abort(404)
 

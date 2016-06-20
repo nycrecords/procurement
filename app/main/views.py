@@ -28,10 +28,23 @@ def new_request():
     if request.method == 'POST':
         if form.validate_on_submit():
             date_submitted = datetime.now()
-            requester_name = current_user.username
-            print(requester_name)
-
-            newrequest = Request(form.request_name.data, date_submitted, form.item.data,
+            if current_user.is_authenticated:
+                newrequest = Request(
+                                     division=current_user.division,
+                                     date_submitted=date_submitted,
+                                     item=form.item.data,
+                                     quantity=form.quantity.data,
+                                     unit_price=form.unit_price.data,
+                                     total_cost=form.total_cost.data,
+                                     funding_source=form.funding_source.data,
+                                     funding_source_description=form.funding_source_description.data,
+                                     justification=form.justification.data,
+                                     creator_id=current_user.id
+                                     )
+            else:
+                newrequest = Request(form.request_name.data,
+                                     date_submitted,
+                                     form.item.data,
                                  form.quantity.data, form.unit_price.data,
                                  form.total_cost.data, form.funding_source.data,
                                  form.funding_source_description.data, form.justification.data,
@@ -39,7 +52,7 @@ def new_request():
             request_vendor_name = str(form.request_vendor_name.data)
             request_vendor_phone = str(form.request_vendor_phone.data)
             request_vendor_fax = str(form.request_vendor_fax.data)
-            request_vendor_mwbe = str(form.request_mwbe.data)
+            request_vendor_mwbe = str(form.request_vendor_mwbe.data)
 
             newvendor = None
 

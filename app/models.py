@@ -77,9 +77,9 @@ class Request(db.Model):
     __tablename__ = 'request'
     id = db.Column(db.Integer, primary_key=True)
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    division = db.Column(db.String(100))
     date_submitted = db.Column(db.DateTime)
     date_closed = db.Column(db.DateTime)
-    name = db.Column(db.String(100))
     item = db.Column(db.String(100))
     quantity = db.Column(db.Integer)
     unit_price = db.Column(db.Numeric)
@@ -95,7 +95,7 @@ class Request(db.Model):
 
     def __init__(
             self,
-            name,
+            division,
             date_submitted,
             item,
             quantity,
@@ -106,7 +106,7 @@ class Request(db.Model):
             justification,
             creator_id
     ):
-        self.name = name
+        self.division = division
         self.date_submitted = date_submitted
         # self.date_closed = date_closed
         self.item = item
