@@ -5,7 +5,7 @@
 """
 
 from datetime import datetime
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, jsonify
 from .. import db
 from ..models import Request, Vendor, User
 from . import main
@@ -82,9 +82,16 @@ def new_request():
     return render_template('main/new_request.html', form=form, user=current_user)
 
 
-@main.route('/requests', methods=['GET'])
-@login_required
-def display_request():
-    """View the page for all the requests."""
-    requests = Request.query.all()
-    return render_template('main/display_request.html', requests=requests)
+@main.route('/divisions', methods=['GET'])
+def divisions():
+    divisions = {
+                    'MRMD': 'MRMD',
+                    'Archives': 'Archives',
+                    'Grants': 'Grants',
+                    'Library': 'Library',
+                    'Executive': 'Executive',
+                    'MIS/Web': 'MIS/Web',
+                    'Administration': 'Administration'
+                }
+
+    return jsonify(divisions)

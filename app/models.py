@@ -2,6 +2,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from flask import current_app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from sqlalchemy.orm.attributes import set_attribute
 from . import db, login_manager
 import re
 
@@ -125,6 +126,10 @@ class Request(db.Model):
         """
         self.vendor_id = vendor_id
 
+    def update_field(self, key, value):
+        """Update the specified field(s) from kwarg."""
+        set_attribute(self, key, value)
+
     def __repr__(self):
         return '<Request {}>'.format(self.id)
 
@@ -161,6 +166,10 @@ class Vendor(db.Model):
 
     def __repr__(self):
         return '<Vendor {}>'.format(self.id)
+
+    def update_field(self, key, value):
+        """Update the specified field(s) from kwarg."""
+        set_attribute(self, key, value)
 
 
 class Comment(db.Model):

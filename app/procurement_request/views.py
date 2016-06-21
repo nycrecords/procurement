@@ -7,8 +7,15 @@ from flask import render_template, request, abort, redirect, url_for
 from .. import db
 from ..models import Request, User, Vendor, Comment
 from . import procurement_request as procurement_request_blueprint
-from ..main.forms import RequestForm
 from .forms import EditRequestForm
+from flask_login import login_required, current_user
+
+@procurement_request_blueprint.route('/', methods=['GET', 'POST'])
+@login_required
+def display_request():
+    """View the page for all the requests."""
+    requests = Request.query.all()
+    return render_template('procurement_request/requests.html', requests=requests)
 
 
 @procurement_request_blueprint.route('/<request_id>', methods=['GET', 'POST'])
