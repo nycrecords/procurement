@@ -3,7 +3,13 @@
     Records Procurement - View Request
   {% endblock %}
 {% block content %}
-<a class="btn btn-primary" href="/request/edit/{{ request.id }}">Edit</a>
+<a class="btn btn-primary" href="/request/edit/{{ request.id }}">Edit Request</a>
+    {% if vendor %}
+<a class="btn btn-primary" href="/vendor/edit/{{ vendor.id }}">Edit Vendor</a>
+    {% else %}
+    <a class="btn btn-primary" href="/vendor/new_vendor/{{ request.id }}">Edit Vendor</a>
+    {% endif %}
+
 <div class="col-sm-6">
   <div class="table-responsive">
     <table class="table table-bordered table-striped">
@@ -38,8 +44,8 @@
         </tr>
         <tr>
           <th scope="row">Total Price:</th>
-          {% if request.total_price %}
-            <td>${{ request.total_price }}</td>
+          {% if request.total_cost %}
+            <td>${{ request.total_cost }}</td>
           {% else %}
             <td>$0.00</td>
           {% endif %}

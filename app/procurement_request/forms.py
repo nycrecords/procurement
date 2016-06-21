@@ -50,22 +50,5 @@ class EditRequestForm(Form):
     justification = TextAreaField(u'Justification', validators=[
         DataRequired('You must enter a justification for your request'),
         Length(1, 255, 'The justification must be less than 255 characters')])
-    request_vendor_name = StringField(u'Vendor Name')
-    request_vendor_address = StringField(u'Vendor Address')
-    request_vendor_phone = PhoneNumberField(
-                                            region='US',
-                                            display_format='national'
-                                            )
-    request_vendor_fax = PhoneNumberField(
-                                            region='US',
-                                            display_format='national'
-                                            )
-    request_vendor_email = StringField(u'Email')
-    request_vendor_taxid = StringField(u'Vendor Tax ID')
-    request_vendor_mwbe = RadioField(u'mwbe',
-                                  choices=[
-                                      ('True', 'Yes'),
-                                      ('False', 'No')
-                                  ],
-                                  validators=[Optional()])
     save = SubmitField(u'Save Changes')
+

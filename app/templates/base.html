@@ -3,11 +3,13 @@
 
 <head>
     <title>{% block title %}{% endblock title %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
-    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}" />
+    <link rel="stylesheet" href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-editable.css')}}" />
 
     {% block custom_css_links %}
+
 
     {% endblock custom_css_links %}
 
@@ -35,10 +37,10 @@
 </nav>
 </body>
 
+<div class="container-fluid-content">
   {% block content %}
-
   {% endblock %}
-
+</div>
 
 <footer class="footer">
     <div class="container">
@@ -47,6 +49,7 @@
 </footer>
 
 {% block scripts %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-editable.min.js')}}">
 {% endblock %}
 
 </html>

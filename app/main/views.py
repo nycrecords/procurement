@@ -60,10 +60,13 @@ def new_request():
                 if request_vendor_mwbe == "None":
                     request_vendor_mwbe = None
 
-                newvendor = Vendor(request_vendor_name, form.request_vendor_address.data,
-                                   request_vendor_phone, request_vendor_fax,
-                                   form.request_vendor_email.data, form.request_vendor_taxid.data,
-                                   request_vendor_mwbe)
+                newvendor = Vendor(name=request_vendor_name,
+                                   address=form.request_vendor_address.data,
+                                   phone=request_vendor_phone,
+                                   fax=request_vendor_fax,
+                                   email=form.request_vendor_email.data,
+                                   tax_id=form.request_vendor_taxid.data,
+                                   mwbe=request_vendor_mwbe)
                 db.session.add(newvendor)
                 db.session.commit()
             else:
