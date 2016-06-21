@@ -12,7 +12,7 @@ from ..main.forms import RequestForm
 from .forms import EditVendorForm
 
 
-@vendor_blueprint.route('/<vendor_id>', methods=['GET', 'POST'])
+@vendor_blueprint.route('/<vendor_id>', methods=['GET'])
 def view_vendor(vendor_id):
     vendor = Request.query.filter_by(id=vendor_id).first()
     user = User.query.filter_by(id=request.creator_id).first()
@@ -28,6 +28,7 @@ def view_vendor(vendor_id):
         abort(404)
 
 
+# TODO: Edit Vendor API Endpoint
 @vendor_blueprint.route('/edit/<vendor_id>',
                         methods=['GET', 'POST'])
 def edit_vendor(vendor_id):
@@ -48,43 +49,3 @@ def edit_vendor(vendor_id):
     else:
         return redirect(url_for('vendor.new_vendor'))
         # abort(400)
-
-
-@vendor_blueprint.route('/new_vendor/<request_id>')
-def new_vendor(request_id):
-    """
-
-    :param request_id:
-    :return:
-    """
-    form = EditVendorForm()
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            name = str(form.name.data)
-            phone = str(form.phone.data)
-            fax = str(form.fax.data)
-            mwbe = str(form.mwbe.data)
-
-            newvendor = None
-
-            if name != '':
-                if mwbe == "None":
-                    mwbe = None
-
-            newvendor = Vendor(name=name,
-                               address=form.address.data,
-                               phone=phone,
-                               fax=fax,
-                               email=form.mail.data,
-                               tax_id=form.taxid.data,
-                               mwbe=mwbe)
-            db.session.add(newvendor)
-            db.session.commit()
-        else:
-            print(form.errors)
-        if newvendor is not None:
-            request_id.set_vendor_id(newvendor.id)
-        db.session.add(newvendor)
-        db.session.commit()
-        return redirect(url_for('main.display_request'))
-    return render_template('vendor/edit_vendor.html', form=form)
