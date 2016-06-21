@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Change Password{% endblock title %}
+{% block custom_css_links %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/new_request.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/bootstrap.min.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='js/plugins/bootstrap.min.js') }}"></script>
+{% endblock custom_css_links %}
+{% block content %}
+    <div class="container-fluid-content">
+        <div class="page-header">
+            <h1>Register</h1>
+        </div>
+        {% for message in get_flashed_messages() %}
+            <div class="alert alert-warning">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                {{ message }}
+            </div>
+        {% endfor %}
+        <form name="register" id="register_form" method="POST" action="">
+            {{ form.hidden_tag() }}
+            {% for message in form.email.errors %}
+                <div class="alert alert-danger" id="missing_old_password">{{ message }}</div>
+            {% endfor %}
+            <div class="form-group">
+                <label for="email">Email</label>
+                {{ form.email(id="email", class="form-control") }}
+            </div>
+
+            {% for message in form.first_name.errors %}
+                <div class="alert alert-danger" id="missing_first_name">{{ message }}</div>
+            {% endfor %}
+            <div class="form-group">
+                <label for="password">First Name</label>
+                {{ form.first_name(id="first_name", class="form-control") }}
+            </div>
+
+            {% for message in form.last_name.errors %}
+                <div class="alert alert-danger" id="missing_last_name">{{ message }}</div>
+            {% endfor %}
+            <div class="form-group">
+                <label for="last_name">Last Name</label>
+                {{ form.last_name(id="last_name", class="form-control") }}
+            </div>
+
+            {% for message in form.division.errors %}
+                <div class="alert alert-danger" id="missing_division">{{ message }}</div>
+            {% endfor %}
+            <div class="form-group">
+                <label for="division">Division</label>
+                {{ form.division(id="division", class="form-control") }}
+            </div>
+
+            {% for message in form.password.errors %}
+                <div class="alert alert-danger" id="missing_password">{{ message }}</div>
+            {% endfor %}
+            <div class="form-group">
+                <label for="password">New Password</label>
+                {{ form.password(id="password", class="form-control") }}
+            </div>
+
+            {% for message in form.password2.errors %}
+                <div class="alert alert-danger" id="missing_password2">{{ message }}</div>
+            {% endfor %}
+            <div class="form-group">
+                <label for="password">Confirm New Password</label>
+                {{ form.password2(id="password2", class="form-control") }}
+            </div>
+
+            <div class="form-group">
+                <div class="spacer">
+                    <button type="submit" class="btn btn-default">Register</button>
+                </div>
+            </div>
+        </form>
+{% endblock %}

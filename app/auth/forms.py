@@ -6,9 +6,20 @@
 
 
 from flask_wtf import Form
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, ValidationError
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, ValidationError, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, Length
 from ..models import User
+
+divisions = [
+    ('', ''),
+    ('MRMD', 'MRMD'),
+    ('Archives', 'Archives'),
+    ('Grants', 'Grants'),
+    ('Library', 'Library'),
+    ('Executive', 'Executive'),
+    ('MIS/Web', 'MIS/Web'),
+    ('Administration', 'Administration')
+]
 
 
 class LoginForm(Form):
@@ -17,6 +28,18 @@ class LoginForm(Form):
     password = PasswordField('Password', validators=[DataRequired('Please enter your password')])
     remember_me = BooleanField('Keep me logged in')
     submit = SubmitField('Log In')
+
+
+class RegistrationForm(Form):
+    email = StringField('Email', validators=[DataRequired(), Length(1, 64),
+                                             Email()])
+    first_name = StringField('Username', validators=[DataRequired(), Length(1, 100)])
+    last_name = StringField('Username', validators=[DataRequired(), Length(1, 100)])
+    division = SelectField(u'Division*', choices=divisions, default='')
+    password = PasswordField('Password', validators=[DataRequired(), EqualTo('password2',
+                                                     message='Passwords must match.')])
+    password2 = PasswordField('Confirm password', validators=[DataRequired()])
+    submit = SubmitField('Register')
 
 
 class ChangePasswordForm(Form):
