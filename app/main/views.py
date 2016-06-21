@@ -16,7 +16,7 @@ from flask_login import login_required, current_user
 @main.route('/')
 def index():
     """Homepage with button that links to the procurement request form."""
-    return render_template('index.html')
+    return render_template('main/index.html')
 
 
 @main.route('/new', methods=['GET', 'POST'])
@@ -79,7 +79,7 @@ def new_request():
         else:
             print(form.errors)
 
-    return render_template('new_request.html', form=form, user=current_user)
+    return render_template('main/new_request.html', form=form, user=current_user)
 
 
 @main.route('/requests', methods=['GET'])
@@ -87,4 +87,4 @@ def new_request():
 def display_request():
     """View the page for all the requests."""
     requests = Request.query.all()
-    return render_template('display_request.html', requests=requests)
+    return render_template('main/display_request.html', requests=requests)

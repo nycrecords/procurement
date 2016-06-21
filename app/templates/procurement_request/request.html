@@ -28,15 +28,18 @@
         </tr>
         <tr>
           <th scope="row">Division:</th>
-          <td>{{ user.division }}</td>
+          <td><a href="#" id="division" data-type="select" data-pk="{{ request.id }}" data-url="/post">
+              {{ user.division }}</a></td>
         </tr>
         <tr>
           <th scope="row">Item:</th>
-          <td>{{ request.item }}</td>
+          <td><a href="#" id="item" data-type="textarea" data-pk="{{ request.id }}" data-url="/post">
+              {{ request.item }}</a></td>
         </tr>
         <tr>
           <th scope="row">Quantity:</th>
-          <td>{{ request.quantity }}</td>
+          <td><a href="#" id="quantity" data-type="text" data-pk="{{ request.id }}" data-url="/post">
+              {{ request.quantity }}</a></td>
         </tr>
         <tr>
           <th scope="row">Unit Price:</th>
