@@ -2,15 +2,21 @@
 {% block title %}
     Records Procurement - View Request
 {% endblock %}
+{% block custom_css_links %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-editable.css')}}" />
+{% endblock %}
 {% block content %}
 
+    <div class="page-header">
+            <h1>{{ request.id }}</h1>
+    </div>
 
-    <a class="btn btn-primary" href="/request/edit/{{ request.id }}">Edit Request</a>
-    {% if vendor %}
-        <a class="btn btn-primary" href="/vendor/edit/{{ vendor.id }}">Edit Vendor</a>
-    {% else %}
-        <a class="btn btn-primary" href="/vendor/new_vendor/{{ request.id }}">Edit Vendor</a>
-    {% endif %}
+{#    <a class="btn btn-primary" href="/request/edit/{{ request.id }}">Edit Request</a>#}
+{#    {% if vendor %}#}
+{#        <a class="btn btn-primary" href="/vendor/edit/{{ vendor.id }}">Edit Vendor</a>#}
+{#    {% else %}#}
+{#        <a class="btn btn-primary" href="/vendor/new_vendor/{{ request.id }}">Edit Vendor</a>#}
+{#    {% endif %}#}
 
     <div class="col-sm-6">
         <div class="table-responsive">
@@ -20,6 +26,9 @@
                     <col class="col-xs-8">
                 </colgroup>
                 <tbody>
+                <tr>
+                    <th scope="row" colspan="2">Request Information</th>
+                </tr>
                 <tr>
                     <th scope="row">Request ID:</th>
                     <td>{{ request.id }}</td>
@@ -34,34 +43,32 @@
                 </tr>
                 <tr>
                     <th scope="row">Item:</th>
-                    <td><a href="#" id="item" data-type="textarea" data-pk="{{ request.id }}" data-url="/request/edit">
-                        {{ request.item }}</a></td>
+                    <td><a href="#" id="item">{{ request.item }}</a></td>
                 </tr>
                 <tr>
                     <th scope="row">Quantity:</th>
-                    <td><a href="#" id="quantity" data-type="text" data-pk="{{ request.id }}" data-url="/request/edit">
-                        {{ request.quantity }}</a></td>
+                    <td><a href="#" id="quantity">{{ request.quantity }}</a></td>
                 </tr>
                 <tr>
                     <th scope="row">Unit Price:</th>
-                    <td>${{ request.unit_price }}</td>
+                    <td><a href="#" id="unit_price">${{ request.unit_price }}</a></td>
                 </tr>
                 <tr>
                     <th scope="row">Total Price:</th>
                     {% if request.total_cost %}
-                        <td>${{ request.total_cost }}</td>
+                        <td><a href="#" id="total_cost">${{ request.total_cost }}</a></td>
                     {% else %}
                         <td>$0.00</td>
                     {% endif %}
                 </tr>
                 <tr>
                     <th scope="row">Funding Source:</th>
-                    <td>{{ request.funding_source }}</td>
+                    <td><a href="#" id="funding_source">{{ request.funding_source }}</a></td>
                 </tr>
                 <!-- TODO: Funding Source Additional Info goes here. -->
                 <tr>
                     <th scope="row">Justification:</th>
-                    <td>{{ request.justification }}</td>
+                    <td><a href="#" id="justification">{{ request.justification }}</a></td>
                 </tr>
                 </tbody>
             </table>
@@ -75,51 +82,51 @@
                     <col class="col-xs-5">
                 </colgroup>
                 <tbody>
-                <tr colspan="2">
-                    <th scope="row">Vendor Information</th>
+                <tr>
+                    <th scope="row" colspan="2">Vendor Information</th>
                 </tr>
                 <tr>
                     <th scope="row">Name:</th>
-                    <td>{{ vendor.name }}</td>
+                    <td><a href="#" id="vendor_name">{{ vendor.name }}</a></td>
                 </tr>
                 <tr>
                     <th scope="row">Address:</th>
-                    <td>{{ vendor.address }}</td>
+                    <td><a href="#" id="vendor_address">{{ vendor.address }}</a></td>
                 </tr>
                 <tr>
                     <th scope="row">Phone:</th>
-                    <td>{{ vendor.phone }}</td>
+                    <td><a href="#" id="vendor_phone">{{ vendor.phone }}</a></td>
                 </tr>
                 <tr>
                     <th scope="row">Fax:</th>
-                    <td>{{ vendor.fax }}</td>
+                    <td><a href="#" id="vendor_fax">{{ vendor.fax }}</a></td>
                 </tr>
                 <tr>
                     <th scope="row">Email:</th>
-                    <td><a href="mailto:{{ vendor.email }}">{{ vendor.email }}</a></td>
+                    <td><a href="mailto:{{ vendor.email }}" id="vendor_email">{{ vendor.email }}</a></td>
                 </tr>
                 <tr>
                     <th scope="row">Tax ID:</th>
-                    <td>{{ vendor.tax_id }}</td>
+                    <td><a href="#" id="vendor_taxid">{{ vendor.tax_id }}</a></td>
                 </tr>
                 <tr>
                     <th scope="row">M/WBE:</th>
                     {% if vendor.mwbe %}
-                        <td>Yes</td>
+                        <td><a href="#" id="vendor_mwbe">Yes</a></td>
                     {% else %}
-                        <td>No</td>
+                        <td><a href="#" id="vendor_mwbe">No</a></td>
                     {% endif %}
                 </tr>
                 </tbody>
             </table>
 
         </div>
+    <div class="spacer"></div>
     </div>
 
 {% endblock %}
 
 {% block scripts %}
-
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-editable.js')}}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/request.js') }}"></script>
-
 {% endblock %}

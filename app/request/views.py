@@ -15,7 +15,7 @@ from . import request as request_blueprint
 def display_request():
     """View the page for all the requests."""
     requests = Request.query.all()
-    return render_template('request/requests.html', requests=requests)
+    return render_template('request/request.html', requests=requests)
 
 
 @request_blueprint.route('/<request_id>', methods=['GET', 'POST'])
