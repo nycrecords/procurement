@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block title %}
+    Records Procurement - View Request
+{% endblock %}
+{% block content %}
+
+
+    <a class="btn btn-primary" href="/request/edit/{{ request.id }}">Edit Request</a>
+    {% if vendor %}
+        <a class="btn btn-primary" href="/vendor/edit/{{ vendor.id }}">Edit Vendor</a>
+    {% else %}
+        <a class="btn btn-primary" href="/vendor/new_vendor/{{ request.id }}">Edit Vendor</a>
+    {% endif %}
+
+    <div class="col-sm-6">
+        <div class="table-responsive">
+            <table id="requests" , class="table table-bordered table-striped">
+                <colgroup>
+                    <col class="col-xs-4">
+                    <col class="col-xs-8">
+                </colgroup>
+                <tbody>
+                <tr>
+                    <th scope="row">Request ID:</th>
+                    <td>{{ request.id }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Requester:</th>
+                    <td><a href="mailto:{{ user.email }}">{{ user.name }}</a></td>
+                </tr>
+                <tr>
+                    <th scope="row">Division:</th>
+                    <td><a href="#" id="division" >{{ user.division }}</a></td>
+                </tr>
+                <tr>
+                    <th scope="row">Item:</th>
+                    <td><a href="#" id="item" data-type="textarea" data-pk="{{ request.id }}" data-url="/request/edit">
+                        {{ request.item }}</a></td>
+                </tr>
+                <tr>
+                    <th scope="row">Quantity:</th>
+                    <td><a href="#" id="quantity" data-type="text" data-pk="{{ request.id }}" data-url="/request/edit">
+                        {{ request.quantity }}</a></td>
+                </tr>
+                <tr>
+                    <th scope="row">Unit Price:</th>
+                    <td>${{ request.unit_price }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Total Price:</th>
+                    {% if request.total_cost %}
+                        <td>${{ request.total_cost }}</td>
+                    {% else %}
+                        <td>$0.00</td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <th scope="row">Funding Source:</th>
+                    <td>{{ request.funding_source }}</td>
+                </tr>
+                <!-- TODO: Funding Source Additional Info goes here. -->
+                <tr>
+                    <th scope="row">Justification:</th>
+                    <td>{{ request.justification }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-sm-push-5">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <colgroup>
+                    <col class="col-xs-1">
+                    <col class="col-xs-5">
+                </colgroup>
+                <tbody>
+                <tr colspan="2">
+                    <th scope="row">Vendor Information</th>
+                </tr>
+                <tr>
+                    <th scope="row">Name:</th>
+                    <td>{{ vendor.name }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Address:</th>
+                    <td>{{ vendor.address }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Phone:</th>
+                    <td>{{ vendor.phone }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Fax:</th>
+                    <td>{{ vendor.fax }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Email:</th>
+                    <td><a href="mailto:{{ vendor.email }}">{{ vendor.email }}</a></td>
+                </tr>
+                <tr>
+                    <th scope="row">Tax ID:</th>
+                    <td>{{ vendor.tax_id }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">M/WBE:</th>
+                    {% if vendor.mwbe %}
+                        <td>Yes</td>
+                    {% else %}
+                        <td>No</td>
+                    {% endif %}
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/request.js') }}"></script>
+
+{% endblock %}
