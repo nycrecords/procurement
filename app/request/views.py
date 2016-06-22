@@ -15,7 +15,9 @@ from . import request as request_blueprint
 def display_request():
     """View the page for all the requests."""
     requests = Request.query.all()
-    return render_template('request/request.html', requests=requests)
+    return render_template('request/requests.html',
+                           requests=requests
+                           )
 
 
 @request_blueprint.route('/<request_id>', methods=['GET', 'POST'])
@@ -38,6 +40,7 @@ def view_request(request_id):
 @request_blueprint.route('/edit', methods=['POST'])
 def edit_request():
     """Edit a request."""
+    import pdb; pdb.set_trace()
     if not flask_request.json or 'name' not in flask_request.json:
         abort(404)
 
@@ -46,11 +49,11 @@ def edit_request():
     if not edit_request:
         abort(404)
 
-    request = edit_request['pk']
+    request = Request.query.filter_by(id=edit_request['pk']).first()
 
     request.update_field(edit_request['name'], edit_request['value'])
 
-    return Response(status=200, format='application/json')
+    return Response(status=200, mimetype='application/json')
 
 
 @request_blueprint.errorhandler(404)
