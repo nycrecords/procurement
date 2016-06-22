@@ -3,19 +3,13 @@
 
 <head>
     <title>{% block title %}{% endblock title %}</title>
-    <!-- bootstrap -->
-    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}" />
+    <link rel="stylesheet" href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" />
     <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
-    <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
-
-    <!-- x-editable (bootstrap version) -->
-    <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.6/bootstrap-editable/css/bootstrap-editable.css" rel="stylesheet"/>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.6/bootstrap-editable/js/bootstrap-editable.min.js"></script>
-{#    <link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/bootstrap.min.css') }}" />#}
-{#    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}" />#}
-{#    <link rel="stylesheet" href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" />#}
-{#    <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>#}
 {#    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-editable.css')}}" />#}
+{#    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-editable.js')}}"></script>#}
+{#    <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.6/bootstrap-editable/js/bootstrap-editable.min.js"></script>#}
 
     {% block custom_css_links %}
 

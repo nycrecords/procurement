@@ -10,6 +10,7 @@ from . import procurement_request as procurement_request_blueprint
 from .forms import EditRequestForm
 from flask_login import login_required, current_user
 
+
 @procurement_request_blueprint.route('/', methods=['GET', 'POST'])
 @login_required
 def display_request():
@@ -50,7 +51,7 @@ def edit_request(request_id):
             # TODO: Implement GET handler
         elif request.method == 'POST':
             # return str(procurement_request)
-            return redirect(url_for('main.display_request'))
+            return redirect(url_for('procurement_request.requests'))
             # TODO: Implement POST handler
         else:
             abort(400)

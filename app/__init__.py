@@ -26,7 +26,7 @@ def create_app(config_name):
     from .procurement_request import procurement_request as \
         procurement_request_blueprint
     app.register_blueprint(procurement_request_blueprint,
-                           url_prefix='/request')
+                           url_prefix='/requests')
 
     from .vendor import vendor as vendor_blueprint
     app.register_blueprint(vendor_blueprint, url_prefix='/vendor')

@@ -36,7 +36,7 @@ class EditRequestForm(Form):
     status = SelectField(u'Status', choices=statuses)
     item = TextAreaField(u'Item', validators=[
         DataRequired('You must enter a FULL item description of your request'),
-        Length(1, 100, 'The item description must be less than 100 characters')
+        Length(1, 500, 'The item description must be less than 100 characters')
         ])
     quantity = IntegerField(u'Quantity', validators=[
         DataRequired('Please enter the quantity')])
@@ -49,6 +49,6 @@ class EditRequestForm(Form):
     funding_source_description = StringField(u'Funding Other')
     justification = TextAreaField(u'Justification', validators=[
         DataRequired('You must enter a justification for your request'),
-        Length(1, 255, 'The justification must be less than 255 characters')])
+        Length(1, 500)])
     save = SubmitField(u'Save Changes')
 

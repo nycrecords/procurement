@@ -49,7 +49,8 @@
                     <tr>
                         <th data-field="id" class="col-sm-1" data-sortable="true">Request #</th>
                         <th class="col-sm-1" data-field="date" data-sortable="true">Date Submitted</th>
-                        <th class="col-sm-2" data-sortable="true" data-filter-control="select">Division</th>
+                        <th class="col-sm-2" data-field="division" data-sortable="true" data-filter-control="select">
+                            Division</th>
                         <th class="col-sm-5" data-sortable="false">Request Description</th>
                         <th class="col-sm-2" data-sortable="false">Status</th>
                         <th class="col-sm-1" data-sortable="false">Total Cost</th>
@@ -57,7 +58,7 @@
                     </thead>
                     <tbody>
                     {% for request in requests %}
-                        <tr class="table-row" data-href="/request/{{ request.id }}">
+                        <tr class="table-row" data-href="/requests/{{ request.id }}">
                             <td> {{ request.id }} </td>
                             <td> {{ request.date_submitted.date().strftime("%B %d, %Y") }} </td>
                             <td> {{ request.division }} </td>

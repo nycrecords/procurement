@@ -81,13 +81,13 @@ class Request(db.Model):
     division = db.Column(db.String(100))
     date_submitted = db.Column(db.DateTime)
     date_closed = db.Column(db.DateTime)
-    item = db.Column(db.String(100))
+    item = db.Column(db.String(500))
     quantity = db.Column(db.Integer)
     unit_price = db.Column(db.Numeric)
     total_cost = db.Column(db.Numeric)
     funding_source = db.Column(db.String(100))
     funding_source_description = db.Column(db.String(100), nullable=True)
-    justification = db.Column(db.String(255))
+    justification = db.Column(db.String(500))
     # Each request has a foreign key to a vendor in the Vendor table. Each request can only have ONE vendor.
     vendor_id = db.Column(db.Integer, db.ForeignKey('vendor.id'))
     # Each request has a foreign key to a creator in the User table. Each request can only have ONE creator.

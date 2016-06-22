@@ -48,8 +48,7 @@ class RequestForm(Form):
                                  validators=[DataRequired('Please select the funding source')])
     funding_source_description = StringField(u'Funding Other')
     justification = TextAreaField(u'Justification*(required)', validators=[
-        DataRequired('You must enter a justification for your request'),
-        Length(1, 255, 'The justification must be less than 255 characters')])
+        DataRequired('You must enter a justification for your request'), Length(1, 500)])
     request_vendor_name = StringField(u'Vendor Name')
     request_vendor_address = StringField(u'Vendor Address')
     request_vendor_phone = PhoneNumberField(region='US', display_format='national')
