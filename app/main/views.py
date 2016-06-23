@@ -75,7 +75,7 @@ def new_request():
                 newrequest.set_vendor_id(newvendor.id)
             db.session.add(newrequest)
             db.session.commit()
-            return redirect(url_for('main.display_request'))
+            return redirect(url_for('request.display_request'))
         else:
             print(form.errors)
 

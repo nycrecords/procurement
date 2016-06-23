@@ -15,7 +15,6 @@ class LoginForm(Form):
     """Form for user login"""
     email = StringField('Email', validators=[DataRequired('Please enter your email address'), Length(1, 100), Email()])
     password = PasswordField('Password', validators=[DataRequired('Please enter your password')])
-    remember_me = BooleanField('Keep me logged in')
     submit = SubmitField('Log In')
 
 

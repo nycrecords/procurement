@@ -13,7 +13,7 @@
 
     <div class="col-sm-6">
         <div class="table-responsive">
-            <table id="requests" , class="table table-bordered table-striped">
+            <table id="requests" class="table table-bordered table-striped">
                 <colgroup>
                     <col class="col-xs-4">
                     <col class="col-xs-8">
@@ -119,6 +119,7 @@
 {% endblock %}
 
 {% block scripts %}
+    <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-editable.js') }}"></script>
     {% block request_xeditable %}
         {% include "request/request_x-editable.html" %}
