@@ -40,6 +40,7 @@
                        data-filter-control="true"
                        data-pagination="true"
                        data-side-pagination="client"
+                       data-pageSize="60"
                        data-page-list="[5, 10, 20, 50, 100, 200]"
                        data-show-export="true"
                        data-toolbar="#toolbar">
@@ -81,5 +82,10 @@
                 window.document.location = $(this).data("href");
             });
         });
+        $('#display_requests').bootstrapTable({
+            pagination: true,
+            pageSize: 60, // number of requests per page
+            pageList: [10, 25, 60, 100, 200]
+    });
     </script>
 {% endblock %}

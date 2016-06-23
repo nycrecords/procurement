@@ -1,9 +1,10 @@
-from datetime import datetime
-from flask import render_template, request
+from datetime import datetime, date, timedelta
+from flask import render_template, request, redirect, url_for
 from .. import db
 from ..models import Request, Vendor
 from . import main
 from .forms import NewRequestForm
+from sqlalchemy import desc
 
 
 @main.route('/')
@@ -59,5 +60,6 @@ def new_request():
 @main.route('/requests', methods=['GET'])
 def display_request():
     """View the page for all the requests."""
-    requests = Request.query.all()
+    requests = Request.query.order_by(desc(Request.date_submitted)).\
+        filter((Request.date_submitted+timedelta(days=30)) > datetime.now())
     return render_template('display_request.html', requests=requests)
