@@ -3,20 +3,13 @@
     Records Procurement - View Request
 {% endblock %}
 {% block custom_css_links %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-editable.css')}}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-editable.css') }}"/>
 {% endblock %}
 {% block content %}
 
     <div class="page-header">
-            <h1>{{ request.id }}</h1>
+        <h1>{{ request.id }}</h1>
     </div>
-
-{#    <a class="btn btn-primary" href="/request/edit/{{ request.id }}">Edit Request</a>#}
-{#    {% if vendor %}#}
-{#        <a class="btn btn-primary" href="/vendor/edit/{{ vendor.id }}">Edit Vendor</a>#}
-{#    {% else %}#}
-{#        <a class="btn btn-primary" href="/vendor/new_vendor/{{ request.id }}">Edit Vendor</a>#}
-{#    {% endif %}#}
 
     <div class="col-sm-6">
         <div class="table-responsive">
@@ -39,7 +32,7 @@
                 </tr>
                 <tr>
                     <th scope="row">Division:</th>
-                    <td><a href="#" id="division" >{{ user.division }}</a></td>
+                    <td>{{ user.division }}</td>
                 </tr>
                 <tr>
                     <th scope="row">Item:</th>
@@ -121,15 +114,15 @@
             </table>
 
         </div>
-    <div class="spacer"></div>
+        <div class="spacer"></div>
     </div>
-
 {% endblock %}
 
 {% block scripts %}
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-editable.js')}}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/request.js') }}"></script>
-    <script type="text/javascript">
-      init_request( {{ request.id }} )
-    </script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-editable.js') }}"></script>
+    {% block request_xeditable %}
+        {% include "request/request_x-editable.html" %}
+    {% endblock %}
 {% endblock %}
+
+

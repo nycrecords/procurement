@@ -129,6 +129,8 @@ class Request(db.Model):
     def update_field(self, key, value):
         """Update the specified field(s) from kwarg."""
         set_attribute(self, key, value)
+        db.session.add(self)
+        db.session.commit()
 
     def __repr__(self):
         return '<Request {}>'.format(self.id)

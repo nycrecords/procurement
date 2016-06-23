@@ -3,7 +3,7 @@
 
    :synopsis: Provides routes for managing a specific request.
 """
-from flask import render_template, request as flask_request, abort, Response
+from flask import render_template, request as flask_request, abort, Response, redirect, url_for
 from flask_login import login_required, current_user
 from .. import db
 from ..models import Request, User, Vendor, Comment
@@ -40,11 +40,11 @@ def view_request(request_id):
 @request_blueprint.route('/edit', methods=['POST'])
 def edit_request():
     """Edit a request."""
-    import pdb; pdb.set_trace()
-    if not flask_request.json or 'name' not in flask_request.json:
+    print(flask_request.method)
+    if not flask_request.form or 'name' not in flask_request.form:
         abort(404)
 
-    edit_request = flask_request.get_json()
+    edit_request = flask_request.form
 
     if not edit_request:
         abort(404)
@@ -52,8 +52,7 @@ def edit_request():
     request = Request.query.filter_by(id=edit_request['pk']).first()
 
     request.update_field(edit_request['name'], edit_request['value'])
-
-    return Response(status=200, mimetype='application/json')
+    return Response(status=200)
 
 
 @request_blueprint.errorhandler(404)
@@ -65,4 +64,4 @@ def not_found(error):
 @request_blueprint.errorhandler(400)
 def bad_request(error):
     """Return a 400 error page."""
-    return render_template('request/bad_request.html', 400)
+    return render_template('request/bad_request.html'), 400

@@ -4,8 +4,6 @@
 
 /* global $ */
 
-var pk
-
 $(document).ready(function () {
   // toggle `popup` / `inline` mode
   $.fn.editable.defaults.mode = 'inline'
@@ -24,14 +22,19 @@ $(document).ready(function () {
       {value: 'MIS', text: 'MIS/Web'},
       {value: 'ADM', text: 'Administration'}
     ],
-    pk: pk,
-    url: '/requests/edit'
+    pk: "{{ request.id }}",
+    url: '/requests/edit',
+    send: 'always'
   })
 
+  // make item editable
   $('#item').editable({
     type: 'text',
     title: 'Enter Item Description',
-    placement: 'right'
+    placement: 'right',
+    pk: 2,
+    url: '/requests/edit',
+    send: 'always'
   })
 
   $('#quantity').editable({
@@ -106,7 +109,3 @@ $(document).ready(function () {
     placement: 'right'
   })
 })
-
-function init_request (id) {
-  pk = id
-}
