@@ -7,8 +7,8 @@
 from flask import Flask
 from flask_wtf import Form
 from wtforms import StringField, SelectField, TextAreaField, SubmitField, \
-     RadioField, DecimalField, IntegerField
-from wtforms.validators import DataRequired, Length, Optional
+     BooleanField, DecimalField, IntegerField
+from wtforms.validators import DataRequired, Length
 from wtforms_alchemy import PhoneNumberField
 app = Flask(__name__)
 
@@ -33,15 +33,11 @@ funding = [
 ]
 
 
-class NewRequestForm(Form):
+class RequestForm(Form):
     """Form for creating a new request"""
-    request_name = StringField(u'Name*(required)', validators=[
-        DataRequired('Please enter the requestor\'s name'), Length(1, 100)])
-    division = SelectField(u'Division*', choices=divisions,
-                           validators=[DataRequired('Please select the division')], default='')
-    item = TextAreaField(u'Item*(required)', validators=[
-        DataRequired('You must enter a FULL item description of your request'),
-        Length(1, 100, 'The item description must be less than 100 characters')])
+    request_name = StringField(u'Name*(required)')
+    division = SelectField(u'Division*', choices=divisions, default='')
+    item = TextAreaField(u'Item*(required)')
     quantity = IntegerField(u'Quantity*', validators=[
         DataRequired('Please enter the quantity')])
     unit_price = DecimalField(u'Price per item*', validators=[
@@ -54,13 +50,12 @@ class NewRequestForm(Form):
     grant_name = StringField(u'Grant Name')
     project_name = StringField(u'Project Name')
     justification = TextAreaField(u'Justification*(required)', validators=[
-        DataRequired('You must enter a justification for your request'),
-        Length(1, 255, 'The justification must be less than 255 characters')])
+        DataRequired('You must enter a justification for your request'), Length(1, 500)])
     request_vendor_name = StringField(u'Vendor Name')
     request_vendor_address = StringField(u'Vendor Address')
     request_vendor_phone = PhoneNumberField(region='US', display_format='national')
     request_vendor_fax = PhoneNumberField(region='US', display_format='national')
     request_vendor_email = StringField(u'Email')
     request_vendor_taxid = StringField(u'Vendor Tax ID')
-    request_MWBE = RadioField(u'MWBE', choices=[('True', 'Yes'), ('False', 'No')], validators=[Optional()])
+    request_vendor_mwbe = BooleanField(u'mwbe')
     submit = SubmitField(u'Submit Request')

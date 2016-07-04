@@ -37,7 +37,19 @@
     margin-top: -20px;
 }
 
-.table-row{
+.table-row {
 cursor:pointer;
 }
 
+.btn-large {
+    padding: 12px 20px;
+    font-size: 17.5px;
+}
+
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+  background-color: #c4e3f3;
+}
+
+div.spacer {
+	margin-bottom: 100px;
+}
