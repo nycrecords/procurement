@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}
+    Records Procurement - View Request
+{% endblock %}
+{% block custom_css_links %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-editable.css') }}"/>
+{% endblock %}
+{% block content %}
+
+    <div class="page-header">
+        <h1>{{ request.id }}</h1>
+    </div>
+
+    <div class="col-sm-6">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <colgroup>
+                    <col class="col-xs-1">
+                    <col class="col-xs-5">
+                </colgroup>
+                <tbody>
+                <tr>
+                    <th scope="row" colspan="2">Vendor Information</th>
+                </tr>
+                <tr>
+                    <th scope="row">Name:</th>
+                    <td><a href="#" id="vendor_name">{{ vendor.name }}</a></td>
+                </tr>
+                <tr>
+                    <th scope="row">Address:</th>
+                    <td><a href="#" id="vendor_address">{{ vendor.address }}</a></td>
+                </tr>
+                <tr>
+                    <th scope="row">Phone:</th>
+                    <td><a href="#" id="vendor_phone">{{ vendor.phone }}</a></td>
+                </tr>
+                <tr>
+                    <th scope="row">Fax:</th>
+                    <td><a href="#" id="vendor_fax">{{ vendor.fax }}</a></td>
+                </tr>
+                <tr>
+                    <th scope="row">Email:</th>
+                    <td><a href="mailto:{{ vendor.email }}" id="vendor_email">{{ vendor.email }}</a></td>
+                </tr>
+                <tr>
+                    <th scope="row">Tax ID:</th>
+                    <td><a href="#" id="vendor_taxid">{{ vendor.tax_id }}</a></td>
+                </tr>
+                <tr>
+                    <th scope="row">M/WBE:</th>
+                    {% if vendor.mwbe %}
+                        <td><a href="#" id="vendor_mwbe">Yes</a></td>
+                    {% else %}
+                        <td><a href="#" id="vendor_mwbe">No</a></td>
+                    {% endif %}
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+        <div class="spacer"></div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-editable.js') }}"></script>
+    {% block request_xeditable %}
+        {% include "request/request_x-editable.html" %}
+    {% endblock %}
+{% endblock %}
+
+

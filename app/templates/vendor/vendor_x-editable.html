@@ -1,0 +1,49 @@
+{% block request_xeditable %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // toggle `popup` / `inline` mode
+            $.fn.editable.defaults.mode = 'inline'
+            $('#vendor_name').editable({
+                type: 'text',
+                title: 'Enter Vendor Name',
+                placement: 'right',
+            })
+
+            $('#vendor_address').editable({
+                type: 'text',
+                title: 'Enter Vendor Address',
+                placement: 'right'
+            })
+
+            $('#vendor_phone').editable({
+                type: 'text',
+                title: 'Enter Vendor Phone',
+                placement: 'right'
+            })
+
+            $('#vendor_fax').editable({
+                type: 'text',
+                title: 'Enter Vendor Fax',
+                placement: 'right'
+            })
+
+            $('#vendor_email').editable({
+                type: 'text',
+                title: 'Enter Vendor Email',
+                placement: 'right'
+            })
+
+            $('#vendor_taxid').editable({
+                type: 'text',
+                title: 'Enter Vendor Tax ID',
+                placement: 'right'
+            })
+
+            $('#vendor_mwbe').editable({
+                type: 'text',
+                title: 'Enter M/WBE',
+                placement: 'right'
+            })
+        })
+    </script>
+{% endblock %}

@@ -1,5 +1,5 @@
 """
-.. module:: Email
+.. module: email
 
     :synopsis: Defines email functionality for the application
 """

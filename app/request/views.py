@@ -3,7 +3,14 @@
 
    :synopsis: Provides routes for managing a specific request.
 """
-from flask import render_template, request as flask_request, abort, Response, redirect, url_for
+from flask import (
+    render_template,
+    request as flask_request,
+    abort,
+    Response,
+    redirect,
+    url_for
+)
 from flask_login import login_required, current_user
 from .. import db
 from ..models import Request, User, Vendor, Comment
@@ -12,7 +19,7 @@ from . import request as request_blueprint
 
 @request_blueprint.route('/', methods=['GET', 'POST'])
 @login_required
-def display_request():
+def display_requests():
     """View the page for all the requests."""
     requests = Request.query.all()
     return render_template('request/requests.html',
@@ -21,7 +28,7 @@ def display_request():
 
 
 @request_blueprint.route('/<request_id>', methods=['GET', 'POST'])
-def view_request(request_id):
+def display_request(request_id):
     """View the page for a specific request."""
     request = Request.query.filter_by(id=request_id).first()
     user = User.query.filter_by(id=request.creator_id).first()
@@ -40,7 +47,6 @@ def view_request(request_id):
 @request_blueprint.route('/edit', methods=['POST'])
 def edit_request():
     """Edit a request."""
-    print(flask_request.method)
     if not flask_request.form or 'name' not in flask_request.form:
         abort(404)
 
@@ -51,7 +57,10 @@ def edit_request():
 
     request = Request.query.filter_by(id=edit_request['pk']).first()
 
-    request.update_field(edit_request['name'], edit_request['value'])
+    request.update_field(
+        edit_request['name'],
+        edit_request['value'].strip('$')
+    )
     return Response(status=200)
 
 

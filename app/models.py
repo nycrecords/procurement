@@ -1,3 +1,8 @@
+"""
+.. module: models
+
+    :synopsis: Defines the models and methods for database objects.
+"""
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from flask import current_app

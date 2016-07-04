@@ -1,3 +1,9 @@
+"""
+.. module: constants
+
+    :synopsis: Defines constants used throughout the application.
+"""
+
 statuses = {
     1: 'Submitted',
     2: 'Needs Division Approval',

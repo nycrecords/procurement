@@ -1,3 +1,8 @@
+"""
+.. module: __init__
+
+    :synopsis: Sets up the procurement application
+"""
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from config import config
@@ -10,6 +15,7 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
+
 
 def create_app(config_name):
     app = Flask(__name__)
@@ -29,7 +35,7 @@ def create_app(config_name):
                            url_prefix='/requests')
 
     from .vendor import vendor as vendor_blueprint
-    app.register_blueprint(vendor_blueprint, url_prefix='/vendor')
+    app.register_blueprint(vendor_blueprint, url_prefix='/vendors')
 
     from .auth import auth as auth_blueprint
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
