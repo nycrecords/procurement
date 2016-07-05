@@ -8,6 +8,7 @@ class Config:
     SECRET_KEY = 'you-will-never-guess'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/procurement'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
     MAIL_SERVER = 'localhost'
     MAIL_PORT = 2500
     MAIL_USE_TLS = False

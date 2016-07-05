@@ -30,7 +30,7 @@ class User(UserMixin, db.Model):
     first_name = db.Column(db.String(100))
     last_name = db.Column(db.String(100))
     email = db.Column(db.String(100), unique=True, index=True)
-    division = db.Column(db.Enum(divisions))
+    division = db.Column(db.String(divisions))
     password_hash = db.Column(db.String(128))
 
     @property

@@ -1,5 +1,5 @@
 """
-.. module:: user_account.forms.
+.. module:: auth.forms
 
     :synopsis: Defines for the functionality of user accounts.
 """

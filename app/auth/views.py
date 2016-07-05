@@ -1,7 +1,7 @@
 """
-.. module:: Provides url endpoints for authentication and user management
+.. module:: auth.views
 
-    :synopsis:
+    :synopsis :Provides url endpoints for authentication and user management
 """
 
 
