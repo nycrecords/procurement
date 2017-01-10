@@ -8,19 +8,9 @@ from flask_login import UserMixin
 from flask import current_app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from sqlalchemy.orm.attributes import set_attribute
+from . constants import division
 from . import db, login_manager
 import re
-
-divisions = [
-    ('', ''),
-    ('MRMD', 'MRMD'),
-    ('Archives', 'Archives'),
-    ('Grants', 'Grants'),
-    ('Library', 'Library'),
-    ('Executive', 'Executive'),
-    ('MIS/Web', 'MIS/Web'),
-    ('Administration', 'Administration')
-]
 
 
 class User(UserMixin, db.Model):
@@ -30,7 +20,13 @@ class User(UserMixin, db.Model):
     first_name = db.Column(db.String(100))
     last_name = db.Column(db.String(100))
     email = db.Column(db.String(100), unique=True, index=True)
-    division = db.Column(db.Enum(divisions))
+    division = db.Column(db.Enum(division.MRMD,
+                                 division.ARC,
+                                 division.GRA,
+                                 division.LIB,
+                                 division.EXEC,
+                                 division.MIS,
+                                 division.ADM))
     password_hash = db.Column(db.String(128))
 
     @property
