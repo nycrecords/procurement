@@ -25,7 +25,7 @@ def new_request():
     """Create a new procurement request."""
     form = RequestForm()
 
-    vendors = Vendor.query.all()
+    vendors = Vendor.query.order_by(Vendor.name).all()
 
     if request.method == 'POST':
         if form.validate_on_submit():
