@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Sign Up{% endblock title %}
+{% block content %}
+    <div class="page-header">
+        <h1>Sign Up</h1>
+    </div>
+    {% for message in get_flashed_messages() %}
+        <div class="alert alert-danger">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            {{ message }}
+        </div>
+    {% endfor %}
+    <form name="signup" id="signup_form" method="POST" action="">
+        {{ form.hidden_tag() }}
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label for="first_name">First Name</label>
+                {{ form.first_name(id="first_name", class="form-control") }}
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label for="last_name">Last Name</label>
+                {{ form.last_name(id="last_name", class="form-control") }}
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label for="division">Division</label>
+                {{ form.division(id="division", class="form-control") }}
+            </div>
+        </div>
+
+        {% for message in form.email.errors %}
+            <div class="alert alert-danger" id="missing_email">{{ message }}</div>
+        {% endfor %}
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label for="email">Email</label>
+                {{ form.email(id="email", class="form-control") }}
+            </div>
+        </div>
+
+        {% for message in form.password.errors %}
+            <div class="alert alert-danger" id="missing_password">{{ message }}</div>
+        {% endfor %}
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label for="password">Password</label>
+                {{ form.password(id="password", class="form-control") }}
+            </div>
+        </div>
+
+        {% for message in form.password2.errors %}
+            <div class="alert alert-danger" id="missing_password2">{{ message }}</div>
+        {% endfor %}
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label for="password">Confirm Password</label>
+                {{ form.password2(id="password2", class="form-control") }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="spacer">
+                <button type="submit" class="btn btn-primary">Sign Up</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}

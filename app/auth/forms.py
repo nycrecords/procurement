@@ -6,9 +6,10 @@
 
 
 from flask_wtf import Form
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, ValidationError
+from wtforms import StringField, PasswordField, BooleanField, SelectField, SubmitField, ValidationError
 from wtforms.validators import DataRequired, Length, Email, EqualTo, Length
 from ..models import User
+from ..constants import division
 
 
 class LoginForm(Form):
@@ -46,3 +47,26 @@ class PasswordResetForm(Form):
     def validate_email(self, field):
         if User.query.filter_by(email=field.data).first() is None:
             raise ValidationError('Unknown email address.')
+
+
+class SignupForm(Form):
+
+    first_name = StringField('first_name', validators=[DataRequired(), Length(1, 100)])
+    last_name = StringField('last_name', validators=[DataRequired(), Length(1, 100)])
+    division = SelectField('division', validators=[DataRequired()], choices=[(division.MRMD, division.MRMD),
+                                                                             (division.ARC, division.ARC),
+                                                                             (division.GRA, division.GRA),
+                                                                             (division.LIB, division.LIB),
+                                                                             (division.EXEC, division.EXEC),
+                                                                             (division.MIS, division.MIS),
+                                                                             (division.ADM, division.ADM)])
+    email = StringField('Email', validators=[DataRequired(), Length(1, 100),
+                                             Email()])
+    password = PasswordField('password', validators=[
+        DataRequired(), EqualTo('password2', message='Passwords must match')])
+    password2 = PasswordField('Confirm new password', validators=[DataRequired()])
+    submit = SubmitField('Sign Up')
+
+    def validate_email(self, field):
+        if User.query.filter_by(email=field.data).first() is not None:
+            raise ValidationError('Email address already in use.')

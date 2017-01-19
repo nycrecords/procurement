@@ -4,7 +4,7 @@
     :synopsis :Provides url endpoints for authentication and user management
 """
 
-
+from werkzeug.security import generate_password_hash
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, current_user, login_required
 from . import auth
@@ -15,7 +15,8 @@ from .forms import (
     LoginForm,
     ChangePasswordForm,
     PasswordResetRequestForm,
-    PasswordResetForm
+    PasswordResetForm,
+    SignupForm
     )
 from .utils import check_password_requirements
 
@@ -95,3 +96,25 @@ def password_reset(token):
         else:
             flash('Password must be at least 8 characters with at least 1 UPPERCASE and 1 NUMBER')
     return render_template('auth/reset_password.html', form=form)
+
+
+@auth.route('/sign_up', methods=['GET', 'POST']) #FIX TO ALLOW DIVISON TO BE SELECTED IN FORMS/VIEWS/HTML
+def sign_up():
+
+    # form = SignupForm()
+    # if form.validate_on_submit():
+    #     newuser = User(division='Archives')
+    #     db.session.add(newuser)
+    #     return redirect(url_for('auth.login'))
+    #
+
+    form = SignupForm()
+    if form.validate_on_submit():
+        newuser = User(email=form.email.data,
+                       division=form.division.data,
+                       password_hash=generate_password_hash(form.password.data),
+                       first_name=form.first_name.data,
+                       last_name=form.last_name.data)
+        db.session.add(newuser)
+        return redirect(url_for('auth.login'))
+    return render_template('auth/sign_up.html', form=form)
