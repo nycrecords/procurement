@@ -28,6 +28,7 @@ class User(UserMixin, db.Model):
                                  division.MIS,
                                  division.ADM))
     password_hash = db.Column(db.String(128))
+    is_admin = db.Column(db.BOOLEAN, default=False)
 
     @property
     def password(self):
