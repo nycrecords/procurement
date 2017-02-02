@@ -231,6 +231,18 @@
         {% endif %}
 
         <div class="form-group row">
+            <label for="request_request_vendor_mwbe" class="col-sm-3 form-control-label">Status:</label>
+            <div class="col-sm-5">
+                {{ form.status(id="status", class='form-control') }}
+            </div>
+        </div>
+        <div class="form-group row">
+        <label for="comment" class="col-sm-3 form-control-label">Comment (Optional):</label>
+            <div class="col-sm-8">
+                {{ form.comment(id="note", rows="3", class="form-control", maxlength="500") }}
+            </div>
+        </div>
+        <div class="form-group row">
             <div class="spacer">
                 <button type="submit" class="btn btn-primary btn-lg btn-block">Submit request</button>
             </div>

@@ -11,10 +11,11 @@ from flask import (
     redirect,
     url_for
 )
+import datetime
 from sqlalchemy import update
 from flask_login import login_required, current_user
 from .. import db
-from .forms import RequestForm
+from .forms import RequestForm, DeleteCommentForm
 from ..models import Request, User, Vendor, Comment
 from . import request as request_blueprint
 
@@ -23,7 +24,7 @@ from . import request as request_blueprint
 @login_required
 def display_requests():
     """View the page for all the requests."""
-    requests = Request.query.all()
+    requests = Request.query.order_by(Request.id).all()
     return render_template('request/requests.html',
                            requests=requests
                            )
@@ -35,12 +36,18 @@ def display_request(request_id):
     request = Request.query.filter_by(id=request_id).first()
     user = User.query.filter_by(id=request.creator_id).first()
     vendor = Vendor.query.filter_by(id=request.vendor_id).first()
+    comments = Comment.query.filter_by(request_id=request_id).order_by(Comment.timestamp.desc()).all()
+
+    form = DeleteCommentForm()
+
     if request:
         return render_template(
                                 'request/request.html',
                                 request=request,
                                 user=user,
-                                vendor=vendor
+                                vendor=vendor,
+                                comments=comments,
+                                form=form
                             )
     else:
         abort(404)
@@ -65,7 +72,8 @@ def edit_request(request_id):
                            unit_price=request.unit_price,
                            total_cost=request.total_cost,
                            funding_source=request.funding_source,
-                           justification=request.justification)
+                           justification=request.justification,
+                           status=request.status)
 
         return render_template('request/edit_request.html',
                                form=form,
@@ -83,6 +91,7 @@ def edit_request(request_id):
         request.total_cost = form.total_cost.data
         request.funding_source = form.funding_source.data
         request.justification = form.justification.data
+        request.status = form.status.data
 
         # Vendor Stuff
         request_vendor_name = str(form.request_vendor_name.data)
@@ -113,17 +122,32 @@ def edit_request(request_id):
         else:
             request.set_vendor_id(vendor_form)
         # db.session.add(request)
+        # db.session.commit()
+
+        # Add Notes
+        if form.comment is not None and form.comment.data.strip() is not "":
+            newcomment = Comment(
+                request_id=request.id,
+                user_id=current_user.id,
+                timestamp=datetime.datetime.now(),
+                content=form.comment.data
+            )
+            db.session.add(newcomment)
+
         db.session.commit()
 
         return redirect(url_for('request.display_request', request_id=request_id))
 
 
-
-    # request.update_field(
-    #     edit_request['name'],
-    #     edit_request['value'].strip('$')
-    # )
-    # return Response(status=200)
+@request_blueprint.route('/delete', methods=['GET', 'POST'])
+def delete_comment():                                 # DOES NOT ACTUALLY DELETE ANYTHING
+    form = DeleteCommentForm()
+    Comment.query.filter(Comment.id == form.comment_id.data).delete()
+    # comment = Comment.query.filter_by(id=comment_id).first()
+    # db.session.delete(comment)
+    db.session.commit()
+    return redirect(url_for('request.display_request', request_id=form.request_id.data))
+    # return render_template("request.html", request_id)
 
 
 @request_blueprint.errorhandler(404)

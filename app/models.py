@@ -111,6 +111,7 @@ class Request(db.Model):
             project_name,
             funding_source_description,
             justification,
+            status,
             creator_id
     ):
         self.division = division
@@ -125,6 +126,7 @@ class Request(db.Model):
         self.project_name = project_name
         self.funding_source_description = funding_source_description
         self.justification = justification
+        self.status = status
         self.creator_id = creator_id
 
     def set_vendor_id(self, vendor_id):
@@ -191,3 +193,5 @@ class Comment(db.Model):
     timestamp = db.Column(db.DateTime)
     content = db.Column(db.String())
     filepath = db.Column(db.String())
+
+    user = db.relationship("User", backref="user")

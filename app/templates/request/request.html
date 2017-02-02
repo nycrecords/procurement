@@ -66,6 +66,10 @@
                     <th scope="row">Justification:</th>
                     <td><a href="#" id="justification">{{ request.justification }}</a></td>
                 </tr>
+                <tr>
+                    <th scope="row">Status:</th>
+                    <td><a href="#" id="status">{{ request.status }}</a></td>
+                </tr>
                 </tbody>
             </table>
         </div>
@@ -115,9 +119,27 @@
                 </tr>
                 </tbody>
             </table>
-
         </div>
         <div class="spacer"></div>
+    </div>
+    <div class="form-group row">
+        <label for="notes" class="col-sm-7 form-control-label">NOTES</label>
+        <div class="page-header"></div>
+
+        {% for comment in comments %}
+        <div class="form-group row">
+            <form action="{{ url_for('request.delete_comment', comment_id=comment.id, request_id=request.id) }}"
+               method="post" value="{{ comment.id }}">
+                <label>{{ comment.timestamp }} | {{ comment.user.first_name }} {{ comment.user.last_name }}</label>
+                {% if current_user.is_admin %}
+                    {{ form.request_id(value=request.id) }}
+                    {{ form.comment_id(value=comment.id) }}
+                    {{ form.submit }}
+                {% endif %}
+            </form>
+            <div>{{ comment.content }}</div>
+        </div><br>
+        {% endfor %}
     </div>
 {% endblock %}
 
