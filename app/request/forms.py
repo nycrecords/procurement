@@ -44,8 +44,9 @@ statuses = [
 
 
 class CommentForm(Form):
-    body = StringField(u'Enter your comment', validators=[DataRequired()])
-    file = FileField(u'Upload File...')
+    content = TextAreaField(validators=[Length(0, 500), DataRequired()])
+    request_id = HiddenField()
+    # file = FileField(u'Upload File...')
     submit = SubmitField(u'Add Comment')
 
 class RequestForm(Form):

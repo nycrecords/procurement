@@ -126,15 +126,23 @@
         <label for="notes" class="col-sm-7 form-control-label">NOTES</label>
         <div class="page-header"></div>
 
+        <div class="form-group row">
+            <form action="{{ url_for('request.add_comment') }}" method="post">
+                {{ commentform.content(id="note", rows="3", cols="100", maxlength="500") }}
+                {{ commentform.request_id(value=request.id) }}
+                <div>{{ commentform.submit }}</div>
+            </form>
+        </div><br>
+
         {% for comment in comments %}
         <div class="form-group row">
-            <form action="{{ url_for('request.delete_comment', comment_id=comment.id, request_id=request.id) }}"
+            <form action="{{ url_for('request.delete_comment') }}"
                method="post" value="{{ comment.id }}">
                 <label>{{ comment.timestamp }} | {{ comment.user.first_name }} {{ comment.user.last_name }}</label>
                 {% if current_user.is_admin %}
-                    {{ form.request_id(value=request.id) }}
-                    {{ form.comment_id(value=comment.id) }}
-                    {{ form.submit }}
+                    {{ deleteform.request_id(value=request.id) }}
+                    {{ deleteform.comment_id(value=comment.id) }}
+                    {{ deleteform.submit }}
                 {% endif %}
             </form>
             <div>{{ comment.content }}</div>

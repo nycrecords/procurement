@@ -15,7 +15,7 @@ import datetime
 from sqlalchemy import update
 from flask_login import login_required, current_user
 from .. import db
-from .forms import RequestForm, DeleteCommentForm
+from .forms import RequestForm, CommentForm, DeleteCommentForm
 from ..models import Request, User, Vendor, Comment
 from . import request as request_blueprint
 
@@ -38,7 +38,8 @@ def display_request(request_id):
     vendor = Vendor.query.filter_by(id=request.vendor_id).first()
     comments = Comment.query.filter_by(request_id=request_id).order_by(Comment.timestamp.desc()).all()
 
-    form = DeleteCommentForm()
+    commentform = CommentForm()
+    deleteform = DeleteCommentForm()
 
     if request:
         return render_template(
@@ -47,7 +48,8 @@ def display_request(request_id):
                                 user=user,
                                 vendor=vendor,
                                 comments=comments,
-                                form=form
+                                commentform=commentform,
+                                deleteform=deleteform
                             )
     else:
         abort(404)
@@ -139,15 +141,27 @@ def edit_request(request_id):
         return redirect(url_for('request.display_request', request_id=request_id))
 
 
-@request_blueprint.route('/delete', methods=['GET', 'POST'])
-def delete_comment():                                 # DOES NOT ACTUALLY DELETE ANYTHING
-    form = DeleteCommentForm()
-    Comment.query.filter(Comment.id == form.comment_id.data).delete()
-    # comment = Comment.query.filter_by(id=comment_id).first()
-    # db.session.delete(comment)
+@request_blueprint.route('/add', methods=['GET', 'POST'])
+def add_comment():
+    commentform = CommentForm()
+    # add here
+    newcomment = Comment(
+        request_id=commentform.request_id.data,
+        user_id=current_user.id,
+        timestamp=datetime.datetime.now(),
+        content=commentform.content.data,
+    )
+    db.session.add(newcomment)
     db.session.commit()
-    return redirect(url_for('request.display_request', request_id=form.request_id.data))
-    # return render_template("request.html", request_id)
+    return redirect(url_for('request.display_request', request_id=commentform.request_id.data))
+
+
+@request_blueprint.route('/delete', methods=['GET', 'POST'])
+def delete_comment():
+    deleteform = DeleteCommentForm()
+    Comment.query.filter(Comment.id == deleteform.comment_id.data).delete()
+    db.session.commit()
+    return redirect(url_for('request.display_request', request_id=deleteform.request_id.data))
 
 
 @request_blueprint.errorhandler(404)
