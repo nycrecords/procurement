@@ -23,7 +23,10 @@ from . import request as request_blueprint
 @login_required
 def display_requests():
     """View the page for all the requests."""
-    requests = Request.query.all()
+    if current_user.is_admin:
+        requests = Request.query.all()
+    else:
+        requests = Request.query.filter_by(division=current_user.division).all()
     return render_template('request/requests.html',
                            requests=requests
                            )
