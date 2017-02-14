@@ -138,7 +138,11 @@
         <div class="form-group row">
             <form action="{{ url_for('request.delete_comment') }}"
                method="post" value="{{ comment.id }}">
-                <label>{{ comment.timestamp }} | {{ comment.user.first_name }} {{ comment.user.last_name }}</label>
+                <label>{{ comment.timestamp }} | {{ comment.user.first_name }} {{ comment.user.last_name }}
+                {% if comment.user_id == request.creator_id %}
+                     (Creator)
+                {% endif %}
+                </label>
                 {% if current_user.is_admin %}
                     {{ deleteform.request_id(value=request.id) }}
                     {{ deleteform.comment_id(value=comment.id) }}

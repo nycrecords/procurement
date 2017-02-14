@@ -12,6 +12,7 @@ from flask import (
     url_for
 )
 import datetime
+import smtplib
 from sqlalchemy import update
 from flask_login import login_required, current_user
 from .. import db
@@ -137,6 +138,27 @@ def edit_request(request_id):
             db.session.add(newcomment)
 
         db.session.commit()
+
+        # email notification for edit
+        sender = 'donotreply@records.nyc.gov'
+        receivers = ['{}'.format(user.email)]
+        # receivers = ['mlaikhram@gmail.com']
+        message = """\
+        From: Procurements <%s>
+        To: %s
+        Subject: Request %s Edited
+        A request you made has been edited.
+        %s
+        """ % (sender, ", ".join(receivers), request_id, form.comment.data.strip())
+
+        print(message)
+
+        try:
+            smtpObj = smtplib.SMTP('localhost', 1025)
+            smtpObj.sendmail(sender, receivers, message)
+            print("Successfully sent email")
+        except:
+            print("Error: unable to send email")
 
         return redirect(url_for('request.display_request', request_id=request_id))
 
