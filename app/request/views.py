@@ -24,9 +24,9 @@ from . import request as request_blueprint
 def display_requests():
     """View the page for all the requests."""
     if current_user.is_admin:
-        requests = Request.query.all()
+        requests = Request.query.order_by(Request.date_submitted.desc()).all()
     else:
-        requests = Request.query.filter_by(division=current_user.division).all()
+        requests = Request.query.filter_by(division=current_user.division).order_by(Request.date_submitted.desc()).all()
     return render_template('request/requests.html',
                            requests=requests
                            )
