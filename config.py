@@ -17,6 +17,8 @@ class Config:
     FLASKY_MAIL_SUBJECT_PREFIX = '[Procurement]'
     FLASKY_MAIL_SENDER = 'Procurement Admin <procurement@example.com>'
     FLASKY_ADMIN = os.environ.get('PROCUREMENT_ADMIN')
+    # UPLOAD_FOLDER = './uploads'
+    UPLOAD_FOLDER = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'uploads')
 
     @staticmethod
     def init_app(app):

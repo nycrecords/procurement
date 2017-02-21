@@ -47,7 +47,7 @@
                     {% for request in requests %}
                         <tr class="table-row" data-href="/requests/{{ request.id }}">
                             <td> {{ request.id }} </td>
-                            <td> {{ request.date_submitted.date().strftime("%B %d, %Y") }} </td>
+                            <td> {{ request.date_submitted.date() }} </td>
                             <td> {{ request.division }} </td>
                             <td> {{ request.item }} </td>
                             <td> {{ request.status }} </td>

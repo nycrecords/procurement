@@ -46,7 +46,7 @@ statuses = [
 class CommentForm(Form):
     content = TextAreaField(validators=[Length(0, 500), DataRequired()])
     request_id = HiddenField()
-    # file = FileField(u'Upload File...')
+    file = FileField(u'Upload File...')
     submit = SubmitField(u'Add Comment')
 
 class RequestForm(Form):

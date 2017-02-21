@@ -9,23 +9,32 @@ from flask import (
     abort,
     Response,
     redirect,
-    url_for
+    url_for,
+send_from_directory
 )
 import datetime
 import smtplib
-from sqlalchemy import update
+# from sqlalchemy import update
+import os
+from werkzeug.utils import secure_filename
 from flask_login import login_required, current_user
 from .. import db
 from .forms import RequestForm, CommentForm, DeleteCommentForm
 from ..models import Request, User, Vendor, Comment
 from . import request as request_blueprint
+from flask import current_app
+
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 
 @request_blueprint.route('/', methods=['GET', 'POST'])
 @login_required
 def display_requests():
     """View the page for all the requests."""
-    requests = Request.query.order_by(Request.id).all()
+    if current_user.is_admin:
+        requests = Request.query.order_by(Request.date_submitted.desc()).all()
+    else:
+        requests = Request.query.filter_by(division=current_user.division).order_by(Request.date_submitted.desc()).all()
     return render_template('request/requests.html',
                            requests=requests
                            )
@@ -56,7 +65,7 @@ def display_request(request_id):
         abort(404)
 
 
-@request_blueprint.route('/edit/<request_id>', methods=['GET', 'POST'])
+@request_blueprint.route('/edit/<int:request_id>', methods=['GET', 'POST'])
 def edit_request(request_id):
     """Edit a request."""
 
@@ -163,18 +172,39 @@ def edit_request(request_id):
         return redirect(url_for('request.display_request', request_id=request_id))
 
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
 @request_blueprint.route('/add', methods=['GET', 'POST'])
 def add_comment():
     commentform = CommentForm()
-    # add here
+
+    filename = None
+
+    # handle submitted file
+    if commentform.file.data is not None:
+        filename = secure_filename(commentform.file.data.filename)
+        # commentform.file.data.save('uploads/' + filename)
+        # commentform.file.data.save('uploads/' + filename)
+        # file_data = flask_request.files[commentform.file.name].read()
+        file_data = commentform.file.data
+        if file_data.filename != '' and file_data and allowed_file(file_data.filename):
+            filename = secure_filename(datetime.datetime.now().strftime("%Y%m%d-%H%M") + file_data.filename)
+            file_data.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+
+    # add to database
     newcomment = Comment(
         request_id=commentform.request_id.data,
         user_id=current_user.id,
         timestamp=datetime.datetime.now(),
         content=commentform.content.data,
+        filepath=filename
     )
     db.session.add(newcomment)
     db.session.commit()
+
     return redirect(url_for('request.display_request', request_id=commentform.request_id.data))
 
 
@@ -184,6 +214,14 @@ def delete_comment():
     Comment.query.filter(Comment.id == deleteform.comment_id.data).delete()
     db.session.commit()
     return redirect(url_for('request.display_request', request_id=deleteform.request_id.data))
+
+
+@request_blueprint.route('/download/<int:comment_id>', methods=['GET'])
+def download(comment_id):
+    comment = Comment.query.filter(Comment.id == comment_id).first()
+    print(comment.filepath)
+    return send_from_directory(current_app.config['UPLOAD_FOLDER'], comment.filepath,
+                               as_attachment=True, attachment_filename=comment.filepath[13:])
 
 
 @request_blueprint.errorhandler(404)

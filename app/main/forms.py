@@ -10,7 +10,7 @@ from wtforms import StringField, SelectField, TextAreaField, SubmitField, \
      BooleanField, DecimalField, IntegerField
 from wtforms.validators import DataRequired, Length
 from wtforms_alchemy import PhoneNumberField
-app = Flask(__name__)
+
 
 divisions = [
     ('', ''),
