@@ -81,7 +81,7 @@ class RequestForm(Form):
                                                                          (status.DEN, status.DEN),
                                                                          (status.RES, status.RES),
                                                                          (status.HOLD, status.HOLD)])
-    comment = TextAreaField(validators=[Length(0, 500)])
+    # comment = TextAreaField(validators=[Length(0, 500)])
     submit = SubmitField(u'Submit Request')
 
 

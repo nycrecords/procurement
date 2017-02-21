@@ -136,38 +136,38 @@ def edit_request(request_id):
         # db.session.add(request)
         # db.session.commit()
 
-        # Add Notes
-        if form.comment is not None and form.comment.data.strip() is not "":
-            newcomment = Comment(
-                request_id=request.id,
-                user_id=current_user.id,
-                timestamp=datetime.datetime.now(),
-                content=form.comment.data
-            )
-            db.session.add(newcomment)
-
-        db.session.commit()
-
-        # email notification for edit
-        sender = 'donotreply@records.nyc.gov'
-        receivers = ['{}'.format(user.email)]
-        # receivers = ['mlaikhram@gmail.com']
-        message = """\
-        From: Procurements <%s>
-        To: %s
-        Subject: Request %s Edited
-        A request you made has been edited.
-        %s
-        """ % (sender, ", ".join(receivers), request_id, form.comment.data.strip())
-
-        print(message)
-
-        try:
-            smtpObj = smtplib.SMTP('localhost', 1025)
-            smtpObj.sendmail(sender, receivers, message)
-            print("Successfully sent email")
-        except:
-            print("Error: unable to send email")
+        # # Add Notes
+        # if form.comment is not None and form.comment.data.strip() is not "":
+        #     newcomment = Comment(
+        #         request_id=request.id,
+        #         user_id=current_user.id,
+        #         timestamp=datetime.datetime.now(),
+        #         content=form.comment.data
+        #     )
+        #     db.session.add(newcomment)
+        #
+        # db.session.commit()
+        #
+        # # email notification for edit
+        # sender = 'donotreply@records.nyc.gov'
+        # receivers = [user.email]
+        # # receivers = ['mlaikhram@gmail.com']
+        # message = """\
+        # From: Procurements <%s>
+        # To: %s
+        # Subject: Request %s Edited
+        # A request you made has been edited.
+        # %s
+        # """ % (sender, ", ".join(receivers), request_id, form.comment.data.strip())
+        #
+        # print(message)
+        #
+        # try:
+        #     smtpObj = smtplib.SMTP('localhost', 1025)
+        #     smtpObj.sendmail(sender, receivers, message)
+        #     print("Successfully sent email")
+        # except:
+        #     print("Error: unable to send email")
 
         return redirect(url_for('request.display_request', request_id=request_id))
 
@@ -204,6 +204,40 @@ def add_comment():
     )
     db.session.add(newcomment)
     db.session.commit()
+
+    # email notification for edit
+
+    request, user, vendor = db.session.query(Request, User, Vendor).filter(Request.id == commentform.request_id.data).\
+                                                    filter(User.id == Request.creator_id).\
+                                                    filter(Request.vendor_id == Vendor.id).first()
+
+    sender = 'donotreply@records.nyc.gov'
+    receivers = [user.email]
+    # receivers = ['mlaikhram@gmail.com']
+    message = """\
+    From: Procurements <%s>
+    To: %s %s <%s>
+    Subject: New Comment Added to Request %s
+    %s %s commented on your request:
+
+    %s
+    """ % (sender,
+           user.first_name,
+           user.last_name,
+           ", ".join(receivers),
+           commentform.request_id.data,
+           current_user.first_name,
+           current_user.last_name,
+           commentform.content.data.strip())
+
+    print(message)
+
+    try:
+        smtpObj = smtplib.SMTP('localhost', 1025)
+        smtpObj.sendmail(sender, receivers, message)
+        print("Successfully sent email")
+    except:
+        print("Error: unable to send email")
 
     return redirect(url_for('request.display_request', request_id=commentform.request_id.data))
 
