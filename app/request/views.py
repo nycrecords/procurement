@@ -18,10 +18,12 @@ import smtplib
 import os
 from werkzeug.utils import secure_filename
 from flask_login import login_required, current_user
+from ..email_notification import send_email
 from .. import db
 from .forms import RequestForm, CommentForm, DeleteCommentForm
 from ..models import Request, User, Vendor, Comment
 from . import request as request_blueprint
+from ..constants import roles
 from flask import current_app
 
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
@@ -31,7 +33,7 @@ ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 @login_required
 def display_requests():
     """View the page for all the requests."""
-    if current_user.is_admin:
+    if current_user.role == roles.ADMIN:
         requests = Request.query.order_by(Request.date_submitted.desc()).all()
     else:
         requests = Request.query.filter_by(division=current_user.division).order_by(Request.date_submitted.desc()).all()
@@ -41,12 +43,16 @@ def display_requests():
 
 
 @request_blueprint.route('/<request_id>', methods=['GET', 'POST'])
+@login_required
 def display_request(request_id):
     """View the page for a specific request."""
     request = Request.query.filter_by(id=request_id).first()
     user = User.query.filter_by(id=request.creator_id).first()
     vendor = Vendor.query.filter_by(id=request.vendor_id).first()
     comments = Comment.query.filter_by(request_id=request_id).order_by(Comment.timestamp.desc()).all()
+
+    if not (current_user.role == roles.ADMIN or current_user.division == request.division):
+        return redirect('requests')
 
     commentform = CommentForm()
     deleteform = DeleteCommentForm()
@@ -66,10 +72,11 @@ def display_request(request_id):
 
 
 @request_blueprint.route('/edit/<int:request_id>', methods=['GET', 'POST'])
+@login_required
 def edit_request(request_id):
     """Edit a request."""
 
-    if not current_user.is_admin:
+    if not current_user.role == roles.ADMIN:
         return redirect('requests')
 
     vendors = Vendor.query.order_by(Vendor.name).all()
@@ -206,38 +213,54 @@ def add_comment():
     db.session.commit()
 
     # email notification for edit
+    receivers = []
 
-    request, user, vendor = db.session.query(Request, User, Vendor).filter(Request.id == commentform.request_id.data).\
-                                                    filter(User.id == Request.creator_id).\
-                                                    filter(Request.vendor_id == Vendor.id).first()
+    request, requestor = db.session.query(Request, User).filter(Request.id == commentform.request_id.data).\
+                                                    filter(User.id == Request.creator_id).first()
+    receivers.append(requestor.email)
 
-    sender = 'donotreply@records.nyc.gov'
-    receivers = [user.email]
+    div_query = db.session.query(User).filter(User.role == roles.DIV).\
+                                       filter(User.email != requestor.email).\
+                                       filter(User.division == requestor.division).all()
+    for query in div_query:
+        receivers.append(query.email)
+
+    proc_query = db.session.query(User).filter(User.role == roles.PROC).\
+                                        filter(User.email != requestor.email).\
+                                        filter(User.division == requestor.division).all()
+    for query in proc_query:
+        receivers.append(query.email)
+
+    # receivers = [requestor.email]
     # receivers = ['mlaikhram@gmail.com']
-    message = """\
-    From: Procurements <%s>
-    To: %s %s <%s>
-    Subject: New Comment Added to Request %s
-    %s %s commented on your request:
+    # message = """\
+    # From: Procurements <%s>
+    # To: <%s>
+    # Subject: New Comment Added to Request %s
+    #
+    # %s %s commented on your request:
+    #
+    # %s
+    # """ % (sender,
+    #        ">, <".join(receivers),
+    #        commentform.request_id.data,
+    #        current_user.first_name,
+    #        current_user.last_name,
+    #        commentform.content.data.strip())
 
-    %s
-    """ % (sender,
-           user.first_name,
-           user.last_name,
-           ", ".join(receivers),
-           commentform.request_id.data,
-           current_user.first_name,
-           current_user.last_name,
-           commentform.content.data.strip())
+    send_email(receivers, "New Comment Added to Request {}".format(commentform.request_id.data),
+               'request/comment_added',
+               user=current_user,
+               commentform=commentform)
 
-    print(message)
+    # print(message)
 
-    try:
-        smtpObj = smtplib.SMTP('localhost', 1025)
-        smtpObj.sendmail(sender, receivers, message)
-        print("Successfully sent email")
-    except:
-        print("Error: unable to send email")
+    # try:
+    #     smtpObj = smtplib.SMTP('localhost', current_app.config["MAIL_PORT"])
+    #     smtpObj.sendmail(sender, receivers, message)
+    #     print("Successfully sent email")
+    # except:
+    #     print("Error: unable to send email")
 
     return redirect(url_for('request.display_request', request_id=commentform.request_id.data))
 

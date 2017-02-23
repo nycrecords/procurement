@@ -9,7 +9,7 @@
 
     <div class="page-header">
         <h1>{{ request.id }}</h1>
-        {% if current_user.is_admin == True %}
+        {% if current_user.role == "Administrator" %}
         <a href="{{ url_for('request.edit_request', request_id=request.id) }}">Edit</a>
         {% endif %}
     </div>
@@ -140,11 +140,13 @@
             <form action="{{ url_for('request.delete_comment') }}"
                method="post" value="{{ comment.id }}">
                 <label>{{ comment.timestamp.strftime("%m/%d/%Y %I:%M:%S %p") }} | {{ comment.user.first_name }} {{ comment.user.last_name }}
-                {% if comment.user_id == request.creator_id %}
-                     (Creator)
+                {%  if comment.user_id == current_user.id %}
+                    (You)
+                {% elif comment.user_id == request.creator_id %}
+                    (Creator)
                 {% endif %}
                 </label>
-                {% if current_user.is_admin %}
+                {% if current_user.role == "Administrator" or current_user.id == comment.user_id %}
                     {{ deleteform.request_id(value=request.id) }}
                     {{ deleteform.comment_id(value=comment.id) }}
                     {{ deleteform.submit }}

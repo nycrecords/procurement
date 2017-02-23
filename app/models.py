@@ -10,6 +10,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from sqlalchemy.orm.attributes import set_attribute
 from . constants import division
 from . import db, login_manager
+from . constants import roles
 import re
 
 
@@ -28,7 +29,7 @@ class User(UserMixin, db.Model):
                                  division.MIS,
                                  division.ADM))
     password_hash = db.Column(db.String(128))
-    is_admin = db.Column(db.BOOLEAN, default=False)
+    role = db.Column(db.String(100), default=roles.REG)
 
     @property
     def password(self):

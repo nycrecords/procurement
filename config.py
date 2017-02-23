@@ -15,7 +15,7 @@ class Config:
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     FLASKY_MAIL_SUBJECT_PREFIX = '[Procurement]'
-    FLASKY_MAIL_SENDER = 'Procurement Admin <procurement@example.com>'
+    FLASKY_MAIL_SENDER = 'Procurement Admin <donotreply@records.nyc.gov>'
     FLASKY_ADMIN = os.environ.get('PROCUREMENT_ADMIN')
     # UPLOAD_FOLDER = './uploads'
     UPLOAD_FOLDER = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'uploads')
