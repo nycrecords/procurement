@@ -118,3 +118,4 @@ def sign_up():
         db.session.add(newuser)
         return redirect(url_for('auth.login'))
     return render_template('auth/sign_up.html', form=form)
+

@@ -26,7 +26,7 @@ class User(UserMixin, db.Model):
                                  division.LIB,
                                  division.EXEC,
                                  division.MIS,
-                                 division.ADM))
+                                 division.ADM, name="division"))
     password_hash = db.Column(db.String(128))
     is_admin = db.Column(db.BOOLEAN, default=False)
 

@@ -110,3 +110,9 @@ def jsonify_fields():
         return jsonify("")
     v = Vendor.query.filter_by(id=request.args['vendor']).first()
     return jsonify(v.name, v.address, v.phone, v.fax, v.email, v.tax_id, v.mwbe)
+
+
+@main.route('/admin_panel', methods=['GET', 'POST'])
+def admin_panel():
+    users = User.query.all()
+    return render_template('main/admin_panel.html', users=users)
