@@ -17,7 +17,7 @@ from .forms import (
     PasswordResetRequestForm,
     PasswordResetForm,
     SignupForm
-    )
+)
 from .utils import check_password_requirements
 
 
@@ -98,16 +98,8 @@ def password_reset(token):
     return render_template('auth/reset_password.html', form=form)
 
 
-@auth.route('/sign_up', methods=['GET', 'POST']) #FIX TO ALLOW DIVISON TO BE SELECTED IN FORMS/VIEWS/HTML
+@auth.route('/sign_up', methods=['GET', 'POST'])  # FIX TO ALLOW DIVISON TO BE SELECTED IN FORMS/VIEWS/HTML
 def sign_up():
-
-    # form = SignupForm()
-    # if form.validate_on_submit():
-    #     newuser = User(division='Archives')
-    #     db.session.add(newuser)
-    #     return redirect(url_for('auth.login'))
-    #
-
     form = SignupForm()
     if form.validate_on_submit():
         newuser = User(email=form.email.data,
@@ -119,4 +111,3 @@ def sign_up():
         flash('User account successfully created!')
         return redirect(url_for('auth.login'))
     return render_template('auth/sign_up.html', form=form)
-

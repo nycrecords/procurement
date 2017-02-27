@@ -8,8 +8,9 @@ from flask import Flask
 from flask_wtf import Form
 from wtforms import StringField, SelectField, TextAreaField, SubmitField, \
     BooleanField, DecimalField, IntegerField
-from wtforms.validators import DataRequired, Length
+from wtforms.validators import DataRequired, Length, Email
 from wtforms_alchemy import PhoneNumberField
+from ..constants import division
 
 app = Flask(__name__)
 
@@ -63,6 +64,22 @@ class RequestForm(Form):
 
 
 class UserForm(Form):
+    """Form for creating a new user"""
+    first_name = StringField('first_name', validators=[DataRequired(), Length(1, 100)])
+    last_name = StringField('last_name', validators=[DataRequired(), Length(1, 100)])
+    division = SelectField('division', validators=[DataRequired()], choices=[(division.MRMD, division.MRMD),
+                                                                             (division.ARC, division.ARC),
+                                                                             (division.GRA, division.GRA),
+                                                                             (division.LIB, division.LIB),
+                                                                             (division.EXEC, division.EXEC),
+                                                                             (division.MIS, division.MIS),
+                                                                             (division.ADM, division.ADM)])
+    email = StringField('Email', validators=[DataRequired(), Length(1, 100),
+                                             Email()])
+    submit = SubmitField(u'Create User')
+
+
+class EditUserForm(Form):
     """Form for updating user information"""
     user_first_name = StringField(u'First Name*(required)')
     user_last_name = StringField(u'Last Name*(required)')

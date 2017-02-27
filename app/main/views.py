@@ -9,7 +9,7 @@ from flask import render_template, request, redirect, url_for, jsonify, flash
 from .. import db
 from ..models import Request, Vendor, User
 from . import main
-from .forms import RequestForm, UserForm
+from .forms import RequestForm, UserForm, EditUserForm
 from flask_login import login_required, current_user
 
 
@@ -115,12 +115,26 @@ def jsonify_fields():
 @main.route('/admin_panel', methods=['GET', 'POST'])
 def admin_panel():
     users = User.query.all()
-    return render_template('main/admin_panel.html', users=users)
+    form = UserForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            new_user = User(email=form.email.data,
+                            division=form.division.data,
+                            password='Change4me',
+                            first_name=form.first_name.data,
+                            last_name=form.last_name.data)
+            db.session.add(new_user)
+            db.session.commit()
+            flash('User account successfully created!')
+            return redirect(url_for('main.admin_panel'))
+        else:
+            print(form.errors)
+    return render_template('main/admin_panel.html', users=users, form=form)
 
 
 @main.route('/admin_panel/users/<int:id>', methods=['GET', 'POST'])
 def edit_user(id):
-    form = UserForm()
+    form = EditUserForm()
     user = User.query.get_or_404(id)
     if request.method == 'POST':
         if form.validate_on_submit():
