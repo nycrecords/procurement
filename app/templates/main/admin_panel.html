@@ -42,10 +42,10 @@
                     </thead>
                     <tbody>
                     {% for user in users %}
-                        <tr class="table-row" data-href="/requests/{{ request.id }}">
+                        <tr class="table-row">
                             <td> {{ user.first_name }} {{ user.last_name }} </td>
                             <td> {{ user.email }} </td>
-                            <td> <a class="btn btn-primary btn-small">Edit</a> </td>
+                            <td> <a class="btn btn-primary btn-small" href="/admin_panel/users/{{ user.id }}">Edit</a> </td>
                             <td> <a class="btn btn-primary btn-small">Disable</a> </td>
                         </tr>
                     {% endfor %}
@@ -67,11 +67,4 @@
     <script type="text/javascript"
             src="{{ url_for('static', filename='js/plugins/bootstrap-table-export.min.js') }}"></script>
     <script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function ($) {
-            $(".table-row").click(function () {
-                window.document.location = $(this).data("href");
-            });
-        });
-    </script>
 {% endblock %}

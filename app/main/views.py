@@ -116,3 +116,9 @@ def jsonify_fields():
 def admin_panel():
     users = User.query.all()
     return render_template('main/admin_panel.html', users=users)
+
+
+@main.route('/admin_panel/users/<int:id>', methods=['GET', 'POST'])
+def edit_user(id):
+    user = User.query.get_or_404(id)
+    return render_template('main/edit_user.html', user=user)
