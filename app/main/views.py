@@ -9,7 +9,7 @@ from flask import render_template, request, redirect, url_for, jsonify, flash
 from .. import db
 from ..models import Request, Vendor, User
 from . import main
-from .forms import RequestForm
+from .forms import RequestForm, UserForm
 from flask_login import login_required, current_user
 
 
@@ -120,15 +120,19 @@ def admin_panel():
 
 @main.route('/admin_panel/users/<int:id>', methods=['GET', 'POST'])
 def edit_user(id):
+    form = UserForm()
     user = User.query.get_or_404(id)
     if request.method == 'POST':
-        user_first_name = request.form['user_first_name']
-        user_last_name = request.form['user_last_name']
-        user_email = request.form['user_email']
-        user.first_name = user_first_name
-        user.last_name = user_last_name
-        user.email = user_email
-        db.session.commit()
-        flash('User information successfully updated!')
-        return render_template('main/edit_user.html', user=user)
-    return render_template('main/edit_user.html', user=user)
+        if form.validate_on_submit():
+            user_first_name = form.user_first_name.data
+            user_last_name = form.user_last_name.data
+            user_email = form.user_email.data
+            user.first_name = user_first_name
+            user.last_name = user_last_name
+            user.email = user_email
+            db.session.commit()
+            flash('User information successfully updated!')
+            return render_template('main/edit_user.html', user=user, form=form)
+        else:
+            print(form.errors)
+    return render_template('main/edit_user.html', user=user, form=form)

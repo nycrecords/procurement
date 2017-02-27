@@ -7,9 +7,10 @@
 from flask import Flask
 from flask_wtf import Form
 from wtforms import StringField, SelectField, TextAreaField, SubmitField, \
-     BooleanField, DecimalField, IntegerField
+    BooleanField, DecimalField, IntegerField
 from wtforms.validators import DataRequired, Length
 from wtforms_alchemy import PhoneNumberField
+
 app = Flask(__name__)
 
 divisions = [
@@ -59,3 +60,11 @@ class RequestForm(Form):
     request_vendor_taxid = StringField(u'Vendor Tax ID')
     request_vendor_mwbe = BooleanField(u'mwbe')
     submit = SubmitField(u'Submit Request')
+
+
+class UserForm(Form):
+    """Form for updating user information"""
+    user_first_name = StringField(u'First Name*(required)')
+    user_last_name = StringField(u'Last Name*(required)')
+    user_email = StringField(u'Email*(required)')
+    update = SubmitField(u'Update Information')

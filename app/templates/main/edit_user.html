@@ -11,45 +11,60 @@
     <p><i><strong>User Information</strong></i></p>
 
     <br>
-    <form name="edit_user" class="form-horizontal" id="editUser" method="POST">
 
-        {% if current_user.is_authenticated %}
+    <form name="newrequest" class="form-horizontal" id="submitRequest" method="POST" action="">
+        {{ form.hidden_tag() }}
 
-            <div class="form-group row">
-                <label for="item" class="col-sm-3 form-control-label">User First Name:</label>
-                <div class="col-sm-8">
-                    <input value="{{ user.first_name }}" name="user_first_name" required>
-                </div>
+        <div class="form-group row">
+            {% for message in form.user_first_name.errors %}
+                <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
+            {% endfor %}
+
+            <label for="quantity" class="col-sm-3 form-control-label">User First Name</label>
+            <div class="col-sm-5">
+                {{ form.user_first_name(id="user_first_name", class="form-control", type="text", value=user.first_name) }}
+                <div class="small">Edit first name if applicable.</div>
             </div>
+        </div>
 
-            <div class="form-group row">
-                <label for="item" class="col-sm-3 form-control-label">User Last Name:</label>
-                <div class="col-sm-8">
-                    <input value="{{ user.last_name }}" name="user_last_name" required>
-                </div>
+        <div class="form-group row">
+            {% for message in form.user_last_name.errors %}
+                <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
+            {% endfor %}
+
+            <label for="quantity" class="col-sm-3 form-control-label">User Last Name</label>
+            <div class="col-sm-5">
+                {{ form.user_last_name(id="user_last_name", class="form-control", type="text", value=user.last_name) }}
+                <div class="small">Edit last name if applicable.</div>
             </div>
+        </div>
 
-            <div class="form-group row">
-                <label for="item" class="col-sm-3 form-control-label">User Email:</label>
-                <div class="col-sm-8">
-                    <input value="{{ user.email }}" name="user_email" required>
-                </div>
+        <div class="form-group row">
+            {% for message in form.user_email.errors %}
+                <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
+            {% endfor %}
+
+            <label for="quantity" class="col-sm-3 form-control-label">User Email</label>
+            <div class="col-sm-5">
+                {{ form.user_email(id="user_email", class="form-control", type="text", value=user.email) }}
+                <div class="small">Edit email if applicable.</div>
             </div>
+        </div>
 
-            <div class="form-group row">
-                <label for="item" class="col-sm-3 form-control-label">Reset User Password:</label>
-                <div class="col-sm-8">
-                    <a class="btn btn-danger btn-small">Reset</a>
-                </div>
+        <div class="form-group row">
+            <label for="quantity" class="col-sm-3 form-control-label">Reset Email</label>
+            <div class="col-sm-5">
+                <a class="btn btn-danger btn-small">Reset Password</a>
+                <div class="small">Click to reset user password.</div>
             </div>
+        </div>
 
-            <div class="form-group row">
-                <div class="spacer">
-                    <button type="submit" class="btn btn-primary btn-lg btn-block">Update Information</button>
-                </div>
+        <div class="form-group row">
+            <div class="spacer">
+                <button type="submit" class="btn btn-primary btn-lg btn-block">Update Information</button>
             </div>
+        </div>
 
-        {% endif %}
     </form>
     <!-- end of static form -->
 {% endblock %}
