@@ -113,7 +113,9 @@ def jsonify_fields():
 
 
 @main.route('/admin_panel', methods=['GET', 'POST'])
+@login_required
 def admin_panel():
+    """Return the admin panel where admins can create users, edit user information, and update login privileges."""
     users = User.query.all()
     form = UserForm()
     if request.method == 'POST':
@@ -133,7 +135,9 @@ def admin_panel():
 
 
 @main.route('/admin_panel/users/<int:id>', methods=['GET', 'POST'])
+@login_required
 def edit_user(id):
+    """Return the page for an admin to update user information."""
     form = EditUserForm()
     user = User.query.get_or_404(id)
     if request.method == 'POST':
@@ -156,7 +160,9 @@ def edit_user(id):
 
 
 @main.route('/admin_panel/users/reset/<int:id>', methods=['GET', 'POST'])
+@login_required
 def reset_password(id):
+    """Resets the password of the user and then redirects to the edit user page."""
     user = User.query.get_or_404(id)
     user.password = 'Change4me'
     db.session.commit()
@@ -165,7 +171,9 @@ def reset_password(id):
 
 
 @main.route('/admin_panel/users/disable/<int:id>', methods=['GET', 'POST'])
+@login_required
 def disable(id):
+    """Disables the user's login privileges and redirects to admin panel page."""
     user = User.query.get_or_404(id)
     user.login = False
     db.session.commit()
@@ -174,7 +182,9 @@ def disable(id):
 
 
 @main.route('/admin_panel/users/enable/<int:id>', methods=['GET', 'POST'])
+@login_required
 def enable(id):
+    """Enables the user's login privileges and redirects to admin panel page."""
     user = User.query.get_or_404(id)
     user.login = True
     db.session.commit()
