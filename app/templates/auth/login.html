@@ -4,12 +4,6 @@
     <div class="page-header">
         <h1>Login</h1>
     </div>
-    {% for message in get_flashed_messages() %}
-        <div class="alert alert-warning">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            {{ message }}
-        </div>
-    {% endfor %}
     <form name="login" id="login_form" method="POST" action="">
         {{ form.hidden_tag() }}
         {% for message in form.email.errors %}

@@ -27,6 +27,9 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
+        if user.login is False:
+            flash('Your account privileges have been disabled. Please contact an administrator.')
+            return redirect(url_for('auth.login'))
         if user is not None and user.verify_password(form.password.data):
             login_user(user)
             return redirect('requests')

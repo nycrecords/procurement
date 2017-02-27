@@ -162,3 +162,21 @@ def reset_password(id):
     db.session.commit()
     flash('User password was successfully reset!')
     return redirect(url_for('main.edit_user', id=id))
+
+
+@main.route('/admin_panel/users/disable/<int:id>', methods=['GET', 'POST'])
+def disable(id):
+    user = User.query.get_or_404(id)
+    user.login = False
+    db.session.commit()
+    flash('User login privileges have been disabled.')
+    return redirect(url_for('main.admin_panel'))
+
+
+@main.route('/admin_panel/users/enable/<int:id>', methods=['GET', 'POST'])
+def enable(id):
+    user = User.query.get_or_404(id)
+    user.login = True
+    db.session.commit()
+    flash('User login privileges have been enabled.')
+    return redirect(url_for('main.admin_panel'))
