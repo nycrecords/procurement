@@ -136,3 +136,12 @@ def edit_user(id):
         else:
             print(form.errors)
     return render_template('main/edit_user.html', user=user, form=form)
+
+
+@main.route('/admin_panel/users/reset/<int:id>', methods=['GET', 'POST'])
+def reset_password(id):
+    user = User.query.get_or_404(id)
+    user.password = 'Change4me'
+    db.session.commit()
+    flash('User password was successfully reset!')
+    return redirect(url_for('main.edit_user', id=id))
