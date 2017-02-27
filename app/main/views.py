@@ -124,15 +124,18 @@ def edit_user(id):
     user = User.query.get_or_404(id)
     if request.method == 'POST':
         if form.validate_on_submit():
-            user_first_name = form.user_first_name.data
-            user_last_name = form.user_last_name.data
-            user_email = form.user_email.data
-            user.first_name = user_first_name
-            user.last_name = user_last_name
-            user.email = user_email
-            db.session.commit()
-            flash('User information successfully updated!')
-            return render_template('main/edit_user.html', user=user, form=form)
+            if user.email != form.user_email.data and len(User.query.filter_by(email=form.user_email.data).all()) == 0:
+                user_first_name = form.user_first_name.data
+                user_last_name = form.user_last_name.data
+                user_email = form.user_email.data
+                user.first_name = user_first_name
+                user.last_name = user_last_name
+                user.email = user_email
+                db.session.commit()
+                flash('User information successfully updated!')
+                return render_template('main/edit_user.html', user=user, form=form)
+            else:
+                flash('User email already exists.')
         else:
             print(form.errors)
     return render_template('main/edit_user.html', user=user, form=form)
