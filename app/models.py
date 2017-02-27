@@ -67,7 +67,7 @@ class User(UserMixin, db.Model):
         return True
 
     def __repr__(self):
-        return '<User %r>' % self.username
+        return '<User %r>' % self.first_name
 
 
 @login_manager.user_loader
