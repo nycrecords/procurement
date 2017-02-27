@@ -116,6 +116,7 @@ def sign_up():
                        first_name=form.first_name.data,
                        last_name=form.last_name.data)
         db.session.add(newuser)
+        flash('User account successfully created!')
         return redirect(url_for('auth.login'))
     return render_template('auth/sign_up.html', form=form)
 
