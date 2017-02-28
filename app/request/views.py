@@ -123,7 +123,7 @@ def edit_request(request_id):
                            justification=request.justification,
                            status=request.status)
 
-        form.status.choices = choices
+        # form.status.choices = choices
 
         return render_template('request/edit_request.html',
                                form=form,
