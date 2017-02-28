@@ -9,7 +9,7 @@
 
     <div class="page-header">
         <h1>{{ request.id }}</h1>
-        {% if current_user.is_admin == True %}
+        {% if current_user.role == "Administrator" %}
         <a href="{{ url_for('request.edit_request', request_id=request.id) }}">Edit</a>
         {% endif %}
     </div>
@@ -66,6 +66,10 @@
                     <th scope="row">Justification:</th>
                     <td><a href="#" id="justification">{{ request.justification }}</a></td>
                 </tr>
+                <tr>
+                    <th scope="row">Status:</th>
+                    <td><a href="#" id="status">{{ request.status }}</a></td>
+                </tr>
                 </tbody>
             </table>
         </div>
@@ -115,9 +119,45 @@
                 </tr>
                 </tbody>
             </table>
-
         </div>
         <div class="spacer"></div>
+    </div>
+    <div class="form-group row">
+        <label for="notes" class="col-sm-7 form-control-label">NOTES</label>
+        <div class="page-header"></div>
+
+        <div class="form-group col">
+            <form action="{{ url_for('request.add_comment') }}" method="post" enctype="multipart/form-data">
+                {{ commentform.content(id="note", rows="3", cols="100", maxlength="500") }}
+                {{ commentform.request_id(value=request.id) }}
+                {{ commentform.file }}
+                {{ commentform.submit }}
+            </form>
+        </div><br>
+
+        {% for comment in comments %}
+        <div class="form-group col">
+            <form action="{{ url_for('request.delete_comment') }}"
+               method="post" value="{{ comment.id }}">
+                <label>{{ comment.timestamp.strftime("%m/%d/%Y %I:%M:%S %p") }} | {{ comment.user.first_name }} {{ comment.user.last_name }}
+                {%  if comment.user_id == current_user.id %}
+                    (You)
+                {% elif comment.user_id == request.creator_id %}
+                    (Creator)
+                {% endif %}
+                </label>
+                {% if current_user.role == "Administrator" or current_user.id == comment.user_id %}
+                    {{ deleteform.request_id(value=request.id) }}
+                    {{ deleteform.comment_id(value=comment.id) }}
+                    {{ deleteform.submit }}
+                {% endif %}
+            </form>
+            <div>{{ comment.content }}</div>
+            {% if comment.filepath %}
+            <div><a href="{{ url_for('request.download', comment_id=comment.id) }}">{{ comment.filepath[13:] }}</a></div>
+            {% endif %}
+        </div><br>
+        {% endfor %}
     </div>
 {% endblock %}
 

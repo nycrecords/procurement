@@ -8,9 +8,11 @@ from datetime import datetime
 from flask import render_template, request, redirect, url_for, jsonify, flash
 from .. import db
 from ..models import Request, Vendor, User
+from ..constants import status
 from . import main
 from .forms import RequestForm, UserForm, EditUserForm
 from flask_login import login_required, current_user
+from ..constants import roles
 
 
 @main.route('/')
@@ -30,29 +32,30 @@ def new_request():
     if request.method == 'POST':
         if form.validate_on_submit():
             date_submitted = datetime.now()
-            if current_user.is_authenticated:
-                newrequest = Request(
-                    division=current_user.division,
-                    date_submitted=date_submitted,
-                    item=form.item.data,
-                    quantity=form.quantity.data,
-                    unit_price=form.unit_price.data,
-                    total_cost=form.total_cost.data,
-                    funding_source=form.funding_source.data,
-                    funding_source_description=form.funding_source_description.data,
-                    justification=form.justification.data,
-                    creator_id=current_user.id,
-                    grant_name=None,
-                    project_name=None
+            # if current_user.is_authenticated:
+            newrequest = Request(
+                division=current_user.division,
+                date_submitted=date_submitted,
+                item=form.item.data,
+                quantity=form.quantity.data,
+                unit_price=form.unit_price.data,
+                total_cost=form.total_cost.data,
+                funding_source=form.funding_source.data,
+                funding_source_description=form.funding_source_description.data,
+                justification=form.justification.data,
+                status=status.SUB,
+                creator_id=current_user.id,
+                grant_name=None,
+                project_name=None
                 )
-            else:
-                newrequest = Request(form.request_name.data,
-                                     date_submitted,
-                                     form.item.data,
-                                     form.quantity.data, form.unit_price.data,
-                                     form.total_cost.data, form.funding_source.data,
-                                     form.funding_source_description.data, form.justification.data,
-                                     creator_id=current_user.id)
+            # else:
+            #     newrequest = Request(form.request_name.data,
+            #                          date_submitted,
+            #                          form.item.data,
+            #                          form.quantity.data, form.unit_price.data,
+            #                          form.total_cost.data, form.funding_source.data,
+            #                          form.funding_source_description.data, form.justification.data,
+            #                          creator_id=current_user.id)
             request_vendor_name = str(form.request_vendor_name.data)
             request_vendor_phone = str(form.request_vendor_phone.data)
             request_vendor_fax = str(form.request_vendor_fax.data)
@@ -116,6 +119,9 @@ def jsonify_fields():
 @login_required
 def admin_panel():
     """Return the admin panel where admins can create users, edit user information, and update login privileges."""
+    if not current_user.role == roles.ADMIN:
+        return redirect('requests')
+
     users = User.query.all()
     form = UserForm()
     if request.method == 'POST':
@@ -138,6 +144,9 @@ def admin_panel():
 @login_required
 def edit_user(id):
     """Return the page for an admin to update user information."""
+    if not current_user.role == roles.ADMIN:
+        return redirect('requests')
+
     form = EditUserForm()
     user = User.query.get_or_404(id)
     if request.method == 'POST':
@@ -163,6 +172,9 @@ def edit_user(id):
 @login_required
 def reset_password(id):
     """Resets the password of the user and then redirects to the edit user page."""
+    if not current_user.role == roles.ADMIN:
+        return redirect('requests')
+
     user = User.query.get_or_404(id)
     user.password = 'Change4me'
     db.session.commit()
@@ -174,6 +186,9 @@ def reset_password(id):
 @login_required
 def disable(id):
     """Disables the user's login privileges and redirects to admin panel page."""
+    if not current_user.role == roles.ADMIN:
+        return redirect('requests')
+
     user = User.query.get_or_404(id)
     user.login = False
     db.session.commit()
@@ -185,6 +200,9 @@ def disable(id):
 @login_required
 def enable(id):
     """Enables the user's login privileges and redirects to admin panel page."""
+    if not current_user.role == roles.ADMIN:
+        return redirect('requests')
+
     user = User.query.get_or_404(id)
     user.login = True
     db.session.commit()

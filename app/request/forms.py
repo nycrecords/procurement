@@ -4,11 +4,12 @@
    :synopsis: Defines forms used to manage Procurement requests.
 """
 from flask_wtf import Form
-from wtforms import StringField, SelectField, TextAreaField, BooleanField, SubmitField, \
+from wtforms import StringField, SelectField, TextAreaField, BooleanField, HiddenField, SubmitField, \
      RadioField, DecimalField, IntegerField
 from flask_wtf.file import FileField
 from wtforms.validators import DataRequired, Length, Optional
 from wtforms_alchemy import PhoneNumberField
+from ..constants import status
 
 divisions = [
     ('', ''),
@@ -43,7 +44,8 @@ statuses = [
 
 
 class CommentForm(Form):
-    body = StringField(u'Enter your comment', validators=[DataRequired()])
+    content = TextAreaField(validators=[Length(0, 500), DataRequired()])
+    request_id = HiddenField()
     file = FileField(u'Upload File...')
     submit = SubmitField(u'Add Comment')
 
@@ -72,4 +74,18 @@ class RequestForm(Form):
     request_vendor_email = StringField(u'Email')
     request_vendor_taxid = StringField(u'Vendor Tax ID')
     request_vendor_mwbe = BooleanField(u'mwbe')
+    status = SelectField(u'status', validators=[DataRequired()], choices=[(status.SUB, status.SUB),
+                                                                         (status.NDA, status.NDA),
+                                                                         (status.NCA, status.NCA),
+                                                                         (status.PEN, status.PEN),
+                                                                         (status.DEN, status.DEN),
+                                                                         (status.RES, status.RES),
+                                                                         (status.HOLD, status.HOLD)])
+    # comment = TextAreaField(validators=[Length(0, 500)])
     submit = SubmitField(u'Submit Request')
+
+
+class DeleteCommentForm(Form):
+    request_id = HiddenField()
+    comment_id = HiddenField()
+    submit = SubmitField(u'delete')

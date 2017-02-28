@@ -10,6 +10,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from sqlalchemy.orm.attributes import set_attribute
 from . constants import division
 from . import db, login_manager
+from . constants import roles
 import re
 
 
@@ -28,8 +29,9 @@ class User(UserMixin, db.Model):
                                  division.MIS,
                                  division.ADM, name="division"))
     password_hash = db.Column(db.String(128))
-    is_admin = db.Column(db.BOOLEAN, default=False)
+    # is_admin = db.Column(db.BOOLEAN, default=False)
     login = db.Column(db.BOOLEAN, default=True)
+    role = db.Column(db.String(100), default=roles.REG)
 
     @property
     def password(self):
@@ -112,6 +114,7 @@ class Request(db.Model):
             project_name,
             funding_source_description,
             justification,
+            status,
             creator_id
     ):
         self.division = division
@@ -126,6 +129,7 @@ class Request(db.Model):
         self.project_name = project_name
         self.funding_source_description = funding_source_description
         self.justification = justification
+        self.status = status
         self.creator_id = creator_id
 
     def set_vendor_id(self, vendor_id):
@@ -192,3 +196,5 @@ class Comment(db.Model):
     timestamp = db.Column(db.DateTime)
     content = db.Column(db.String())
     filepath = db.Column(db.String())
+
+    user = db.relationship("User", backref="user")
