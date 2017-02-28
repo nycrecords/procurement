@@ -81,7 +81,8 @@ class UserForm(Form):
 
 class EditUserForm(Form):
     """Form for updating user information"""
-    user_first_name = StringField(u'First Name*(required)')
-    user_last_name = StringField(u'Last Name*(required)')
-    user_email = StringField(u'Email*(required)')
+    user_first_name = StringField(u'First Name*(required)', validators=[DataRequired(), Length(1, 100)])
+    user_last_name = StringField(u'Last Name*(required)', validators=[DataRequired(), Length(1, 100)])
+    user_email = StringField(u'Email*(required)', validators=[DataRequired(), Length(1, 100),
+                                             Email()])
     update = SubmitField(u'Update Information')

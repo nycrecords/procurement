@@ -142,7 +142,7 @@ def edit_user(id):
     user = User.query.get_or_404(id)
     if request.method == 'POST':
         if form.validate_on_submit():
-            if user.email != form.user_email.data and len(User.query.filter_by(email=form.user_email.data).all()) == 0:
+            if user.email == form.user_email.data or len(User.query.filter_by(email=form.user_email.data).all()) == 0:
                 user_first_name = form.user_first_name.data
                 user_last_name = form.user_last_name.data
                 user_email = form.user_email.data
