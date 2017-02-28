@@ -81,6 +81,7 @@ def display_request(request_id):
 def edit_request(request_id):
     """Edit a request."""
 
+    # CURRENTLY USERS MUST GO THROUGH EDIT IN ORDER TO CHANGE STATUS (WILL BE FIXED IN THE FUTURE)
     COST_LIMIT = 1000
 
     if not current_user.role == roles.ADMIN and current_user.role == roles.REG:
@@ -134,7 +135,6 @@ def edit_request(request_id):
                            funding_source=request.funding_source,
                            justification=request.justification,
                            status=request.status)
-
         form.status.choices = choices
 
         return render_template('request/edit_request.html',
