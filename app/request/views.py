@@ -81,7 +81,9 @@ def display_request(request_id):
 def edit_request(request_id):
     """Edit a request."""
 
-    if not current_user.role == roles.ADMIN:
+    COST_LIMIT = 1000
+
+    if not current_user.role == roles.ADMIN and current_user.role == roles.REG:
         return redirect('requests')
 
     vendors = Vendor.query.order_by(Vendor.name).all()
@@ -90,29 +92,39 @@ def edit_request(request_id):
                                                     filter(Request.vendor_id == Vendor.id).first()
     form = RequestForm()
 
-    # if current_user.role == roles.ADMIN or current_user.role == roles.PROC:
-    #     choices = [(status.SUB, status.SUB),
-    #                (status.NDA, status.NDA),
-    #                (status.NCA, status.NCA),
-    #                (status.PEN, status.PEN),
-    #                (status.DEN, status.DEN),
-    #                (status.RES, status.RES),
-    #                (status.HOLD, status.HOLD)]
-    #
-    # elif current_user.role == roles.DIV:
-    #     choices = [(status.SUB, status.SUB),
-    #                (status.NDA, status.NDA),
-    #                (status.NCA, status.NCA),
-    #                (status.PEN, status.PEN),
-    #                (status.DEN, status.DEN),
-    #                (status.RES, status.RES),
-    #                (status.HOLD, status.HOLD)]
-    #
-    # elif current_user.role == roles.COM:
-    #     pass
-    #
-    # elif current_user.role == roles.PROC:
-    #     pass
+    disable_fields = True
+
+    if current_user.role == roles.ADMIN:
+        choices = [(status.NDA, status.NDA),
+                   (status.NCA, status.NCA),
+                   (status.PEN, status.PEN),
+                   (status.DEN, status.DEN),
+                   (status.RES, status.RES),
+                   (status.HOLD, status.HOLD)]
+        disable_fields = False
+
+    elif current_user.role == roles.DIV:
+        approved = status.NCA
+        if request.total_cost > COST_LIMIT:
+            approved = status.PEN
+
+        choices = [(status.NDA, status.NDA),
+                   (approved, "Approved"),
+                   (status.DEN, status.DEN)]
+
+    elif current_user.role == roles.COM:
+        choices = [(status.NCA, status.NCA),
+                   (status.PEN, "Approved"),
+                   (status.DEN, status.DEN)]
+
+    elif current_user.role == roles.PROC:
+        choices = [(status.NDA, status.NDA),
+                   (status.NCA, status.NCA),
+                   (status.PEN, status.PEN),
+                   (status.APR, status.APR),
+                   (status.DEN, status.DEN),
+                   (status.RES, status.RES),
+                   (status.HOLD, status.HOLD)]
 
     if flask_request.method == 'GET':
         form = RequestForm(item=request.item,
@@ -130,7 +142,8 @@ def edit_request(request_id):
                                vendors=vendors,
                                selected_vendor_id=vendor.id,
                                user=user,
-                               request=request)
+                               request=request,
+                               disableFields=disable_fields)
 
     elif flask_request.method == 'POST':
 
