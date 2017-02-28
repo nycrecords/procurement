@@ -23,7 +23,7 @@ from .. import db
 from .forms import RequestForm, CommentForm, DeleteCommentForm
 from ..models import Request, User, Vendor, Comment
 from . import request as request_blueprint
-from ..constants import roles
+from ..constants import roles, status
 from flask import current_app
 
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
@@ -46,6 +46,11 @@ def display_requests():
 @login_required
 def display_request(request_id):
     """View the page for a specific request."""
+
+    current_request = Request.query.filter_by(id=request_id).first()
+    if current_user.role != roles.ADMIN and current_user.division != current_request.division:
+        return redirect('requests')
+
     request = Request.query.filter_by(id=request_id).first()
     user = User.query.filter_by(id=request.creator_id).first()
     vendor = Vendor.query.filter_by(id=request.vendor_id).first()
@@ -85,6 +90,30 @@ def edit_request(request_id):
                                                     filter(Request.vendor_id == Vendor.id).first()
     form = RequestForm()
 
+    # if current_user.role == roles.ADMIN or current_user.role == roles.PROC:
+    #     choices = [(status.SUB, status.SUB),
+    #                (status.NDA, status.NDA),
+    #                (status.NCA, status.NCA),
+    #                (status.PEN, status.PEN),
+    #                (status.DEN, status.DEN),
+    #                (status.RES, status.RES),
+    #                (status.HOLD, status.HOLD)]
+    #
+    # elif current_user.role == roles.DIV:
+    #     choices = [(status.SUB, status.SUB),
+    #                (status.NDA, status.NDA),
+    #                (status.NCA, status.NCA),
+    #                (status.PEN, status.PEN),
+    #                (status.DEN, status.DEN),
+    #                (status.RES, status.RES),
+    #                (status.HOLD, status.HOLD)]
+    #
+    # elif current_user.role == roles.COM:
+    #     pass
+    #
+    # elif current_user.role == roles.PROC:
+    #     pass
+
     if flask_request.method == 'GET':
         form = RequestForm(item=request.item,
                            quantity=request.quantity,
@@ -93,6 +122,8 @@ def edit_request(request_id):
                            funding_source=request.funding_source,
                            justification=request.justification,
                            status=request.status)
+
+        form.status.choices = choices
 
         return render_template('request/edit_request.html',
                                form=form,

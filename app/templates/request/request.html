@@ -126,6 +126,7 @@
         <label for="notes" class="col-sm-7 form-control-label">NOTES</label>
         <div class="page-header"></div>
 
+        {% if current_user.role != "Regular User" or current_user.id == request.creator_id %}
         <div class="form-group col">
             <form action="{{ url_for('request.add_comment') }}" method="post" enctype="multipart/form-data">
                 {{ commentform.content(id="note", rows="3", cols="100", maxlength="500") }}
@@ -134,6 +135,7 @@
                 {{ commentform.submit }}
             </form>
         </div><br>
+        {% endif %}
 
         {% for comment in comments %}
         <div class="form-group col">
