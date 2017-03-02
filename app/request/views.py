@@ -265,7 +265,7 @@ def add_comment():
     db.session.add(newcomment)
     db.session.commit()
 
-    # email notification for edit
+    # email notification for notes
     receivers = []
 
     request, requestor = db.session.query(Request, User).filter(Request.id == commentform.request_id.data).\
@@ -284,36 +284,10 @@ def add_comment():
     for query in proc_query:
         receivers.append(query.email)
 
-    # receivers = [requestor.email]
-    # receivers = ['mlaikhram@gmail.com']
-    # message = """\
-    # From: Procurements <%s>
-    # To: <%s>
-    # Subject: New Comment Added to Request %s
-    #
-    # %s %s commented on your request:
-    #
-    # %s
-    # """ % (sender,
-    #        ">, <".join(receivers),
-    #        commentform.request_id.data,
-    #        current_user.first_name,
-    #        current_user.last_name,
-    #        commentform.content.data.strip())
-
     send_email(receivers, "New Comment Added to Request {}".format(commentform.request_id.data),
                'request/comment_added',
                user=current_user,
                commentform=commentform)
-
-    # print(message)
-
-    # try:
-    #     smtpObj = smtplib.SMTP('localhost', current_app.config["MAIL_PORT"])
-    #     smtpObj.sendmail(sender, receivers, message)
-    #     print("Successfully sent email")
-    # except:
-    #     print("Error: unable to send email")
 
     return redirect(url_for('request.display_request', request_id=commentform.request_id.data))
 
@@ -338,8 +312,35 @@ def download(comment_id):
 def update_status(request_id):
     statusform = StatusForm()
     request = Request.query.filter_by(id=request_id).first()
+    old_status = request.status
     request.status = statusform.status.data
     db.session.commit()
+
+    # email notification for notes NOT YET EDITED
+    receivers = []
+
+    request, requestor = db.session.query(Request, User).filter(Request.id == request_id).\
+                                                    filter(User.id == Request.creator_id).first()
+    receivers.append(requestor.email)
+
+    div_query = db.session.query(User).filter(User.role == roles.DIV).\
+                                       filter(User.email != requestor.email).\
+                                       filter(User.division == requestor.division).all()
+    for query in div_query:
+        receivers.append(query.email)
+
+    proc_query = db.session.query(User).filter(User.role == roles.PROC).\
+                                        filter(User.email != requestor.email).\
+                                        filter(User.division == requestor.division).all()
+    for query in proc_query:
+        receivers.append(query.email)
+
+    send_email(receivers, "Status Update on Request {}".format(request_id),
+               'request/status_update',
+               user=current_user,
+               request=request,
+               old_status=old_status)
+
     return redirect(url_for('request.display_request', request_id=request_id))
 
 

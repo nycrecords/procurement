@@ -191,7 +191,11 @@
         <div class="form-group col">
             <form action="{{ url_for('request.delete_comment') }}"
                method="post" value="{{ comment.id }}">
-                <label>{{ comment.timestamp.strftime("%m/%d/%Y %I:%M:%S %p") }} | {{ comment.user.first_name }} {{ comment.user.last_name }}
+                <label>{{ comment.timestamp.strftime("%m/%d/%Y %I:%M:%S %p") }} |
+                    {% if comment.user.role != "Regular User" %}
+                    {{ comment.user.role }}:
+                    {% endif %}
+                    {{ comment.user.first_name }} {{ comment.user.last_name }}
                 {%  if comment.user_id == current_user.id %}
                     (You)
                 {% elif comment.user_id == request.creator_id %}
