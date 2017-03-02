@@ -14,7 +14,6 @@
 #     7: 'Hold'
 # }
 
-SUB = 'Submitted'
 NDA = 'Needs Division Approval'
 NCA = 'Needs Commissioner Approval'
 PEN = 'Pending'

@@ -20,7 +20,7 @@ from werkzeug.utils import secure_filename
 from flask_login import login_required, current_user
 from ..email_notification import send_email
 from .. import db
-from .forms import RequestForm, CommentForm, DeleteCommentForm
+from .forms import RequestForm, CommentForm, DeleteCommentForm, StatusForm
 from ..models import Request, User, Vendor, Comment
 from . import request as request_blueprint
 from ..constants import roles, status
@@ -47,76 +47,54 @@ def display_requests():
 def display_request(request_id):
     """View the page for a specific request."""
 
-    current_request = Request.query.filter_by(id=request_id).first()
-    if current_user.role != roles.ADMIN and current_user.division != current_request.division:
+    request = Request.query.filter_by(id=request_id).first()
+    if current_user.role != roles.ADMIN and current_user.division != request.division:
         return redirect('requests')
 
-    request = Request.query.filter_by(id=request_id).first()
     user = User.query.filter_by(id=request.creator_id).first()
     vendor = Vendor.query.filter_by(id=request.vendor_id).first()
     comments = Comment.query.filter_by(request_id=request_id).order_by(Comment.timestamp.desc()).all()
 
-    if not (current_user.role == roles.ADMIN or current_user.division == request.division):
-        return redirect('requests')
-
     commentform = CommentForm()
     deleteform = DeleteCommentForm()
+    statusform = StatusForm(status=request.status)
 
-    if request:
-        return render_template(
-                                'request/request.html',
-                                request=request,
-                                user=user,
-                                vendor=vendor,
-                                comments=comments,
-                                commentform=commentform,
-                                deleteform=deleteform
-                            )
-    else:
-        abort(404)
+    # COST_LIMIT = 1000
+    allowed_to_update = True
+    choices = []
 
+    # determine what options the current user has for updating status
+    if current_user.role == roles.REG:
+        allowed_to_update = False
 
-@request_blueprint.route('/edit/<int:request_id>', methods=['GET', 'POST'])
-@login_required
-def edit_request(request_id):
-    """Edit a request."""
-
-    # CURRENTLY USERS MUST GO THROUGH EDIT IN ORDER TO CHANGE STATUS (WILL BE FIXED IN THE FUTURE)
-    COST_LIMIT = 1000
-
-    if not current_user.role == roles.ADMIN and current_user.role == roles.REG:
-        return redirect('requests')
-
-    vendors = Vendor.query.order_by(Vendor.name).all()
-    request, user, vendor = db.session.query(Request, User, Vendor).filter(Request.id == request_id).\
-                                                    filter(User.id == Request.creator_id).\
-                                                    filter(Request.vendor_id == Vendor.id).first()
-    form = RequestForm()
-
-    disable_fields = True
-
-    if current_user.role == roles.ADMIN:
+    elif current_user.role == roles.ADMIN:
         choices = [(status.NDA, status.NDA),
                    (status.NCA, status.NCA),
                    (status.PEN, status.PEN),
+                   (status.APR, status.APR),
                    (status.DEN, status.DEN),
                    (status.RES, status.RES),
                    (status.HOLD, status.HOLD)]
-        disable_fields = False
 
     elif current_user.role == roles.DIV:
         approved = status.NCA
-        if request.total_cost > COST_LIMIT:
+        if request.total_cost <= current_app.config['COST_LIMIT']:
             approved = status.PEN
 
         choices = [(status.NDA, status.NDA),
                    (approved, "Approved"),
                    (status.DEN, status.DEN)]
 
+        if request.status != status.NDA:
+            allowed_to_update = False
+
     elif current_user.role == roles.COM:
         choices = [(status.NCA, status.NCA),
                    (status.PEN, "Approved"),
                    (status.DEN, status.DEN)]
+
+        if request.status != status.NDA and request.status != status.NCA:
+            allowed_to_update = False
 
     elif current_user.role == roles.PROC:
         choices = [(status.NDA, status.NDA),
@@ -127,6 +105,39 @@ def edit_request(request_id):
                    (status.RES, status.RES),
                    (status.HOLD, status.HOLD)]
 
+    statusform.status.choices = choices
+
+    if request:
+        return render_template(
+                                'request/request.html',
+                                current_user=current_user,
+                                request=request,
+                                user=user,
+                                vendor=vendor,
+                                comments=comments,
+                                commentform=commentform,
+                                statusform=statusform,
+                                deleteform=deleteform,
+                                allowed_to_update=allowed_to_update
+                            )
+    else:
+        abort(404)
+
+
+@request_blueprint.route('/edit/<int:request_id>', methods=['GET', 'POST'])
+@login_required
+def edit_request(request_id):
+    """Edit a request."""
+
+    if not current_user.role == roles.ADMIN:
+        return redirect('requests')
+
+    vendors = Vendor.query.order_by(Vendor.name).all()
+    request, user, vendor = db.session.query(Request, User, Vendor).filter(Request.id == request_id).\
+                                                    filter(User.id == Request.creator_id).\
+                                                    filter(Request.vendor_id == Vendor.id).first()
+    form = RequestForm()
+
     if flask_request.method == 'GET':
         form = RequestForm(item=request.item,
                            quantity=request.quantity,
@@ -135,15 +146,13 @@ def edit_request(request_id):
                            funding_source=request.funding_source,
                            justification=request.justification,
                            status=request.status)
-        form.status.choices = choices
 
         return render_template('request/edit_request.html',
                                form=form,
                                vendors=vendors,
                                selected_vendor_id=vendor.id,
                                user=user,
-                               request=request,
-                               disableFields=disable_fields)
+                               request=request)
 
     elif flask_request.method == 'POST':
 
@@ -323,6 +332,15 @@ def download(comment_id):
     print(comment.filepath)
     return send_from_directory(current_app.config['UPLOAD_FOLDER'], comment.filepath,
                                as_attachment=True, attachment_filename=comment.filepath[13:])
+
+
+@request_blueprint.route('/status/<int:request_id>', methods=['GET', 'POST'])
+def update_status(request_id):
+    statusform = StatusForm()
+    request = Request.query.filter_by(id=request_id).first()
+    request.status = statusform.status.data
+    db.session.commit()
+    return redirect(url_for('request.display_request', request_id=request_id))
 
 
 @request_blueprint.errorhandler(404)

@@ -5,7 +5,7 @@
 """
 
 from datetime import datetime
-from flask import render_template, request, redirect, url_for, jsonify, flash
+from flask import render_template, request, redirect, url_for, jsonify, flash, current_app
 from .. import db
 from ..models import Request, Vendor, User
 from ..constants import status
@@ -31,8 +31,21 @@ def new_request():
 
     if request.method == 'POST':
         if form.validate_on_submit():
+
             date_submitted = datetime.now()
-            # if current_user.is_authenticated:
+
+            current_status = status.NDA
+            if current_user.role == roles.DIV:
+                current_status = status.NCA
+                if form.total_cost.data <= current_app.config['COST_LIMIT']:
+                    current_status = status.PEN
+
+            elif current_user.role == roles.COM:
+                current_status = status.PEN
+
+            elif current_user.role == roles.PROC:
+                current_status = status.NCA
+
             newrequest = Request(
                 division=current_user.division,
                 date_submitted=date_submitted,
@@ -43,7 +56,7 @@ def new_request():
                 funding_source=form.funding_source.data,
                 funding_source_description=form.funding_source_description.data,
                 justification=form.justification.data,
-                status=status.SUB,
+                status=current_status,
                 creator_id=current_user.id,
                 grant_name=None,
                 project_name=None

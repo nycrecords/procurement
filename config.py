@@ -19,6 +19,7 @@ class Config:
     FLASKY_ADMIN = os.environ.get('PROCUREMENT_ADMIN')
     # UPLOAD_FOLDER = './uploads'
     UPLOAD_FOLDER = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'uploads')
+    COST_LIMIT = 1000
 
     @staticmethod
     def init_app(app):

@@ -74,13 +74,13 @@ class RequestForm(Form):
     request_vendor_email = StringField(u'Email')
     request_vendor_taxid = StringField(u'Vendor Tax ID')
     request_vendor_mwbe = BooleanField(u'mwbe')
-    status = SelectField(u'status', validators=[DataRequired()], choices=[(status.SUB, status.SUB),
-                                                                         (status.NDA, status.NDA),
-                                                                         (status.NCA, status.NCA),
-                                                                         (status.PEN, status.PEN),
-                                                                         (status.DEN, status.DEN),
-                                                                         (status.RES, status.RES),
-                                                                         (status.HOLD, status.HOLD)])
+    status = SelectField(u'status', validators=[DataRequired()], choices=[(status.NDA, status.NDA),
+                                                                          (status.NCA, status.NCA),
+                                                                          (status.PEN, status.PEN),
+                                                                          (status.APR, status.APR),
+                                                                          (status.DEN, status.DEN),
+                                                                          (status.RES, status.RES),
+                                                                          (status.HOLD, status.HOLD)])
     # comment = TextAreaField(validators=[Length(0, 500)])
     submit = SubmitField(u'Submit Request')
 
@@ -89,3 +89,8 @@ class DeleteCommentForm(Form):
     request_id = HiddenField()
     comment_id = HiddenField()
     submit = SubmitField(u'delete')
+
+
+class StatusForm(Form):
+    status = SelectField(u'status', validators=[DataRequired()])
+    submit = SubmitField(u'Update')
