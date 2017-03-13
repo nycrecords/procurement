@@ -6,25 +6,25 @@
 
 from datetime import datetime
 from flask import render_template, request, redirect, url_for, jsonify, flash
-from .. import db
-from ..models import Request, Vendor, User
-from ..constants import status
-from . import main
-from .forms import RequestForm, UserForm, EditUserForm
 from flask_login import login_required, current_user
-from ..constants import roles
+from app import db
+from app.models import Request, Vendor, User
+from app.constants import status
+from app.main import main
+from app.main.forms import RequestForm, UserForm, EditUserForm
+from app.constants import roles
 
 
 @main.route('/')
 def index():
-    """Homepage with button that links to the procurement request form."""
+    """Return homepage with a button redirecting to the procurement request form."""
     return render_template('main/index.html')
 
 
-@main.route('/new', methods=['GET', 'POST'])
+@main.route('/new_request', methods=['GET', 'POST'])
 @login_required
 def new_request():
-    """Create a new procurement request."""
+    """Return new request form for procurements."""
     form = RequestForm()
 
     vendors = Vendor.query.order_by(Vendor.name).all()
@@ -32,8 +32,7 @@ def new_request():
     if request.method == 'POST':
         if form.validate_on_submit():
             date_submitted = datetime.now()
-            # if current_user.is_authenticated:
-            newrequest = Request(
+            new_request = Request(
                 division=current_user.division,
                 date_submitted=date_submitted,
                 item=form.item.data,
@@ -45,47 +44,41 @@ def new_request():
                 justification=form.justification.data,
                 status=status.SUB,
                 creator_id=current_user.id,
-                grant_name=None,
-                project_name=None
-                )
-            # else:
-            #     newrequest = Request(form.request_name.data,
-            #                          date_submitted,
-            #                          form.item.data,
-            #                          form.quantity.data, form.unit_price.data,
-            #                          form.total_cost.data, form.funding_source.data,
-            #                          form.funding_source_description.data, form.justification.data,
-            #                          creator_id=current_user.id)
+                grant_name=form.grant_name.data,
+                project_name=form.project_name.data
+            )
             request_vendor_name = str(form.request_vendor_name.data)
             request_vendor_phone = str(form.request_vendor_phone.data)
             request_vendor_fax = str(form.request_vendor_fax.data)
             request_vendor_mwbe = str(form.request_vendor_mwbe.data)
 
-            newvendor = None
+            new_vendor = None
             vendor_form = request.form["vendor"]
 
             if request_vendor_name != '':
                 if request_vendor_mwbe == "None":
                     request_vendor_mwbe = None
                 if vendor_form == "default":
-                    newvendor = Vendor(name=request_vendor_name,
+                    new_vendor = Vendor(name=request_vendor_name,
                                        address=form.request_vendor_address.data,
                                        phone=request_vendor_phone,
                                        fax=request_vendor_fax,
                                        email=form.request_vendor_email.data,
                                        tax_id=form.request_vendor_taxid.data,
                                        mwbe=request_vendor_mwbe)
-                    db.session.add(newvendor)
+                    db.session.add(new_vendor)
                     db.session.commit()
             else:
                 print(form.errors)
-            if newvendor is not None:
-                newrequest.set_vendor_id(newvendor.id)
+
+            if new_vendor is not None:
+                new_request.set_vendor_id(new_vendor.id)
             else:
-                newrequest.set_vendor_id(vendor_form)
-            db.session.add(newrequest)
+                new_request.set_vendor_id(vendor_form)
+
+            db.session.add(new_request)
             db.session.commit()
-            return redirect(url_for('request.display_request', request_id=newrequest.id))
+            return redirect(url_for('request.display_request', request_id=new_request.id))
         else:
             print(form.errors)
 
@@ -103,7 +96,6 @@ def divisions():
         'MIS/Web': 'MIS/Web',
         'Administration': 'Administration'
     }
-
     return jsonify(divisions)
 
 

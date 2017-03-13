@@ -1,8 +1,8 @@
-<p>{{ user.first_name}} {{ user.last_name }} has commented on Request {{ commentform.request_id.data }}:</p>
-<p>{{ commentform.content.data }}</p>
-<p><a href="{{ url_for('request.display_request', request_id=commentform.request_id.data, _external=True) }}">Click here</a>
-    to view this request.
+<p>{{ user.first_name }} {{ user.last_name }} has commented on Request {{ comment_form.request_id.data }}:</p>
+<p>{{ comment_form.content.data }}</p>
+<p><a href="{{ url_for('request.display_request', request_id=comment_form.request_id.data, _external=True) }}">Click
+    here</a> to view this request.
 </p>
-<p>Sincerely,</p>
-<p>The Flasky Team</p>
-<p><small>Note: replies to this email address are not monitored.</small></p>
+<p>
+    <small>Note: replies to this email address are not monitored.</small>
+</p>
