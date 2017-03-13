@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}
-    Records Procurement - Vendors
+    Records Procurement - Vendor List
 {% endblock title %}
 {% block custom_css_links %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/bootstrap-table.min.css') }}">
@@ -13,7 +13,7 @@
                 <h2>Vendor List</h2>
             </div>
             <div class="col-sm-offset-4 col-sm-3">
-                <a href="/new_request" class="btn btn-primary btn-large pull-right">New Vendor</a>
+                <a href="/new_vendor" class="btn btn-primary btn-large pull-right">New Vendor</a>
             </div>
         </div>
     </div>
@@ -36,10 +36,13 @@
 
                 <thead>
                 <tr>
-                    <th data-field="name" class="col-sm-5" data-sortable="true">Name</th>
-                    <th class="col-sm-5" data-field="email" data-sortable="true">Email</th>
-                    <th class="col-sm-2" data-sortable="false">Tax ID</th>
-                    <th class="col-sm-1" data-sortable="false">M/WBE</th>
+                    <th class="col-sm-3" data-field="name" data-sortable="true">Name</th>
+                    <th class="col-sm-3" data-field="address" data-sortable="true">Address</th>
+                    <th class="col-sm-3" data-field="phone" data-sortable="false">Phone</th>
+                    <th class="col-sm-3" data-field="fax" data-sortable="false">Fax</th>
+                    <th class="col-sm-3" data-field="email" data-sortable="true">Email</th>
+                    <th class="col-sm-3" data-field="tax_id" data-sortable="true">Tax ID</th>
+                    <th class="col-sm-1" data-field="mwbe" data-sortable="false">M/WBE</th>
                     <th class="col-sm-1" data-sortable="false">Edit</th>
                 </tr>
                 </thead>
@@ -47,6 +50,9 @@
                 {% for vendor in vendors %}
                     <tr class="table-row">
                         <td> {{ vendor.name }} </td>
+                        <td> {{ vendor.address }} </td>
+                        <td> {{ vendor.phone }} </td>
+                        <td> {{ vendor.fax }} </td>
                         <td> {{ vendor.email }} </td>
                         <td> {{ vendor.tax_id }} </td>
                         <td> {{ vendor.mwbe }} </td>
