@@ -1,7 +1,8 @@
-'''
-Defines the different roles for users
-'''
+"""
+.. module:: constants.roles
 
+    :synopsis: Defines roles used throughout the application.
+"""
 REG = "Regular User"
 DIV = "Division Head"
 PROC = "Procurement Head"

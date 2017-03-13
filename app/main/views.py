@@ -1,9 +1,8 @@
 """
-.. module:: Provides url endpoints for the main application
+.. module:: main.views
 
-    :synopsis:
+    :synopsis: Handles all core URL endpoints for the procurement application
 """
-
 from datetime import datetime
 from flask import render_template, request, redirect, url_for, jsonify, flash
 from flask_login import login_required, current_user
