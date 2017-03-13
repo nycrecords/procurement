@@ -1,11 +1,11 @@
 """
-    ..module: auth.utils
+.. module:: auth.utils
 
     :synopsis: Defines the functions for auth directory
 """
-from werkzeug.security import check_password_hash
-from ..models import User
 import re
+from werkzeug.security import check_password_hash
+from app.models import User
 
 
 def check_password_requirements(email, old_password, password, password_confirmation):

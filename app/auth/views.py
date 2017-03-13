@@ -1,29 +1,28 @@
 """
 .. module:: auth.views
 
-    :synopsis :Provides url endpoints for authentication and user management
+    :synopsis: Provides url endpoints for authentication and user management
 """
-
 from werkzeug.security import generate_password_hash
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, current_user, login_required
-from . import auth
-from .. import db
-from ..models import User
-from ..email_notification import send_email
-from .forms import (
+from app import db
+from app.auth import auth
+from app.models import User
+from app.email_notification import send_email
+from app.auth.utils import check_password_requirements
+from app.auth.forms import (
     LoginForm,
     ChangePasswordForm,
     PasswordResetRequestForm,
     PasswordResetForm,
     SignupForm
 )
-from .utils import check_password_requirements
 
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
-    """Login page for user login."""
+    """Return the login page."""
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -41,7 +40,7 @@ def login():
 @auth.route('/logout')
 @login_required
 def logout():
-    """Logout"""
+    """Logs out user and redirects to homepage."""
     logout_user()
     flash('You have been logged out.')
     return redirect(url_for('main.index'))
@@ -50,7 +49,7 @@ def logout():
 @auth.route('/change-password', methods=['GET', 'POST'])
 @login_required
 def change_password():
-    """Password change page"""
+    """Return page to change password."""
     form = ChangePasswordForm()
     if form.validate_on_submit():
         if check_password_requirements(current_user.email,
@@ -68,6 +67,7 @@ def change_password():
 
 @auth.route('/reset', methods=['GET', 'POST'])
 def password_reset_request():
+    """Return page to reset password."""
     if not current_user.is_anonymous:
         return redirect(url_for('main.index'))
     form = PasswordResetRequestForm()
@@ -104,6 +104,7 @@ def password_reset(token):
 
 @auth.route('/sign_up', methods=['GET', 'POST'])  # FIX TO ALLOW DIVISON TO BE SELECTED IN FORMS/VIEWS/HTML
 def sign_up():
+    """Return page to create a new account."""
     form = SignupForm()
     if form.validate_on_submit():
         newuser = User(email=form.email.data,
