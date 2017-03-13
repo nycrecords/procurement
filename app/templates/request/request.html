@@ -68,8 +68,13 @@
                         <td><a href="#" id="grant_name">{{ request.grant_name }}</a></td>
                     </tr>
                     <tr>
-                        <th scope="row">Funding Source:</th>
+                        <th scope="row">Project Name:</th>
                         <td><a href="#" id="project_name">{{ request.project_name }}</a></td>
+                    </tr>
+                {% elif request.funding_source == "Other" %}
+                    <tr>
+                        <th scope="row">Funding Source Description:</th>
+                        <td><a href="#" id="grant_name">{{ request.funding_source_description }}</a></td>
                     </tr>
                 {% endif %}
                 <tr>

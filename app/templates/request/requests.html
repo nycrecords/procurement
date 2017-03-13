@@ -13,7 +13,8 @@
                 <h2>Request History</h2>
             </div>
             <div class="col-sm-offset-4 col-sm-3">
-                <a href="{{ url_for('request.new_request') }}" class="btn btn-primary btn-large pull-right">New Request</a>
+                <a href="{{ url_for('request.new_request') }}" class="btn btn-primary btn-large pull-right">New
+                    Request</a>
             </div>
         </div>
     </div>
@@ -44,6 +45,9 @@
                     <th class="col-sm-5" data-sortable="false">Request Description</th>
                     <th class="col-sm-2" data-sortable="false">Status</th>
                     <th class="col-sm-1" data-sortable="false">Total Cost</th>
+                    {% if current_user.role == "Administrator" %}
+                        <th class="col-sm-1" data-sortable="false">Edit</th>
+                    {% endif %}
                 </tr>
                 </thead>
                 <tbody>
@@ -55,6 +59,9 @@
                         <td> {{ request.item }} </td>
                         <td> {{ request.status }} </td>
                         <td class="text-success"> ${{ request.total_cost }} </td>
+                        {% if current_user.role == "Administrator" %}
+                            <td><a class="btn btn-danger btn-small" href="/requests/edit/{{ request.id }}">Edit</a></td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
                 </tbody>

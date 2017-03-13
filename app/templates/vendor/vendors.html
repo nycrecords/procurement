@@ -43,13 +43,15 @@
                     <th class="col-sm-3" data-field="email" data-sortable="true">Email</th>
                     <th class="col-sm-3" data-field="tax_id" data-sortable="true">Tax ID</th>
                     <th class="col-sm-1" data-field="mwbe" data-sortable="false">M/WBE</th>
-                    <th class="col-sm-1" data-sortable="false">Edit</th>
+                    {% if current_user.role == "Administrator" %}
+                        <th class="col-sm-1" data-sortable="false">Edit</th>
+                    {% endif %}
                     <th class="col-sm-1" data-sortable="false">View</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for vendor in vendors %}
-                    <tr class="table-row">
+                    <tr class="table-row" data-href="/vendors/{{ vendor.id }}">
                         <td> {{ vendor.name }} </td>
                         <td> {{ vendor.address }} </td>
                         <td> {{ vendor.phone }} </td>
@@ -57,7 +59,9 @@
                         <td> {{ vendor.email }} </td>
                         <td> {{ vendor.tax_id }} </td>
                         <td> {{ vendor.mwbe }} </td>
-                        <td><a class="btn btn-danger btn-small" href="/vendors/edit/{{ vendor.id }}">Edit</a></td>
+                        {% if current_user.role == "Administrator" %}
+                            <td><a class="btn btn-danger btn-small" href="/vendors/edit/{{ vendor.id }}">Edit</a></td>
+                        {% endif %}
                         <td><a class="btn btn-primary btn-small" href="/vendors/{{ vendor.id }}">View</a></td>
                     </tr>
                 {% endfor %}
@@ -79,4 +83,11 @@
     <script type="text/javascript"
             src="{{ url_for('static', filename='js/plugins/bootstrap-table-export.min.js') }}"></script>
     <script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function ($) {
+            $(".table-row").click(function () {
+                window.document.location = $(this).data("href");
+            });
+        });
+    </script>
 {% endblock %}
