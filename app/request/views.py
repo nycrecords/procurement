@@ -12,7 +12,8 @@ from flask import (
     redirect,
     url_for,
     send_from_directory,
-    current_app
+    current_app,
+    flash
 )
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
@@ -56,44 +57,38 @@ def new_request():
                 unit_price=form.unit_price.data,
                 total_cost=form.total_cost.data,
                 funding_source=form.funding_source.data,
-                funding_source_description=form.funding_source_description.data,
                 justification=form.justification.data,
                 status=status.SUB,
-                creator_id=current_user.id,
-                grant_name=form.grant_name.data,
-                project_name=form.project_name.data
+                creator_id=current_user.id
             )
+
+            if new_request.funding_source == "Grant":
+                new_request.grant_name = form.grant_name.data
+                new_request.project_name = form.project_name.data
+            elif new_request == "Other":
+                new_request.funding_source_description = form.funding_source_description.data
+
             request_vendor_name = str(form.request_vendor_name.data)
             request_vendor_phone = str(form.request_vendor_phone.data)
             request_vendor_fax = str(form.request_vendor_fax.data)
-            request_vendor_mwbe = str(form.request_vendor_mwbe.data)
+            request_vendor_mwbe = form.request_vendor_mwbe.data
 
-            new_vendor = None
-            vendor_form = request.form["vendor"]
-
-            if request_vendor_name != '':
-                if request_vendor_mwbe == "None":
-                    request_vendor_mwbe = None
-                if vendor_form == "default":
-                    new_vendor = Vendor(name=request_vendor_name,
-                                       address=form.request_vendor_address.data,
-                                       phone=request_vendor_phone,
-                                       fax=request_vendor_fax,
-                                       email=form.request_vendor_email.data,
-                                       tax_id=form.request_vendor_taxid.data,
-                                       mwbe=request_vendor_mwbe)
-                    db.session.add(new_vendor)
-                    db.session.commit()
-            else:
-                print(form.errors)
-
-            if new_vendor is not None:
+            vendor_form = flask_request.form["vendor"]
+            if vendor_form == "default":
+                new_vendor = Vendor(name=request_vendor_name,
+                                    address=form.request_vendor_address.data,
+                                    phone=request_vendor_phone,
+                                    fax=request_vendor_fax,
+                                    email=form.request_vendor_email.data,
+                                    tax_id=form.request_vendor_taxid.data,
+                                    mwbe=request_vendor_mwbe)
+                db.session.add(new_vendor)
                 new_request.set_vendor_id(new_vendor.id)
             else:
                 new_request.set_vendor_id(vendor_form)
-
             db.session.add(new_request)
             db.session.commit()
+            flash("Request was successfully created!")
             return redirect(url_for('request.display_request', request_id=new_request.id))
         else:
             print(form.errors)
@@ -156,18 +151,10 @@ def edit_request(request_id):
                            funding_source=request.funding_source,
                            justification=request.justification,
                            status=request.status)
-
-        # form.status.choices = choices
-
-        return render_template('request/edit_request.html',
-                               form=form,
-                               vendors=vendors,
-                               selected_vendor_id=vendor.id,
-                               user=user,
-                               request=request)
+        return render_template('request/edit_request.html', form=form, vendors=vendors, selected_vendor_id=vendor.id,
+                               user=user, request=request)
 
     elif flask_request.method == 'POST':
-        # Updates database with new information
         request.item = form.item.data
         request.quantity = form.quantity.data
         request.unit_price = form.unit_price.data
@@ -176,37 +163,39 @@ def edit_request(request_id):
         request.justification = form.justification.data
         request.status = form.status.data
 
-        # Vendor Information
+        if request.funding_source == "Grant":
+            request.grant_name = form.grant_name.data
+            request.project_name = form.project_name.data
+            request.funding_source_description = None
+        elif request.funding_source == "Other":
+            request.grant_name = None
+            request.project_name = None
+            request.funding_source_description = form.funding_source_description.data
+        else:
+            request.grant_name = None
+            request.project_name = None
+            request.funding_source_description = None
+
         request_vendor_name = str(form.request_vendor_name.data)
         request_vendor_phone = str(form.request_vendor_phone.data)
         request_vendor_fax = str(form.request_vendor_fax.data)
-        request_vendor_mwbe = str(form.request_vendor_mwbe.data)
+        request_vendor_mwbe = form.request_vendor_mwbe.data
 
-        new_vendor = None
         vendor_form = flask_request.form["vendor"]
-
-        if request_vendor_name != '':
-            if request_vendor_mwbe == "None":
-                request_vendor_mwbe = None
-            if vendor_form == "default":
-                new_vendor = Vendor(name=request_vendor_name,
-                                    address=form.request_vendor_address.data,
-                                    phone=request_vendor_phone,
-                                    fax=request_vendor_fax,
-                                    email=form.request_vendor_email.data,
-                                    tax_id=form.request_vendor_taxid.data,
-                                    mwbe=request_vendor_mwbe)
-                db.session.add(new_vendor)
-                db.session.commit()
-        else:
-            print(form.errors)
-
-        if new_vendor is not None:
-            request.set_vendor_id(new_vendor.id)
+        if vendor_form == "default":
+            new_vendor = Vendor(name=request_vendor_name,
+                                address=form.request_vendor_address.data,
+                                phone=request_vendor_phone,
+                                fax=request_vendor_fax,
+                                email=form.request_vendor_email.data,
+                                tax_id=form.request_vendor_taxid.data,
+                                mwbe=request_vendor_mwbe)
+            db.session.add(new_vendor)
+            new_request.set_vendor_id(new_vendor.id)
         else:
             request.set_vendor_id(vendor_form)
-        # db.session.add(request)
-        # db.session.commit()
+        db.session.commit()
+        flash("Request was successfully updated!")
 
         # # Add Notes
         # if form.comment is not None and form.comment.data.strip() is not "":

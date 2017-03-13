@@ -128,12 +128,28 @@
             </div>
         </div>
 
-        <div class="form-group row">
+        <div id="funding_source_description" class="form-group row" style="display: None;">
             <label for="funding_source_description" class="col-sm-offset-1 col-sm-3 form-control-label">
                 If Other, specify:</label>
             <div class="col-sm-5">
                 {{ form.funding_source_description(id="funding_source_description", class="form-control",
-                            text="text", maxlength="100") }}
+                        text="text", maxlength="100", value=request.funding_source_description) }}
+            </div>
+        </div>
+
+        <div id="grant_name" class="form-group row required" style="display: None;">
+            <label for="grant_name" class="col-sm-offset-1 col-sm-3 form-control-label">
+                Grant Name:</label>
+            <div class="col-sm-5">
+                {{ form.grant_name(id="grant_name", class="form-control", text="text", maxlength="100", value=request.grant_name) }}
+            </div>
+        </div>
+
+        <div id="project_name" class="form-group row required" style="display: None;">
+            <label for="project_name" class="col-sm-offset-1 col-sm-3 form-control-label">
+                Project Name:</label>
+            <div class="col-sm-5">
+                {{ form.project_name(id="project_name", class="form-control", text="text", maxlength="100", value=request.project_name) }}
             </div>
         </div>
 
@@ -166,62 +182,60 @@
             </div>
         </div>
 
-        {% if 0 == 0 %}
-            <div class="form-group row">
-                <label for="request_vendor_name" class="col-sm-3 form-control-label">Vendor Name:</label>
-                <div class="col-sm-5">
-                    {{ form.request_vendor_name(id="vendor_name", class="form-control", maxlength="100") }}
-                </div>
+        <div class="form-group row">
+            <label for="request_vendor_name" class="col-sm-3 form-control-label">Vendor Name:</label>
+            <div class="col-sm-5">
+                {{ form.request_vendor_name(id="vendor_name", class="form-control", maxlength="100") }}
             </div>
+        </div>
 
-            <div class="form-group row">
-                <label for="request_vendor_address" class="col-sm-3 form-control-label">Vendor Address:</label>
-                <div class="col-sm-5">
-                    {{ form.request_vendor_address(id="vendor_address", class="form-control", maxlength="100") }}
-                </div>
+        <div class="form-group row">
+            <label for="request_vendor_address" class="col-sm-3 form-control-label">Vendor Address:</label>
+            <div class="col-sm-5">
+                {{ form.request_vendor_address(id="vendor_address", class="form-control", maxlength="100") }}
             </div>
+        </div>
 
-            <div class="form-group row">
-                {% for message in form.request_vendor_phone.errors %}
-                    <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
-                {% endfor %}
-                <label for="request_vendor_phone" class="col-sm-3 form-control-label">Vendor Phone:</label>
-                <div class="col-sm-5">
-                    {{ form.request_vendor_phone(id="vendor_phone", class="form-control", type="tel") }}
-                </div>
+        <div class="form-group row">
+            {% for message in form.request_vendor_phone.errors %}
+                <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
+            {% endfor %}
+            <label for="request_vendor_phone" class="col-sm-3 form-control-label">Vendor Phone:</label>
+            <div class="col-sm-5">
+                {{ form.request_vendor_phone(id="vendor_phone", class="form-control", type="tel") }}
             </div>
+        </div>
 
-            <div class="form-group row">
-                {% for message in form.request_vendor_fax.errors %}
-                    <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
-                {% endfor %}
-                <label for="request_vendor_fax" class="col-sm-3 form-control-label">Vendor Fax:</label>
-                <div class="col-sm-5">
-                    {{ form.request_vendor_fax(id="vendor_fax", class="form-control", type="tel") }}
-                </div>
+        <div class="form-group row">
+            {% for message in form.request_vendor_fax.errors %}
+                <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
+            {% endfor %}
+            <label for="request_vendor_fax" class="col-sm-3 form-control-label">Vendor Fax:</label>
+            <div class="col-sm-5">
+                {{ form.request_vendor_fax(id="vendor_fax", class="form-control", type="tel") }}
             </div>
+        </div>
 
-            <div class="form-group row">
-                <label for="request_vendor_email" class="col-sm-3 form-control-label">Vendor Email:</label>
-                <div class="col-sm-5">
-                    {{ form.request_vendor_email(id="vendor_email", class="form-control", maxlength="100") }}
-                </div>
+        <div class="form-group row">
+            <label for="request_vendor_email" class="col-sm-3 form-control-label">Vendor Email:</label>
+            <div class="col-sm-5">
+                {{ form.request_vendor_email(id="vendor_email", class="form-control", maxlength="100") }}
             </div>
+        </div>
 
-            <div class="form-group row">
-                <label for="request_vendor_taxid" class="col-sm-3 form-control-label">Vendor/Tax ID:</label>
-                <div class="col-sm-5">
-                    {{ form.request_vendor_taxid(id="vendor_taxid", class="form-control", maxlength="100") }}
-                </div>
+        <div class="form-group row">
+            <label for="request_vendor_taxid" class="col-sm-3 form-control-label">Vendor/Tax ID:</label>
+            <div class="col-sm-5">
+                {{ form.request_vendor_taxid(id="vendor_taxid", class="form-control", maxlength="100") }}
             </div>
+        </div>
 
-            <div class="form-group row">
-                <label for="request_request_vendor_mwbe" class="col-sm-3 form-control-label">M/WBE:</label>
-                <div class="col-sm-5">
-                    {{ form.request_vendor_mwbe(id="request_vendor_mwbe", class="radio-inline") }}
-                </div>
+        <div class="form-group row">
+            <label for="request_request_vendor_mwbe" class="col-sm-3 form-control-label">M/WBE:</label>
+            <div class="col-sm-5">
+                {{ form.request_vendor_mwbe(id="request_vendor_mwbe", class="radio-inline") }}
             </div>
-        {% endif %}
+        </div>
 
         <div class="form-group row">
             <label for="request_request_vendor_mwbe" class="col-sm-3 form-control-label">Status:</label>
@@ -229,23 +243,57 @@
                 {{ form.status(id="status", class='form-control') }}
             </div>
         </div>
-        <!--<div class="form-group row">
-        <label for="comment" class="col-sm-3 form-control-label">Comment (Optional):</label>
-            <div class="col-sm-8">
-{#                {{ form.comment(id="note", rows="3", class="form-control", maxlength="500") }}#}
-            </div>
-        </div>-->
+
         <div class="form-group row">
             <div class="spacer">
                 <button type="submit" class="btn btn-primary btn-lg btn-block">Submit Request</button>
             </div>
         </div>
     </form>
-    <!-- end of static form -->
 {% endblock %}
 
 {% block scripts %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if ($('#funding_source').val() == 'Other') {
+                $('#funding_source_description').show();
+                $('#grant_name').hide();
+                $('#project_name').hide();
+            }
+            else if ($('#funding_source').val() == 'Grant') {
+                $('#grant_name').show();
+                $('#project_name').show();
+                $('#funding_source_description').hide();
+            }
+            else {
+                $('#funding_source_description').hide();
+                $('#grant_name').hide();
+                $('#project_name').hide();
+            }
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#funding_source').on('change', function () {
+                if ($('#funding_source').val() == 'Other') {
+                    $('#funding_source_description').show();
+                    $('#grant_name').hide();
+                    $('#project_name').hide();
+                }
+                else if ($('#funding_source').val() == 'Grant') {
+                    $('#grant_name').show();
+                    $('#project_name').show();
+                    $('#funding_source_description').hide();
+                }
+                else {
+                    $('#funding_source_description').hide();
+                    $('#grant_name').hide();
+                    $('#project_name').hide();
+                }
+            })
+        });
+    </script>
     <script>
         $("#vendor").change(function () {
             $.ajax({

@@ -63,7 +63,6 @@
             </div>
         {% endif %}
 
-
         <div class="form-group row">
             {% for message in form.item.errors %}
                 <div class="alert alert-danger" id="missing_item">{{ message }}</div>
@@ -178,66 +177,71 @@
             </div>
         </div>
 
-        {% if 0 == 0 %}
-            <div class="form-group row">
-                <label for="request_vendor_name" class="col-sm-3 form-control-label">Vendor Name:</label>
-                <div class="col-sm-5">
-                    {{ form.request_vendor_name(id="vendor_name", class="form-control", maxlength="100") }}
-                </div>
+        <div class="form-group row">
+            <label for="request_vendor_name" class="col-sm-3 form-control-label">Vendor Name:</label>
+            <div class="col-sm-5">
+                {{ form.request_vendor_name(id="vendor_name", class="form-control", maxlength="100") }}
             </div>
+        </div>
 
-            <div class="form-group row">
-                <label for="request_vendor_address" class="col-sm-3 form-control-label">Vendor Address:</label>
-                <div class="col-sm-5">
-                    {{ form.request_vendor_address(id="vendor_address", class="form-control", maxlength="100") }}
-                </div>
+        <div class="form-group row">
+            <label for="request_vendor_address" class="col-sm-3 form-control-label">Vendor Address:</label>
+            <div class="col-sm-5">
+                {{ form.request_vendor_address(id="vendor_address", class="form-control", maxlength="100") }}
             </div>
+        </div>
 
-            <div class="form-group row">
-                {% for message in form.request_vendor_phone.errors %}
-                    <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
-                {% endfor %}
-                <label for="request_vendor_phone" class="col-sm-3 form-control-label">Vendor Phone:</label>
-                <div class="col-sm-5">
-                    {{ form.request_vendor_phone(id="vendor_phone", class="form-control", type="tel") }}
-                </div>
+        <div class="form-group row">
+            {% for message in form.request_vendor_phone.errors %}
+                <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
+            {% endfor %}
+            <label for="request_vendor_phone" class="col-sm-3 form-control-label">Vendor Phone:</label>
+            <div class="col-sm-5">
+                {{ form.request_vendor_phone(id="vendor_phone", class="form-control", type="tel") }}
             </div>
+        </div>
 
-            <div class="form-group row">
-                {% for message in form.request_vendor_fax.errors %}
-                    <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
-                {% endfor %}
-                <label for="request_vendor_fax" class="col-sm-3 form-control-label">Vendor Fax:</label>
-                <div class="col-sm-5">
-                    {{ form.request_vendor_fax(id="vendor_fax", class="form-control", type="tel") }}
-                </div>
+        <div class="form-group row">
+            {% for message in form.request_vendor_fax.errors %}
+                <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
+            {% endfor %}
+            <label for="request_vendor_fax" class="col-sm-3 form-control-label">Vendor Fax:</label>
+            <div class="col-sm-5">
+                {{ form.request_vendor_fax(id="vendor_fax", class="form-control", type="tel") }}
             </div>
+        </div>
 
-            <div class="form-group row">
-                <label for="request_vendor_email" class="col-sm-3 form-control-label">Vendor Email:</label>
-                <div class="col-sm-5">
-                    {{ form.request_vendor_email(id="vendor_email", class="form-control", maxlength="100") }}
-                </div>
+        <div class="form-group row">
+            <label for="request_vendor_email" class="col-sm-3 form-control-label">Vendor Email:</label>
+            <div class="col-sm-5">
+                {{ form.request_vendor_email(id="vendor_email", class="form-control", maxlength="100") }}
             </div>
+        </div>
 
-            <div class="form-group row">
-                <label for="request_vendor_taxid" class="col-sm-3 form-control-label">Vendor/Tax ID:</label>
-                <div class="col-sm-5">
-                    {{ form.request_vendor_taxid(id="vendor_taxid", class="form-control", maxlength="100") }}
-                </div>
+        <div class="form-group row">
+            <label for="request_vendor_taxid" class="col-sm-3 form-control-label">Vendor/Tax ID:</label>
+            <div class="col-sm-5">
+                {{ form.request_vendor_taxid(id="vendor_taxid", class="form-control", maxlength="100") }}
             </div>
+        </div>
 
-            <div class="form-group row">
-                <label for="request_request_vendor_mwbe" class="col-sm-3 form-control-label">M/WBE:</label>
-                <div class="col-sm-5">
-                    {{ form.request_vendor_mwbe(id="request_vendor_mwbe", class="radio-inline") }}
-                </div>
+        <div class="form-group row">
+            <label for="request_vendor_mwbe" class="col-sm-3 form-control-label">M/WBE:</label>
+            <div class="col-sm-5">
+                {{ form.request_vendor_mwbe(id="request_vendor_mwbe", class="radio-inline") }}
             </div>
-        {% endif %}
+        </div>
+
+        <div class="form-group row">
+            <label for="request_vendor_status" class="col-sm-3 form-control-label">Status:</label>
+            <div class="col-sm-5">
+                {{ form.status(id="status", class="form-control") }}
+            </div>
+        </div>
 
         <div class="form-group row">
             <div class="spacer">
-                <button type="submit" class="btn btn-primary btn-lg btn-block">Submit request</button>
+                <button type="submit" class="btn btn-primary btn-lg btn-block">Submit Request</button>
             </div>
         </div>
     </form>
@@ -248,7 +252,6 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $('#funding_source').on('change', function () {
-                console.log($('#funding_source').val());
                 if ($('#funding_source').val() == 'Other') {
                     $('#funding_source_description').show();
                     $('#grant_name').hide();

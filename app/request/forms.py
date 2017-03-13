@@ -26,6 +26,7 @@ funding = [
     ('', ''),
     ('Expense', 'Expense'),
     ('MAARF', 'MAARRF'),
+    ('Grant', 'Grant'),
     ('SARA', 'SARA'),
     ('KOCH', 'KOCH'),
     ('Other', 'Other')
