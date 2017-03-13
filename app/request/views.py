@@ -37,6 +37,70 @@ def display_requests():
     return render_template('request/requests.html', requests=requests)
 
 
+@request.route('/new_request', methods=['GET', 'POST'])
+@login_required
+def new_request():
+    """Return new request form for procurements."""
+    form = RequestForm()
+
+    vendors = Vendor.query.order_by(Vendor.name).all()
+
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            date_submitted = datetime.now()
+            new_request = Request(
+                division=current_user.division,
+                date_submitted=date_submitted,
+                item=form.item.data,
+                quantity=form.quantity.data,
+                unit_price=form.unit_price.data,
+                total_cost=form.total_cost.data,
+                funding_source=form.funding_source.data,
+                funding_source_description=form.funding_source_description.data,
+                justification=form.justification.data,
+                status=status.SUB,
+                creator_id=current_user.id,
+                grant_name=form.grant_name.data,
+                project_name=form.project_name.data
+            )
+            request_vendor_name = str(form.request_vendor_name.data)
+            request_vendor_phone = str(form.request_vendor_phone.data)
+            request_vendor_fax = str(form.request_vendor_fax.data)
+            request_vendor_mwbe = str(form.request_vendor_mwbe.data)
+
+            new_vendor = None
+            vendor_form = request.form["vendor"]
+
+            if request_vendor_name != '':
+                if request_vendor_mwbe == "None":
+                    request_vendor_mwbe = None
+                if vendor_form == "default":
+                    new_vendor = Vendor(name=request_vendor_name,
+                                       address=form.request_vendor_address.data,
+                                       phone=request_vendor_phone,
+                                       fax=request_vendor_fax,
+                                       email=form.request_vendor_email.data,
+                                       tax_id=form.request_vendor_taxid.data,
+                                       mwbe=request_vendor_mwbe)
+                    db.session.add(new_vendor)
+                    db.session.commit()
+            else:
+                print(form.errors)
+
+            if new_vendor is not None:
+                new_request.set_vendor_id(new_vendor.id)
+            else:
+                new_request.set_vendor_id(vendor_form)
+
+            db.session.add(new_request)
+            db.session.commit()
+            return redirect(url_for('request.display_request', request_id=new_request.id))
+        else:
+            print(form.errors)
+
+    return render_template('request/new_request.html', form=form, user=current_user, vendors=vendors)
+
+
 @request.route('/<request_id>', methods=['GET', 'POST'])
 @login_required
 def display_request(request_id):
