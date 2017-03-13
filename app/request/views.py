@@ -42,6 +42,7 @@ def display_requests():
 def display_request(request_id):
     """Return page to view a specific request."""
     current_request = Request.query.filter_by(id=request_id).first()
+
     if current_user.role != roles.ADMIN and current_user.division != current_request.division:
         return redirect('requests')
 
@@ -63,7 +64,7 @@ def display_request(request_id):
             user=user,
             vendor=vendor,
             comments=comments,
-            commentform=comment_form,
+            comment_form=comment_form,
             deleteform=delete_form
         )
     else:
@@ -73,7 +74,7 @@ def display_request(request_id):
 @request.route('/edit/<int:request_id>', methods=['GET', 'POST'])
 @login_required
 def edit_request(request_id):
-    """Edit a request."""
+    """Return page to edit a specific request."""
     if not current_user.role == roles.ADMIN:
         return redirect('requests')
 
@@ -247,7 +248,7 @@ def add_comment():
     send_email(receivers, "New Comment Added to Request {}".format(comment_form.request_id.data),
                'request/comment_added',
                user=current_user,
-               commentform=comment_form)
+               comment_form=comment_form)
 
     # print(message)
 
@@ -258,7 +259,8 @@ def add_comment():
     # except:
     #     print("Error: unable to send email")
 
-    return redirect(url_for('request.display_request', request_id=comment_form.request_id.data))
+    return redirect(
+        url_for('request.display_request', request_id=comment_form.request_id.data, comment_form=comment_form))
 
 
 @request.route('/delete', methods=['GET', 'POST'])
