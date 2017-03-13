@@ -1,7 +1,7 @@
 """
-.. module:: auth.forms
+.. module:: auth.forms.
 
-    :synopsis: Defines for the functionality of user accounts.
+    :synopsis: Defines for the functionality of user accounts
 """
 from flask_wtf import Form
 from wtforms import StringField, PasswordField, SelectField, SubmitField, ValidationError

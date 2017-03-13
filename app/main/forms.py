@@ -1,5 +1,5 @@
 """
-.. module:: main.forms
+.. module:: main.forms.
 
     :synopsis: Defines forms used to create procurement requests
 """

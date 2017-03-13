@@ -1,5 +1,5 @@
 """
-.. module:: auth.views
+.. module:: auth.views.
 
     :synopsis: Provides url endpoints for authentication and user management
 """

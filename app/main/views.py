@@ -1,5 +1,5 @@
 """
-.. module:: main.views
+.. module:: main.views.
 
     :synopsis: Handles all core URL endpoints for the procurement application
 """

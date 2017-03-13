@@ -1,7 +1,7 @@
 """
 .. module:: request.views.
 
-   :synopsis: Provides routes for managing a specific request.
+   :synopsis: Provides routes for managing a specific request
 """
 import datetime
 import os
@@ -14,10 +14,10 @@ from flask import (
     send_from_directory,
     current_app
 )
-from werkzeug.utils import secure_filename
 from flask_login import login_required, current_user
-from app.email_notification import send_email
+from werkzeug.utils import secure_filename
 from app import db
+from app.email_notification import send_email
 from app.request.forms import RequestForm, CommentForm, DeleteCommentForm
 from app.models import Request, User, Vendor, Comment
 from app.request import request as request
@@ -29,7 +29,7 @@ ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 @request.route('/', methods=['GET', 'POST'])
 @login_required
 def display_requests():
-    """View the page for all the requests."""
+    """Return requests page that displays all requests."""
     if current_user.role == roles.ADMIN:
         requests = Request.query.order_by(Request.date_submitted.desc()).all()
     else:
@@ -40,8 +40,7 @@ def display_requests():
 @request.route('/<request_id>', methods=['GET', 'POST'])
 @login_required
 def display_request(request_id):
-    """View the page for a specific request."""
-
+    """Return page to view a specific request."""
     current_request = Request.query.filter_by(id=request_id).first()
     if current_user.role != roles.ADMIN and current_user.division != current_request.division:
         return redirect('requests')
@@ -54,8 +53,8 @@ def display_request(request_id):
     if not (current_user.role == roles.ADMIN or current_user.division == request.division):
         return redirect('requests')
 
-    commentform = CommentForm()
-    deleteform = DeleteCommentForm()
+    comment_form = CommentForm()
+    delete_form = DeleteCommentForm()
 
     if request:
         return render_template(
@@ -64,8 +63,8 @@ def display_request(request_id):
             user=user,
             vendor=vendor,
             comments=comments,
-            commentform=commentform,
-            deleteform=deleteform
+            commentform=comment_form,
+            deleteform=delete_form
         )
     else:
         abort(404)
@@ -75,7 +74,6 @@ def display_request(request_id):
 @login_required
 def edit_request(request_id):
     """Edit a request."""
-
     if not current_user.role == roles.ADMIN:
         return redirect('requests')
 
@@ -104,7 +102,6 @@ def edit_request(request_id):
                                request=request)
 
     elif flask_request.method == 'POST':
-
         # Updates database with new information
         request.item = form.item.data
         request.quantity = form.quantity.data

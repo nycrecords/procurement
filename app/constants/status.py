@@ -1,7 +1,7 @@
 """
-.. module:: constants.status
+.. module:: constants.status.
 
-    :synopsis: Defines constants used throughout the application.
+    :synopsis: Defines constants used throughout the application
 """
 # statuses = {
 #     1: 'Submitted',

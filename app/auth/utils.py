@@ -1,5 +1,5 @@
 """
-.. module:: auth.utils
+.. module:: auth.utils.
 
     :synopsis: Defines the functions for auth directory
 """

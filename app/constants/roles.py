@@ -1,7 +1,7 @@
 """
-.. module:: constants.roles
+.. module:: constants.roles.
 
-    :synopsis: Defines roles used throughout the application.
+    :synopsis: Defines roles used throughout the application
 """
 REG = "Regular User"
 DIV = "Division Head"

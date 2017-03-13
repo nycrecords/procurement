@@ -1,5 +1,5 @@
 """
-.. module: __init__
+.. module:: __init__.
 
     :synopsis: Sets up the procurement application
 """
@@ -32,8 +32,8 @@ def create_app(config_name):
     from .request import request as request
     app.register_blueprint(request, url_prefix='/requests')
 
-    from .vendor import vendor as vendor_blueprint
-    app.register_blueprint(vendor_blueprint, url_prefix='/vendors')
+    from .vendor import vendor as vendor
+    app.register_blueprint(vendor, url_prefix='/vendors')
 
     from .auth import auth as auth_blueprint
     app.register_blueprint(auth_blueprint, url_prefix='/auth')

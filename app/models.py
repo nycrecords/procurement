@@ -1,7 +1,7 @@
 """
-.. module: models
+.. module: models.
 
-    :synopsis: Defines the models and methods for database objects.
+    :synopsis: Defines the models and methods for database objects
 """
 import re
 from flask import current_app
