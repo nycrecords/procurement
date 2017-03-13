@@ -10,11 +10,11 @@ from wtforms_alchemy import PhoneNumberField
 
 class EditVendorForm(Form):
     """Form for editing vendor."""
-    name = StringField(u'Vendor Name')
-    address = StringField(u'Vendor Address')
-    phone = PhoneNumberField(region='US', display_format='national')
-    fax = PhoneNumberField(region='US', display_format='national')
-    email = StringField(u'Email')
-    taxid = StringField(u'Vendor Tax ID')
-    mwbe = BooleanField(u'mwbe')
+    vendor_name = StringField(u'Vendor Name')
+    vendor_address = StringField(u'Vendor Address')
+    vendor_phone = PhoneNumberField(region='US', display_format='national')
+    vendor_fax = PhoneNumberField(region='US', display_format='national')
+    vendor_email = StringField(u'Email')
+    vendor_tax_id = StringField(u'Vendor Tax ID')
+    vendor_mwbe = BooleanField(u'mwbe')
     save = SubmitField(u'Save Changes')

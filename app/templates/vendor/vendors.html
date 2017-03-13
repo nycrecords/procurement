@@ -1,59 +1,63 @@
 {% extends "base.html" %}
-{% block title %}Records Procurement History{% endblock title %}
+{% block title %}
+    Records Procurement - Vendors
+{% endblock title %}
 {% block custom_css_links %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/bootstrap-table.min.css') }}">
 {% endblock custom_css_links %}
 
 {% block content %}
-        <div class="page-header">
-            <div class="row">
-                <div class="col-sm-5">
-                    <h2>Vendor List</h2>
-                </div>
-                <div class="col-sm-offset-4 col-sm-3">
-                    <a href="/new_request" class="btn btn-primary btn-large pull-right">New Vendor</a>
-                </div>
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-5">
+                <h2>Vendor List</h2>
+            </div>
+            <div class="col-sm-offset-4 col-sm-3">
+                <a href="/new_request" class="btn btn-primary btn-large pull-right">New Vendor</a>
             </div>
         </div>
+    </div>
 
-        <div id="test" class="row">
-            <div class="col-lg-12">
-                <table id="display_requests" class="table table-nonfluid table-hover"
-                       style="border-collapse:collapse"
-                       data-toggle="table"
-                       data-search="true"
-                       data-show-refresh="true"
-                       data-show-toggle="true"
-                       data-show-columns="true"
-                       data-filter-control="true"
-                       data-pagination="true"
-                       data-side-pagination="client"
-                       data-page-list="[5, 10, 20, 50, 100, 200]"
-                       data-show-export="true"
-                       data-toolbar="#toolbar">
+    <div id="test" class="row">
+        <div class="col-lg-12">
+            <table id="display_vendors" class="table table-nonfluid table-hover"
+                   style="border-collapse:collapse"
+                   data-toggle="table"
+                   data-search="true"
+                   data-show-refresh="true"
+                   data-show-toggle="true"
+                   data-show-columns="true"
+                   data-filter-control="true"
+                   data-pagination="true"
+                   data-side-pagination="client"
+                   data-page-list="[5, 10, 20, 50, 100, 200]"
+                   data-show-export="true"
+                   data-toolbar="#toolbar">
 
-                    <thead>
-                    <tr>
-                        <th data-field="name" class="col-sm-5" data-sortable="true">Name</th>
-                        <th class="col-sm-5" data-field="email" data-sortable="true">Email</th>
-                        <th class="col-sm-2" data-sortable="false">Tax ID</th>
-                        <th class="col-sm-1" data-sortable="false">M/WBE</th>
+                <thead>
+                <tr>
+                    <th data-field="name" class="col-sm-5" data-sortable="true">Name</th>
+                    <th class="col-sm-5" data-field="email" data-sortable="true">Email</th>
+                    <th class="col-sm-2" data-sortable="false">Tax ID</th>
+                    <th class="col-sm-1" data-sortable="false">M/WBE</th>
+                    <th class="col-sm-1" data-sortable="false">Edit</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for vendor in vendors %}
+                    <tr class="table-row">
+                        <td> {{ vendor.name }} </td>
+                        <td> {{ vendor.email }} </td>
+                        <td> {{ vendor.tax_id }} </td>
+                        <td> {{ vendor.mwbe }} </td>
+                        <td><a class="btn btn-danger btn-small" href="/vendors/edit/{{ vendor.id }}">Edit</a></td>
                     </tr>
-                    </thead>
-                    <tbody>
-                    {% for vendor in vendors %}
-                        <tr class="table-row" data-href="/requests/{{ vendor.id }}">
-                            <td> {{ vendor.name }} </td>
-                            <td> {{ vendor.email }} </td>
-                            <td> {{ vendor.tax_id }} </td>
-                            <td> {{ vendor.mwbe }} </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-                <div class="spacer"></div>
-            </div>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="spacer"></div>
         </div>
+    </div>
 {% endblock %}
 
 {% block scripts %}
@@ -67,11 +71,4 @@
     <script type="text/javascript"
             src="{{ url_for('static', filename='js/plugins/bootstrap-table-export.min.js') }}"></script>
     <script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function ($) {
-            $(".table-row").click(function () {
-                window.document.location = $(this).data("href");
-            });
-        });
-    </script>
 {% endblock %}

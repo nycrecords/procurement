@@ -5,11 +5,12 @@
 """
 from flask import (
     render_template,
-    request as flask_request,
     abort,
-    Response
+    request
 )
-from app.models import Request, Vendor
+from app import db
+from app.models import Vendor
+from app.vendor.forms import EditVendorForm
 from app.vendor import vendor as vendor
 
 
@@ -33,13 +34,20 @@ def view_vendor(vendor_id):
         abort(404)
 
 
-@vendor.route('/edit', methods=['POST'])
-def edit_edit():
+@vendor.route('/edit/<int:vendor_id>', methods=['GET', 'POST'])
+def edit_vendor(vendor_id):
     """Return page to edit vendor information."""
-    edit_request = flask_request.form
-    request = Request.query.filter_by(id=edit_request['pk']).first()
-    request.update_field(
-        edit_request['name'],
-        edit_request['value'].strip('$')
-    )
-    return Response(status=200)
+    vendor = Vendor.query.filter_by(id=vendor_id).first()
+    form = EditVendorForm()
+    if request.method == "POST":
+        vendor.name = str(form.vendor_name.data)
+        vendor.address = form.vendor_address.data
+        vendor.phone = str(form.vendor_phone.data)
+        vendor.fax = str(form.vendor_fax.data)
+        vendor.email = form.vendor_email.data
+        vendor.tax_id = form.vendor_tax_id.data
+        vendor.mwbe = form.vendor_mwbe.data
+        db.session.commit()
+        vendors = Vendor.query.all()
+        return render_template('vendor/vendors.html', vendors=vendors)
+    return render_template('vendor/edit_vendor.html', vendor=vendor, form=form)
