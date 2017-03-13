@@ -28,10 +28,7 @@ def display_vendors():
 def view_vendor(vendor_id):
     """Return page to view a specific vendor."""
     vendor = Vendor.query.filter_by(id=vendor_id).first()
-    if vendor:
-        return render_template('vendor/vendor.html', vendor=vendor)
-    else:
-        abort(404)
+    return render_template('vendor/vendor.html', vendor=vendor)
 
 
 @vendor.route('/edit/<int:vendor_id>', methods=['GET', 'POST'])

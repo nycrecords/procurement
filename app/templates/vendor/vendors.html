@@ -44,6 +44,7 @@
                     <th class="col-sm-3" data-field="tax_id" data-sortable="true">Tax ID</th>
                     <th class="col-sm-1" data-field="mwbe" data-sortable="false">M/WBE</th>
                     <th class="col-sm-1" data-sortable="false">Edit</th>
+                    <th class="col-sm-1" data-sortable="false">View</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -57,6 +58,7 @@
                         <td> {{ vendor.tax_id }} </td>
                         <td> {{ vendor.mwbe }} </td>
                         <td><a class="btn btn-danger btn-small" href="/vendors/edit/{{ vendor.id }}">Edit</a></td>
+                        <td><a class="btn btn-primary btn-small" href="/vendors/{{ vendor.id }}">View</a></td>
                     </tr>
                 {% endfor %}
                 </tbody>
