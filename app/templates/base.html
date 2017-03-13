@@ -29,17 +29,14 @@
                 </li>
             {% if current_user.role == "Administrator" %}
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin_panel">Administrator Panel</a>
+                    <a class="nav-link" href="{{ url_for('main.admin_panel') }}">Administrator Panel</a>
                 </li>
             {% endif %}
             <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('request.new_request') }}">Create Request</a>
+                <a class="nav-link" href="{{ url_for('request.display_requests') }}">View Requests</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/requests">View Requests</a>
-            </li>
-        <li class="nav-item">
-                <a class="nav-link" href="/vendors">View Vendors</a>
+                <a class="nav-link" href="{{ url_for('vendor.display_vendors') }}">View Vendors</a>
             </li>
         </ul>
     </div>
