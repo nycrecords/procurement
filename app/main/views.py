@@ -3,14 +3,12 @@
 
     :synopsis: Handles all core URL endpoints for the procurement application
 """
-from datetime import datetime
 from flask import render_template, request, redirect, url_for, jsonify, flash
 from flask_login import login_required, current_user
 from app import db
-from app.models import Request, Vendor, User
-from app.constants import status
+from app.models import Vendor, User
 from app.main import main
-from app.main.forms import RequestForm, UserForm, EditUserForm
+from app.main.forms import UserForm, EditUserForm
 from app.constants import roles
 
 

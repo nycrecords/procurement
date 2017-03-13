@@ -6,12 +6,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
 {% endblock custom_css_links %}
 {% block content %}
+
     <div class="page-header">
-        <!-- start of static form -->
         <h1>Purchase Request</h1>
     </div>
+
     <p><i><strong>Purchase Information</strong></i></p>
-    <!-- javascript to display current date -->
     <script type="text/javascript">
         var currentDate = new Date();
         var day = currentDate.getDate();
@@ -241,7 +241,6 @@
             </div>
         </div>
     </form>
-    <!-- end of static form -->
 {% endblock %}
 
 {% block scripts %}

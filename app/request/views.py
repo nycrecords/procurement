@@ -21,7 +21,7 @@ from app.email_notification import send_email
 from app.request.forms import RequestForm, CommentForm, DeleteCommentForm
 from app.models import Request, User, Vendor, Comment
 from app.request import request as request
-from app.constants import roles
+from app.constants import roles, status
 
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
@@ -37,7 +37,7 @@ def display_requests():
     return render_template('request/requests.html', requests=requests)
 
 
-@request.route('/new_request', methods=['GET', 'POST'])
+@request.route('/new', methods=['GET', 'POST'])
 @login_required
 def new_request():
     """Return new request form for procurements."""
@@ -45,9 +45,9 @@ def new_request():
 
     vendors = Vendor.query.order_by(Vendor.name).all()
 
-    if request.method == 'POST':
+    if flask_request.method == 'POST':
         if form.validate_on_submit():
-            date_submitted = datetime.now()
+            date_submitted = datetime.datetime.now()
             new_request = Request(
                 division=current_user.division,
                 date_submitted=date_submitted,

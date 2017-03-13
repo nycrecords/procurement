@@ -33,7 +33,7 @@
                 </li>
             {% endif %}
             <li class="nav-item">
-                <a class="nav-link" href="/new_request">Create Request</a>
+                <a class="nav-link" href="{{ url_for('request.new_request') }}">Create Request</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/requests">View Requests</a>
