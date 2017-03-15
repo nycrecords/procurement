@@ -48,6 +48,7 @@
                     {% if current_user.role == "Administrator" %}
                         <th class="col-sm-1" data-sortable="false">Edit</th>
                     {% endif %}
+                    <th class="col-sm-1" data-sortable="false">View</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -62,6 +63,7 @@
                         {% if current_user.role == "Administrator" %}
                             <td><a class="btn btn-danger btn-small" href="/requests/edit/{{ request.id }}">Edit</a></td>
                         {% endif %}
+                        <td><a class="btn btn-primary btn-small" href="/requests/{{ request.id }}">View</a></td>
                     </tr>
                 {% endfor %}
                 </tbody>
