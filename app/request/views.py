@@ -57,6 +57,9 @@ def new_request():
                 unit_price=form.unit_price.data,
                 total_cost=form.total_cost.data,
                 funding_source=form.funding_source.data,
+                funding_source_description=None,
+                grant_name=None,
+                project_name=None,
                 justification=form.justification.data,
                 status=status.SUB,
                 creator_id=current_user.id
