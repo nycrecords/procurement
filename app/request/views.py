@@ -104,6 +104,38 @@ def new_request():
                 new_request.set_vendor_id(vendor_form)
             db.session.add(new_request)
             db.session.commit()
+
+            # Email Notifications
+            if current_status == status.NDA:
+                # send notification to proc head
+                receivers = [current_user.email]
+
+                proc_query = db.session.query(User).filter(User.role == roles.PROC).\
+                                                    filter(User.id != current_user.id).\
+                                                    filter(User.division == current_user.division).all()
+                for query in proc_query:
+                    receivers.append(query.email)
+
+                send_email(receivers, "Request {} has been Routed for Approval".format(new_request.id),
+                           'request/new_request_notification',
+                           user=current_user,
+                           request=new_request)
+
+            elif current_status == status.NCA:
+                # send notification to admin
+                print("NCA")
+                receivers = [current_user.email]
+
+                admin_query = db.session.query(User).filter(User.role == roles.ADMIN).\
+                                                    filter(User.id != current_user.id).all()
+                for query in admin_query:
+                    receivers.append(query.email)
+
+                send_email(receivers, "Request {} needs High Level Approval".format(new_request.id),
+                           'request/new_request_notification',
+                           user=current_user,
+                           request=new_request)
+
             flash("Request was successfully created!")
             return redirect(url_for('request.display_request', request_id=new_request.id))
         else:
@@ -161,6 +193,7 @@ def display_request(request_id):
     elif current_user.role == roles.COM:
         choices = [(status.NCA, status.NCA),
                    (status.PEN, "Approved"),
+                   (status.HOLD, status.HOLD),
                    (status.DEN, status.DEN)]
 
         if request.status != status.NDA and request.status != status.NCA:
@@ -269,39 +302,6 @@ def edit_request(request_id):
         db.session.commit()
         flash("Request was successfully updated!")
 
-        # # Add Notes
-        # if form.comment is not None and form.comment.data.strip() is not "":
-        #     newcomment = Comment(
-        #         request_id=request.id,
-        #         user_id=current_user.id,
-        #         timestamp=datetime.datetime.now(),
-        #         content=form.comment.data
-        #     )
-        #     db.session.add(newcomment)
-        #
-        # db.session.commit()
-        #
-        # # email notification for edit
-        # sender = 'donotreply@records.nyc.gov'
-        # receivers = [user.email]
-        # # receivers = ['mlaikhram@gmail.com']
-        # message = """\
-        # From: Procurements <%s>
-        # To: %s
-        # Subject: Request %s Edited
-        # A request you made has been edited.
-        # %s
-        # """ % (sender, ", ".join(receivers), request_id, form.comment.data.strip())
-        #
-        # print(message)
-        #
-        # try:
-        #     smtpObj = smtplib.SMTP('localhost', 1025)
-        #     smtpObj.sendmail(sender, receivers, message)
-        #     print("Successfully sent email")
-        # except:
-        #     print("Error: unable to send email")
-
         return redirect(url_for('request.display_request', request_id=request_id))
 
 
@@ -385,30 +385,79 @@ def update_status(request_id):
     request.status = status_form.status.data
     db.session.commit()
 
-    # email notification for notes NOT YET EDITED
-    receivers = []
+    requester = db.session.query(User).filter(User.id == request.creator_id).first()
 
-    request, requester = db.session.query(Request, User).filter(Request.id == request_id).\
-                                                    filter(User.id == Request.creator_id).first()
-    receivers.append(requester.email)
+    # Email Notifications
+    if old_status != request.status:
+        if request.status == status.DEN:
+            receivers = [requester.email]
 
-    div_query = db.session.query(User).filter(User.role == roles.DIV).\
-                                       filter(User.email != requester.email).\
-                                       filter(User.division == requester.division).all()
-    for query in div_query:
-        receivers.append(query.email)
+            admin_query = db.session.query(User).filter(User.role == roles.ADMIN).\
+                                                filter(User.id != requester.id).all()
+            for query in admin_query:
+                receivers.append(query.email)
 
-    proc_query = db.session.query(User).filter(User.role == roles.PROC).\
-                                        filter(User.email != requester.email).\
-                                        filter(User.division == requester.division).all()
-    for query in proc_query:
-        receivers.append(query.email)
+            send_email(receivers, "Request {} has been Denied".format(request.id),
+                       'request/status_update',
+                       user=current_user,
+                       request=request,
+                       old_status=old_status)
 
-    send_email(receivers, "Status Update on Request {}".format(request_id),
-               'request/status_update',
-               user=current_user,
-               request=request,
-               old_status=old_status)
+        elif request.status == status.NDA:
+            receivers = [requester.email]
+
+            proc_query = db.session.query(User).filter(User.role == roles.PROC).\
+                                                filter(User.id != requester.id).all()
+            for query in proc_query:
+                receivers.append(query.email)
+
+            send_email(receivers, "Request {} has been Routed for Approval".format(request.id),
+                       'request/status_update',
+                       user=current_user,
+                       request=request,
+                       old_status=old_status)
+
+        elif request.status == status.NCA:
+            receivers = [requester.email]
+
+            admin_query = db.session.query(User).filter(User.role == roles.ADMIN).\
+                                                filter(User.id != requester.id).all()
+            for query in admin_query:
+                receivers.append(query.email)
+
+            send_email(receivers, "Request {} needs High Level Approval".format(request.id),
+                       'request/status_update',
+                       user=current_user,
+                       request=request,
+                       old_status=old_status)
+
+        elif request.status == status.PEN:
+            receivers = [requester.email]
+
+            admin_query = db.session.query(User).filter(User.role == roles.ADMIN).\
+                                                filter(User.id != requester.id).all()
+            for query in admin_query:
+                receivers.append(query.email)
+
+            send_email(receivers, "Request {} awaiting Procurement Head Approval".format(request.id),
+                       'request/status_update',
+                       user=current_user,
+                       request=request,
+                       old_status=old_status)
+
+        elif request.status == status.HOLD:
+            receivers = [requester.email]
+
+            admin_query = db.session.query(User).filter(User.role == roles.ADMIN).\
+                                                filter(User.id != requester.id).all()
+            for query in admin_query:
+                receivers.append(query.email)
+
+            send_email(receivers, "Request {} has been put on Hold".format(request.id),
+                       'request/status_update',
+                       user=current_user,
+                       request=request,
+                       old_status=old_status)
 
     return redirect(url_for('request.display_request', request_id=request_id))
 
