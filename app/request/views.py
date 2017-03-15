@@ -445,6 +445,20 @@ def update_status(request_id):
                        request=request,
                        old_status=old_status)
 
+        elif request.status == status.APR:
+            receivers = [requester.email]
+
+            admin_query = db.session.query(User).filter(User.role == roles.ADMIN).\
+                                                filter(User.id != requester.id).all()
+            for query in admin_query:
+                receivers.append(query.email)
+
+            send_email(receivers, "Request {} has been Approved".format(request.id),
+                       'request/status_update',
+                       user=current_user,
+                       request=request,
+                       old_status=old_status)
+
         elif request.status == status.HOLD:
             receivers = [requester.email]
 
@@ -458,6 +472,12 @@ def update_status(request_id):
                        user=current_user,
                        request=request,
                        old_status=old_status)
+
+        elif request.status == status.RES:
+            # record the resolution time
+            date_closed = datetime.datetime.now()
+            request.date_closed = date_closed
+            db.session.commit()
 
     return redirect(url_for('request.display_request', request_id=request_id))
 
