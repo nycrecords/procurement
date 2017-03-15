@@ -1,15 +1,15 @@
 """
 .. module:: request.forms.
 
-   :synopsis: Defines forms used to manage Procurement requests.
+   :synopsis: Defines forms used to manage procurement requests
 """
 from flask_wtf import Form
-from wtforms import StringField, SelectField, TextAreaField, BooleanField, HiddenField, SubmitField, \
-     RadioField, DecimalField, IntegerField
+from wtforms import StringField, SelectField, TextAreaField, BooleanField, HiddenField, SubmitField, DecimalField, \
+    IntegerField
 from flask_wtf.file import FileField
-from wtforms.validators import DataRequired, Length, Optional
+from wtforms.validators import DataRequired, Length
 from wtforms_alchemy import PhoneNumberField
-from ..constants import status
+from app.constants import status
 
 divisions = [
     ('', ''),
@@ -26,6 +26,7 @@ funding = [
     ('', ''),
     ('Expense', 'Expense'),
     ('MAARF', 'MAARRF'),
+    ('Grant', 'Grant'),
     ('SARA', 'SARA'),
     ('KOCH', 'KOCH'),
     ('Other', 'Other')
@@ -44,13 +45,15 @@ statuses = [
 
 
 class CommentForm(Form):
+    """Form for creating a new comment."""
     content = TextAreaField(validators=[Length(0, 500), DataRequired()])
     request_id = HiddenField()
     file = FileField(u'Upload File...')
     submit = SubmitField(u'Add Comment')
 
+
 class RequestForm(Form):
-    """Form for creating a new request"""
+    """Form for creating a new request."""
     request_name = StringField(u'Name*(required)')
     division = SelectField(u'Division*', choices=divisions, default='')
     item = TextAreaField(u'Item*(required)')
@@ -74,18 +77,20 @@ class RequestForm(Form):
     request_vendor_email = StringField(u'Email')
     request_vendor_taxid = StringField(u'Vendor Tax ID')
     request_vendor_mwbe = BooleanField(u'mwbe')
-    status = SelectField(u'status', validators=[DataRequired()], choices=[(status.NDA, status.NDA),
+    status = SelectField(u'status', validators=[], choices=[(status.NDA, status.NDA),
                                                                           (status.NCA, status.NCA),
                                                                           (status.PEN, status.PEN),
                                                                           (status.APR, status.APR),
                                                                           (status.DEN, status.DEN),
                                                                           (status.RES, status.RES),
-                                                                          (status.HOLD, status.HOLD)])
+                                                                          (status.HOLD, status.HOLD)],
+                         default=status.NDA)
     # comment = TextAreaField(validators=[Length(0, 500)])
     submit = SubmitField(u'Submit Request')
 
 
 class DeleteCommentForm(Form):
+    """Form for deleting a comment."""
     request_id = HiddenField()
     comment_id = HiddenField()
     submit = SubmitField(u'delete')

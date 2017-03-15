@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}
     Records Procurement - View Request
-{% endblock %}
+{% endblock title %}
 {% block custom_css_links %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-editable.css') }}"/>
 {% endblock %}
@@ -10,7 +10,8 @@
     <div class="page-header">
         <h1>{{ request.id }}</h1>
         {% if current_user.role == "Administrator" %}
-        <a href="{{ url_for('request.edit_request', request_id=request.id) }}">Edit</a>
+            <a class="btn btn-primary btn-small" href="{{ url_for('request.edit_request', request_id=request.id) }}">Edit
+                Request</a>
         {% endif %}
     </div>
 
@@ -61,7 +62,21 @@
                     <th scope="row">Funding Source:</th>
                     <td><a href="#" id="funding_source">{{ request.funding_source }}</a></td>
                 </tr>
-                <!-- TODO: Funding Source Additional Info goes here. -->
+                {% if request.funding_source == "Grant" %}
+                    <tr>
+                        <th scope="row">Grant Name:</th>
+                        <td><a href="#" id="grant_name">{{ request.grant_name }}</a></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Project Name:</th>
+                        <td><a href="#" id="project_name">{{ request.project_name }}</a></td>
+                    </tr>
+                {% elif request.funding_source == "Other" %}
+                    <tr>
+                        <th scope="row">Funding Source Description:</th>
+                        <td><a href="#" id="grant_name">{{ request.funding_source_description }}</a></td>
+                    </tr>
+                {% endif %}
                 <tr>
                     <th scope="row">Justification:</th>
                     <td><a href="#" id="justification">{{ request.justification }}</a></td>
@@ -97,18 +112,18 @@
                     <form action="{{ url_for('request.update_status', request_id=request.id) }}"
                           name="update_status" class="form-horizontal" id="status" method="POST">
 
-                        {{ statusform.hidden_tag() }}
+                        {{ status_form.hidden_tag() }}
 
                         <div class="form-group row">
                             <label for="quantity" class="col-sm-3 form-control-label">New Status</label>
                             <div class="col-sm-5">
-                                {{ statusform.status }}
+                                {{ status_form.status }}
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <div class="col-sm-5">
-                                {{ statusform.submit }}
+                                {{ status_form.submit }}
                             </div>
                         </div>
 
@@ -169,6 +184,8 @@
                 </tr>
                 </tbody>
             </table>
+            <a class="btn btn-primary btn-small"
+               href="{{ url_for('request.display_requests') }}">Return to Request History</a>
         </div>
         <div class="spacer"></div>
     </div>
@@ -177,14 +194,14 @@
         <div class="page-header"></div>
 
         {% if current_user.role != "Regular User" or current_user.id == request.creator_id %}
-        <div class="form-group col">
-            <form action="{{ url_for('request.add_comment') }}" method="post" enctype="multipart/form-data">
-                {{ commentform.content(id="note", rows="3", cols="100", maxlength="500") }}
-                {{ commentform.request_id(value=request.id) }}
-                {{ commentform.file }}
-                {{ commentform.submit }}
-            </form>
-        </div><br>
+            <div class="form-group col">
+                <form action="{{ url_for('request.add_comment') }}" method="post" enctype="multipart/form-data">
+                    {{ comment_form.content(id="note", rows="3", cols="100", maxlength="500") }}
+                    {{ comment_form.request_id(value=request.id) }}
+                    {{ comment_form.file }} <br>
+                    {{ comment_form.submit }}
+                </form>
+            </div><br>
         {% endif %}
 
         {% for comment in comments %}
@@ -203,9 +220,9 @@
                 {% endif %}
                 </label>
                 {% if current_user.role == "Administrator" or current_user.id == comment.user_id %}
-                    {{ deleteform.request_id(value=request.id) }}
-                    {{ deleteform.comment_id(value=comment.id) }}
-                    {{ deleteform.submit }}
+                    {{ delete_form.request_id(value=request.id) }}
+                    {{ delete_form.comment_id(value=comment.id) }}
+                    {{ delete_form.submit }}
                 {% endif %}
             </form>
             <div>{{ comment.content }}</div>

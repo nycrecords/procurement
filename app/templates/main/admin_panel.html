@@ -1,5 +1,7 @@
 {% extends "base.html" %}
-{% block title %}Records Procurement Administrator Panel{% endblock title %}
+{% block title %}
+    Records Procurement - Administrator Panel
+{% endblock title %}
 {% block custom_css_links %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/bootstrap-table.min.css') }}">
 {% endblock custom_css_links %}
@@ -100,7 +102,7 @@
 
     <div id="test" class="row">
         <div class="col-lg-12">
-            <table id="display_requests" class="table table-nonfluid table-hover"
+            <table id="display_users" class="table table-nonfluid table-hover"
                    style="border-collapse:collapse"
                    data-toggle="table"
                    data-search="true"
@@ -130,11 +132,11 @@
                         <td><a class="btn btn-primary btn-small" href="/admin_panel/users/{{ user.id }}">Edit</a></td>
                         <td>
                             {% if user.login == True %}
-                            <a class="btn btn-danger btn-small"
-                               href="/admin_panel/users/disable/{{ user.id }}">Disable</a></td>
+                                <a class="btn btn-danger btn-small"
+                                   href="/admin_panel/users/disable/{{ user.id }}">Disable</a></td>
                             {% else %}
-                            <a class="btn btn-primary btn-small"
-                               href="/admin_panel/users/enable/{{ user.id }}">Enable</a></td>
+                                <a class="btn btn-primary btn-small"
+                                   href="/admin_panel/users/enable/{{ user.id }}">Enable</a></td>
                             {% endif %}
                     </tr>
                 {% endfor %}

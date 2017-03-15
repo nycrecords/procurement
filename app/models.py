@@ -1,17 +1,16 @@
 """
-.. module: models
+.. module: models.
 
-    :synopsis: Defines the models and methods for database objects.
+    :synopsis: Defines the models and methods for database objects
 """
-from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import UserMixin
+import re
 from flask import current_app
+from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from sqlalchemy.orm.attributes import set_attribute
-from . constants import division
-from . import db, login_manager
-from . constants import roles
-import re
+from werkzeug.security import generate_password_hash, check_password_hash
+from app import db, login_manager
+from app.constants import division, roles
 
 
 class User(UserMixin, db.Model):
@@ -29,7 +28,6 @@ class User(UserMixin, db.Model):
                                  division.MIS,
                                  division.ADM, name="division"))
     password_hash = db.Column(db.String(128))
-    # is_admin = db.Column(db.BOOLEAN, default=False)
     login = db.Column(db.BOOLEAN, default=True)
     role = db.Column(db.String(100), default=roles.REG)
 
@@ -48,12 +46,12 @@ class User(UserMixin, db.Model):
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    # generates token with default validity for 1 hour
+    # Generates token with default validity for 1 hour
     def generate_reset_token(self, expiration=3600):
         s = Serializer(current_app.config['SECRET_KEY'], expiration)
         return s.dumps({'reset': self.id})
 
-    # verifies the token and if valid, resets password
+    # Verifies the token and if valid, resets password
     def reset_password(self, token, new_password):
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
@@ -62,7 +60,7 @@ class User(UserMixin, db.Model):
             return False
         if data.get('reset') != self.id:
             return False
-        # checks if the new password is at least 8 characters with at least 1 UPPERCASE AND 1 NUMBER
+        # Checks if the new password is at least 8 characters with at least 1 UPPERCASE AND 1 NUMBER
         if not re.match(r'^(?=.*?\d)(?=.*?[A-Z])(?=.*?[a-z])[A-Za-z\d]{8,128}$', new_password):
             return False
         self.password = new_password
@@ -196,5 +194,4 @@ class Comment(db.Model):
     timestamp = db.Column(db.DateTime)
     content = db.Column(db.String())
     filepath = db.Column(db.String())
-
     user = db.relationship("User", backref="user")

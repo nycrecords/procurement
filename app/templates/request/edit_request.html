@@ -1,35 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html><!-- This template is to initiate a new request. -->
-{% extends "base.html" %} {% block title %}Records Procurement Form{% endblock title %}
+{% extends "base.html" %}
+{% block title %}
+    Records Procurement - Edit Request
+{% endblock title %}
 {% block custom_css_links %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
 {% endblock custom_css_links %}
 {% block content %}
+
     <div class="page-header">
-        <!-- start of static form -->
         <h1>Edit Request</h1>
     </div>
+
     <p><i><strong>Purchase Information</strong></i></p>
-    <!-- javascript to display current date -->
     <script type="text/javascript">
-        var currentDate = new Date()
-        var day = currentDate.getDate()
-        var month = currentDate.getMonth() + 1
-        var year = currentDate.getFullYear()
+        var currentDate = new Date();
+        var day = currentDate.getDate();
+        var month = currentDate.getMonth() + 1;
+        var year = currentDate.getFullYear();
         document.write("<b>" + "Date: " + month + "/" + day + "/" + year + "</b>")
     </script>
     <br>
 
     <br>
-    <form name="newrequest" class="form-horizontal" id="submitRequest" method="POST" action="">
+    <form name="new_request" class="form-horizontal" id="submitRequest" method="POST" action="">
         {{ form.hidden_tag() }}
 
         {% if current_user.is_authenticated %}
@@ -135,12 +128,28 @@
             </div>
         </div>
 
-        <div class="form-group row">
+        <div id="funding_source_description" class="form-group row" style="display: None;">
             <label for="funding_source_description" class="col-sm-offset-1 col-sm-3 form-control-label">
                 If Other, specify:</label>
             <div class="col-sm-5">
                 {{ form.funding_source_description(id="funding_source_description", class="form-control",
-                            text="text", maxlength="100") }}
+                        text="text", maxlength="100", value=request.funding_source_description) }}
+            </div>
+        </div>
+
+        <div id="grant_name" class="form-group row required" style="display: None;">
+            <label for="grant_name" class="col-sm-offset-1 col-sm-3 form-control-label">
+                Grant Name:</label>
+            <div class="col-sm-5">
+                {{ form.grant_name(id="grant_name", class="form-control", text="text", maxlength="100", value=request.grant_name) }}
+            </div>
+        </div>
+
+        <div id="project_name" class="form-group row required" style="display: None;">
+            <label for="project_name" class="col-sm-offset-1 col-sm-3 form-control-label">
+                Project Name:</label>
+            <div class="col-sm-5">
+                {{ form.project_name(id="project_name", class="form-control", text="text", maxlength="100", value=request.project_name) }}
             </div>
         </div>
 
@@ -168,12 +177,11 @@
                         {% else %}
                             <option id={{ vendor.id }} value={{ vendor.id }}> {{ vendor.name }} </option>
                         {% endif %}
-                    {%  endfor  %}
+                    {% endfor %}
                 </select>
             </div>
         </div>
 
-        {% if 0 == 0 %}
         <div class="form-group row">
             <label for="request_vendor_name" class="col-sm-3 form-control-label">Vendor Name:</label>
             <div class="col-sm-5">
@@ -228,7 +236,6 @@
                 {{ form.request_vendor_mwbe(id="request_vendor_mwbe", class="radio-inline") }}
             </div>
         </div>
-        {% endif %}
 
         <div class="form-group row">
             <label for="request_request_vendor_mwbe" class="col-sm-3 form-control-label">Status:</label>
@@ -236,23 +243,57 @@
                 {{ form.status(id="status", class='form-control') }}
             </div>
         </div>
-        <!--<div class="form-group row">
-        <label for="comment" class="col-sm-3 form-control-label">Comment (Optional):</label>
-            <div class="col-sm-8">
-{#                {{ form.comment(id="note", rows="3", class="form-control", maxlength="500") }}#}
-            </div>
-        </div>-->
+
         <div class="form-group row">
             <div class="spacer">
-                <button type="submit" class="btn btn-primary btn-lg btn-block">Submit request</button>
+                <button type="submit" class="btn btn-primary btn-lg btn-block">Submit Request</button>
             </div>
         </div>
     </form>
-    <!-- end of static form -->
 {% endblock %}
 
 {% block scripts %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if ($('#funding_source').val() == 'Other') {
+                $('#funding_source_description').show();
+                $('#grant_name').hide();
+                $('#project_name').hide();
+            }
+            else if ($('#funding_source').val() == 'Grant') {
+                $('#grant_name').show();
+                $('#project_name').show();
+                $('#funding_source_description').hide();
+            }
+            else {
+                $('#funding_source_description').hide();
+                $('#grant_name').hide();
+                $('#project_name').hide();
+            }
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#funding_source').on('change', function () {
+                if ($('#funding_source').val() == 'Other') {
+                    $('#funding_source_description').show();
+                    $('#grant_name').hide();
+                    $('#project_name').hide();
+                }
+                else if ($('#funding_source').val() == 'Grant') {
+                    $('#grant_name').show();
+                    $('#project_name').show();
+                    $('#funding_source_description').hide();
+                }
+                else {
+                    $('#funding_source_description').hide();
+                    $('#grant_name').hide();
+                    $('#project_name').hide();
+                }
+            })
+        });
+    </script>
     <script>
         $("#vendor").change(function () {
             $.ajax({
@@ -261,7 +302,7 @@
                 data: {
                     vendor: $("#vendor").children(":selected").attr("id")
                 },
-                success: function (data){
+                success: function (data) {
                     console.log(data)
 
                     var dis = false;
@@ -273,7 +314,7 @@
                     var vendor_taxid = $("#vendor_taxid");
                     var vendor_mwbe = $("#request_vendor_mwbe");
 
-                    if (data == ""){
+                    if (data == "") {
                         vendor_name.val("");
                         vendor_address.val("");
                         vendor_phone.val("");
@@ -313,7 +354,7 @@
                 data: {
                     vendor: $("#vendor").children(":selected").attr("id")
                 },
-                success: function (data){
+                success: function (data) {
                     console.log(data)
 
                     var dis = false;
@@ -325,7 +366,7 @@
                     var vendor_taxid = $("#vendor_taxid");
                     var vendor_mwbe = $("#request_vendor_mwbe");
 
-                    if (data == ""){
+                    if (data == "") {
                         vendor_name.val("");
                         vendor_address.val("");
                         vendor_phone.val("");

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}
-    Records Procurement - View Request
+    Records Procurement - View Vendor
 {% endblock %}
 {% block custom_css_links %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-editable.css') }}"/>
@@ -8,10 +8,13 @@
 {% block content %}
 
     <div class="page-header">
-        <h1>{{ request.id }}</h1>
-    </div>
+        <h1>{{ vendor.name }}</h1>
+        {% if current_user.role == "Administrator" %}
+            <a class="btn btn-primary btn-small"
+               href="{{ url_for('vendor.edit_vendor', vendor_id=vendor.id) }}">Edit Vendor</a>
+        {% endif %}
 
-    <div class="col-sm-6">
+        <hr>
         <div class="table-responsive">
             <table class="table table-bordered table-striped">
                 <colgroup>
@@ -24,19 +27,19 @@
                 </tr>
                 <tr>
                     <th scope="row">Name:</th>
-                    <td><a href="#" id="vendor_name">{{ vendor.name }}</a></td>
+                    <td><a id="vendor_name">{{ vendor.name }}</a></td>
                 </tr>
                 <tr>
                     <th scope="row">Address:</th>
-                    <td><a href="#" id="vendor_address">{{ vendor.address }}</a></td>
+                    <td><a id="vendor_address">{{ vendor.address }}</a></td>
                 </tr>
                 <tr>
                     <th scope="row">Phone:</th>
-                    <td><a href="#" id="vendor_phone">{{ vendor.phone }}</a></td>
+                    <td><a id="vendor_phone">{{ vendor.phone }}</a></td>
                 </tr>
                 <tr>
                     <th scope="row">Fax:</th>
-                    <td><a href="#" id="vendor_fax">{{ vendor.fax }}</a></td>
+                    <td><a id="vendor_fax">{{ vendor.fax }}</a></td>
                 </tr>
                 <tr>
                     <th scope="row">Email:</th>
@@ -44,7 +47,7 @@
                 </tr>
                 <tr>
                     <th scope="row">Tax ID:</th>
-                    <td><a href="#" id="vendor_taxid">{{ vendor.tax_id }}</a></td>
+                    <td><a id="vendor_taxid">{{ vendor.tax_id }}</a></td>
                 </tr>
                 <tr>
                     <th scope="row">M/WBE:</th>
@@ -57,7 +60,12 @@
                 </tbody>
             </table>
 
+            <a class="btn btn-primary btn-small"
+               href="{{ url_for('vendor.display_vendors') }}">Return to Vendor List</a>
         </div>
+    </div>
+
+    <div class="col-sm-6">
         <div class="spacer"></div>
     </div>
 {% endblock %}

@@ -1,108 +1,21 @@
 """
-.. module:: Provides url endpoints for the main application
+.. module:: main.views.
 
-    :synopsis:
+    :synopsis: Handles all core URL endpoints for the procurement application
 """
-
-from datetime import datetime
-from flask import render_template, request, redirect, url_for, jsonify, flash, current_app
-from .. import db
-from ..models import Request, Vendor, User
-from ..constants import status
-from . import main
-from .forms import RequestForm, UserForm, EditUserForm
+from flask import render_template, request, redirect, url_for, jsonify, flash
 from flask_login import login_required, current_user
-from ..constants import roles
+from app import db
+from app.models import Vendor, User
+from app.main import main
+from app.main.forms import UserForm, EditUserForm
+from app.constants import roles
 
 
 @main.route('/')
 def index():
-    """Homepage with button that links to the procurement request form."""
+    """Return homepage with a button redirecting to the procurement request form."""
     return render_template('main/index.html')
-
-
-@main.route('/new', methods=['GET', 'POST'])
-@login_required
-def new_request():
-    """Create a new procurement request."""
-    form = RequestForm()
-
-    vendors = Vendor.query.order_by(Vendor.name).all()
-
-    if request.method == 'POST':
-        if form.validate_on_submit():
-
-            date_submitted = datetime.now()
-
-            current_status = status.NDA
-            if current_user.role == roles.DIV:
-                current_status = status.NCA
-                if form.total_cost.data <= current_app.config['COST_LIMIT']:
-                    current_status = status.PEN
-
-            elif current_user.role == roles.COM:
-                current_status = status.PEN
-
-            elif current_user.role == roles.PROC:
-                current_status = status.NCA
-
-            newrequest = Request(
-                division=current_user.division,
-                date_submitted=date_submitted,
-                item=form.item.data,
-                quantity=form.quantity.data,
-                unit_price=form.unit_price.data,
-                total_cost=form.total_cost.data,
-                funding_source=form.funding_source.data,
-                funding_source_description=form.funding_source_description.data,
-                justification=form.justification.data,
-                status=current_status,
-                creator_id=current_user.id,
-                grant_name=None,
-                project_name=None
-                )
-            # else:
-            #     newrequest = Request(form.request_name.data,
-            #                          date_submitted,
-            #                          form.item.data,
-            #                          form.quantity.data, form.unit_price.data,
-            #                          form.total_cost.data, form.funding_source.data,
-            #                          form.funding_source_description.data, form.justification.data,
-            #                          creator_id=current_user.id)
-            request_vendor_name = str(form.request_vendor_name.data)
-            request_vendor_phone = str(form.request_vendor_phone.data)
-            request_vendor_fax = str(form.request_vendor_fax.data)
-            request_vendor_mwbe = str(form.request_vendor_mwbe.data)
-
-            newvendor = None
-            vendor_form = request.form["vendor"]
-
-            if request_vendor_name != '':
-                if request_vendor_mwbe == "None":
-                    request_vendor_mwbe = None
-                if vendor_form == "default":
-                    newvendor = Vendor(name=request_vendor_name,
-                                       address=form.request_vendor_address.data,
-                                       phone=request_vendor_phone,
-                                       fax=request_vendor_fax,
-                                       email=form.request_vendor_email.data,
-                                       tax_id=form.request_vendor_taxid.data,
-                                       mwbe=request_vendor_mwbe)
-                    db.session.add(newvendor)
-                    db.session.commit()
-            else:
-                print(form.errors)
-            if newvendor is not None:
-                newrequest.set_vendor_id(newvendor.id)
-            else:
-                newrequest.set_vendor_id(vendor_form)
-            db.session.add(newrequest)
-            db.session.commit()
-            return redirect(url_for('request.display_request', request_id=newrequest.id))
-        else:
-            print(form.errors)
-
-    return render_template('main/new_request.html', form=form, user=current_user, vendors=vendors)
 
 
 @main.route('/divisions', methods=['GET'])
@@ -116,7 +29,6 @@ def divisions():
         'MIS/Web': 'MIS/Web',
         'Administration': 'Administration'
     }
-
     return jsonify(divisions)
 
 
