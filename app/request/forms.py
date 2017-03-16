@@ -79,7 +79,6 @@ class RequestForm(Form):
     request_vendor_mwbe = BooleanField(u'mwbe')
     status = SelectField(u'status', validators=[], choices=[(status.NDA, status.NDA),
                                                                           (status.NCA, status.NCA),
-                                                                          (status.PEN, status.PEN),
                                                                           (status.APR, status.APR),
                                                                           (status.DEN, status.DEN),
                                                                           (status.RES, status.RES),

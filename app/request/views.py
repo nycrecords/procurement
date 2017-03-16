@@ -22,9 +22,7 @@ from app.email_notification import send_email
 from app.request.forms import RequestForm, CommentForm, DeleteCommentForm, StatusForm
 from app.models import Request, User, Vendor, Comment
 from app.request import request as request
-from app.constants import roles, status
-
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+from app.constants import roles, status, mimetypes
 
 
 @request.route('/', methods=['GET', 'POST'])
@@ -54,10 +52,10 @@ def new_request():
             if current_user.role == roles.DIV:
                 current_status = status.NCA
                 if form.total_cost.data <= current_app.config['COST_LIMIT']:
-                    current_status = status.PEN
+                    current_status = status.APR
 
             elif current_user.role == roles.COM:
-                current_status = status.PEN
+                current_status = status.APR
 
             elif current_user.role == roles.PROC:
                 current_status = status.NCA
@@ -166,7 +164,6 @@ def display_request(request_id):
     elif current_user.role == roles.ADMIN:
         choices = [(status.NDA, status.NDA),
                    (status.NCA, status.NCA),
-                   (status.PEN, status.PEN),
                    (status.APR, status.APR),
                    (status.DEN, status.DEN),
                    (status.RES, status.RES),
@@ -175,7 +172,7 @@ def display_request(request_id):
     elif current_user.role == roles.DIV:
         approved = status.NCA
         if request.total_cost <= current_app.config['COST_LIMIT']:
-            approved = status.PEN
+            approved = status.APR
 
         choices = [(status.NDA, status.NDA),
                    (approved, "Approved"),
@@ -186,7 +183,7 @@ def display_request(request_id):
 
     elif current_user.role == roles.COM:
         choices = [(status.NCA, status.NCA),
-                   (status.PEN, "Approved"),
+                   (status.APR, "Approved"),
                    (status.HOLD, status.HOLD),
                    (status.DEN, status.DEN)]
 
@@ -196,7 +193,6 @@ def display_request(request_id):
     elif current_user.role == roles.PROC:
         choices = [(status.NDA, status.NDA),
                    (status.NCA, status.NCA),
-                   (status.PEN, status.PEN),
                    (status.APR, status.APR),
                    (status.DEN, status.DEN),
                    (status.RES, status.RES),
@@ -301,7 +297,7 @@ def edit_request(request_id):
 
 def allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+           filename.rsplit('.', 1)[1].lower() in mimetypes.ALLOWED_EXTENSIONS
 
 
 @request.route('/add', methods=['GET', 'POST'])
@@ -313,6 +309,11 @@ def add_comment():
     if comment_form.file.data is not None:
         filename = secure_filename(comment_form.file.data.filename)
         file_data = comment_form.file.data
+
+        if not allowed_file(file_data.filename):
+            flash("Invalid File Type")
+            return redirect(url_for('request.display_request', request_id=comment_form.request_id.data))
+
         if file_data.filename != '' and file_data and allowed_file(file_data.filename):
             filename = secure_filename(datetime.datetime.now().strftime("%Y%m%d-%H%M") + file_data.filename)
             file_data.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
@@ -425,7 +426,7 @@ def update_status(request_id):
                        request=request,
                        old_status=old_status)
 
-        elif request.status == status.PEN:
+        elif request.status == status.APR:
             receivers = [requester.email]
 
             admin_query = db.session.query(User).filter(User.role == roles.ADMIN).\
@@ -433,7 +434,7 @@ def update_status(request_id):
             for query in admin_query:
                 receivers.append(query.email)
 
-            send_email(receivers, "Request {} awaiting Procurement Head Approval".format(request.id),
+            send_email(receivers, "Request {} awaiting Procurement Approval".format(request.id),
                        'request/status_update',
                        user=current_user,
                        request=request,

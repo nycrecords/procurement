@@ -15,8 +15,7 @@
 
 NDA = 'Needs Division Approval'
 NCA = 'Needs Commissioner Approval'
-PEN = 'Pending'
-APR = 'Approved'
+APR = 'Approved - Pending'
 DEN = 'Denied'
 RES = 'Resolved'
 HOLD = 'Hold'
