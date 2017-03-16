@@ -80,5 +80,6 @@ def edit_vendor(vendor_id):
         vendor.tax_id = form.vendor_tax_id.data
         vendor.mwbe = form.vendor_mwbe.data
         db.session.commit()
+        flash("Vendor information was successfully updated!")
         return redirect(url_for('vendor.display_vendors'))
     return render_template('vendor/edit_vendor.html', vendor=vendor, form=form)
