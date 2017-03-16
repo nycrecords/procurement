@@ -106,35 +106,29 @@ def new_request():
             db.session.commit()
 
             # Email Notifications
+            receivers = [current_user.email]
+            header = ""
             if current_status == status.NDA:
-                # send notification to proc head
-                receivers = [current_user.email]
-
                 proc_query = db.session.query(User).filter(User.role == roles.PROC).\
                                                     filter(User.id != current_user.id).\
                                                     filter(User.division == current_user.division).all()
                 for query in proc_query:
                     receivers.append(query.email)
 
-                send_email(receivers, "Request {} has been Routed for Approval".format(new_request.id),
-                           'request/new_request_notification',
-                           user=current_user,
-                           request=new_request)
+                header = "Request {} has been Routed for Approval".format(new_request.id)
 
             elif current_status == status.NCA:
-                # send notification to admin
-                print("NCA")
-                receivers = [current_user.email]
-
                 admin_query = db.session.query(User).filter(User.role == roles.ADMIN).\
                                                     filter(User.id != current_user.id).all()
                 for query in admin_query:
                     receivers.append(query.email)
 
-                send_email(receivers, "Request {} needs High Level Approval".format(new_request.id),
-                           'request/new_request_notification',
-                           user=current_user,
-                           request=new_request)
+                header = "Request {} needs High Level Approval".format(new_request.id)
+
+            send_email(receivers, header,
+                       'request/new_request_notification',
+                       user=current_user,
+                       request=new_request)
 
             flash("Request was successfully created!")
             return redirect(url_for('request.display_request', request_id=new_request.id))
