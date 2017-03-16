@@ -43,6 +43,15 @@ statuses = [
     ('Hold', 'Hold')
 ]
 
+request_statuses = [
+    (status.NDA, status.NDA),
+    (status.NCA, status.NCA),
+    (status.APR, status.APR),
+    (status.DEN, status.DEN),
+    (status.RES, status.RES),
+    (status.HOLD, status.HOLD)
+]
+
 
 class CommentForm(Form):
     """Form for creating a new comment."""
@@ -77,13 +86,7 @@ class RequestForm(Form):
     request_vendor_email = StringField(u'Email')
     request_vendor_taxid = StringField(u'Vendor Tax ID')
     request_vendor_mwbe = BooleanField(u'mwbe')
-    status = SelectField(u'status', validators=[], choices=[(status.NDA, status.NDA),
-                                                                          (status.NCA, status.NCA),
-                                                                          (status.APR, status.APR),
-                                                                          (status.DEN, status.DEN),
-                                                                          (status.RES, status.RES),
-                                                                          (status.HOLD, status.HOLD)],
-                         default=status.NDA)
+    status = SelectField(u'status', validators=[], choices=request_statuses, default=status.NDA)
     # comment = TextAreaField(validators=[Length(0, 500)])
     submit = SubmitField(u'Submit Request')
 
@@ -96,5 +99,6 @@ class DeleteCommentForm(Form):
 
 
 class StatusForm(Form):
+    """Form for updating status of a request."""
     status = SelectField(u'status', validators=[DataRequired()])
     submit = SubmitField(u'Update')
