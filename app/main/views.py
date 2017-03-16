@@ -26,7 +26,7 @@ def divisions():
         'Grants': 'Grants',
         'Library': 'Library',
         'Executive': 'Executive',
-        'MIS/Web': 'MIS/Web',
+        'Tech': 'Tech',
         'Administration': 'Administration'
     }
     return jsonify(divisions)

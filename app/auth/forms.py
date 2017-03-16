@@ -54,7 +54,7 @@ class SignupForm(Form):
                                                                              (division.GRA, division.GRA),
                                                                              (division.LIB, division.LIB),
                                                                              (division.EXEC, division.EXEC),
-                                                                             (division.MIS, division.MIS),
+                                                                             (division.TECH, division.TECH),
                                                                              (division.ADM, division.ADM)])
     email = StringField('Email', validators=[DataRequired(), Length(1, 100), Email()])
     password = PasswordField('password', validators=[
