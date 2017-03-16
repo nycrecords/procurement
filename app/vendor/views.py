@@ -11,6 +11,7 @@ from flask import (
     url_for,
     flash
 )
+from flask_login import login_required
 from app import db
 from app.models import Vendor
 from app.vendor.forms import NewVendorForm, EditVendorForm
@@ -18,6 +19,7 @@ from app.vendor import vendor as vendor
 
 
 @vendor.route('/', methods=['GET'])
+@login_required
 def display_vendors():
     """Return page that displays all vendors."""
     vendors = Vendor.query.all()
@@ -28,6 +30,7 @@ def display_vendors():
 
 
 @vendor.route('/new', methods=['GET', 'POST'])
+@login_required
 def new_vendor():
     """Return page to create a new vendor."""
     form = NewVendorForm()
@@ -55,6 +58,7 @@ def new_vendor():
 
 
 @vendor.route('/<vendor_id>', methods=['GET'])
+@login_required
 def view_vendor(vendor_id):
     """Return page to view a specific vendor."""
     vendor = Vendor.query.filter_by(id=vendor_id).first()
@@ -62,6 +66,7 @@ def view_vendor(vendor_id):
 
 
 @vendor.route('/edit/<int:vendor_id>', methods=['GET', 'POST'])
+@login_required
 def edit_vendor(vendor_id):
     """Return page to edit vendor information."""
     vendor = Vendor.query.filter_by(id=vendor_id).first()
