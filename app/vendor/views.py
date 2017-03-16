@@ -8,7 +8,8 @@ from flask import (
     abort,
     request,
     redirect,
-    url_for
+    url_for,
+    flash
 )
 from app import db
 from app.models import Vendor
@@ -48,6 +49,7 @@ def new_vendor():
                             )
         db.session.add(new_vendor)
         db.session.commit()
+        flash("Vendor was successfully added!")
         return redirect(url_for('vendor.display_vendors'))
     return render_template('vendor/new_vendor.html', form=form)
 
