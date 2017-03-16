@@ -40,9 +40,9 @@ def jsonify_fields():
     return jsonify(v.name, v.address, v.phone, v.fax, v.email, v.tax_id, v.mwbe)
 
 
-@main.route('/admin_panel', methods=['GET', 'POST'])
+@main.route('/manage_users', methods=['GET', 'POST'])
 @login_required
-def admin_panel():
+def manage_users():
     """Return the admin panel where admins can create users, edit user information, and update login privileges."""
     if not current_user.role == roles.ADMIN:
         return redirect('requests')
@@ -59,13 +59,13 @@ def admin_panel():
             db.session.add(new_user)
             db.session.commit()
             flash('User account successfully created!')
-            return redirect(url_for('main.admin_panel'))
+            return redirect(url_for('main.manage_users'))
         else:
             print(form.errors)
-    return render_template('main/admin_panel.html', users=users, form=form)
+    return render_template('main/manage_users.html', users=users, form=form)
 
 
-@main.route('/admin_panel/users/<int:id>', methods=['GET', 'POST'])
+@main.route('/manage_users/users/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit_user(id):
     """Return the page for an admin to update user information."""
@@ -93,7 +93,7 @@ def edit_user(id):
     return render_template('main/edit_user.html', user=user, form=form)
 
 
-@main.route('/admin_panel/users/reset/<int:id>', methods=['GET', 'POST'])
+@main.route('/manage_users/users/reset/<int:id>', methods=['GET', 'POST'])
 @login_required
 def reset_password(id):
     """Resets the password of the user and then redirects to the edit user page."""
@@ -107,7 +107,7 @@ def reset_password(id):
     return redirect(url_for('main.edit_user', id=id))
 
 
-@main.route('/admin_panel/users/disable/<int:id>', methods=['GET', 'POST'])
+@main.route('/manage_users/users/disable/<int:id>', methods=['GET', 'POST'])
 @login_required
 def disable(id):
     """Disables the user's login privileges and redirects to admin panel page."""
@@ -118,10 +118,10 @@ def disable(id):
     user.login = False
     db.session.commit()
     flash('User login privileges have been disabled.')
-    return redirect(url_for('main.admin_panel'))
+    return redirect(url_for('main.manage_users'))
 
 
-@main.route('/admin_panel/users/enable/<int:id>', methods=['GET', 'POST'])
+@main.route('/manage_users/users/enable/<int:id>', methods=['GET', 'POST'])
 @login_required
 def enable(id):
     """Enables the user's login privileges and redirects to admin panel page."""
@@ -132,4 +132,4 @@ def enable(id):
     user.login = True
     db.session.commit()
     flash('User login privileges have been enabled.')
-    return redirect(url_for('main.admin_panel'))
+    return redirect(url_for('main.manage_users'))
