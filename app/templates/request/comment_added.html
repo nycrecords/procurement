@@ -3,9 +3,9 @@
     {{ user.role }}:
     {% endif %}
     {{ user.first_name }} {{ user.last_name }}
-    has commented on Request {{ comment_form.request_id.data }}:</p>
+    has commented on Request {{ request_id }}:</p>
 <p>{{ comment_form.content.data }}</p>
-<p><a href="{{ url_for('request.display_request', request_id=comment_form.request_id.data, _external=True) }}">Click here</a>
+<p><a href="{{ url_for('request.display_request', request_id=request_id, _external=True) }}">Click here</a>
     to view this request.
 </p>
 <p>

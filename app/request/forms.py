@@ -55,8 +55,7 @@ request_statuses = [
 
 class CommentForm(Form):
     """Form for creating a new comment."""
-    content = TextAreaField(validators=[Length(0, 500), DataRequired()])
-    request_id = HiddenField()
+    content = TextAreaField(validators=[Length(0, 500), DataRequired('Please enter a comment')])
     file = FileField(u'Upload File...')
     submit = SubmitField(u'Add Comment')
 

@@ -195,9 +195,9 @@
 
         {% if current_user.role != "Regular User" or current_user.id == request.creator_id %}
             <div class="form-group col">
-                <form action="{{ url_for('request.add_comment') }}" method="post" enctype="multipart/form-data">
+                <form action="{{ url_for('request.add_comment', request_id=request.id) }}" method="post" enctype="multipart/form-data">
+                    {{ comment_form.hidden_tag() }}
                     {{ comment_form.content(id="note", rows="3", cols="100", maxlength="500") }}
-                    {{ comment_form.request_id(value=request.id) }}
                     {{ comment_form.file }} <br>
                     {{ comment_form.submit }}
                 </form>

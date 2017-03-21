@@ -19,6 +19,7 @@ from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 from app import db
 from app.email_notification import send_email
+from app.errors import flash_errors
 from app.request.forms import RequestForm, CommentForm, DeleteCommentForm, StatusForm
 from app.models import Request, User, Vendor, Comment
 from app.request import request as request
@@ -305,65 +306,75 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in mimetypes.ALLOWED_EXTENSIONS
 
 
-@request.route('/add', methods=['GET', 'POST'])
-def add_comment():
+@request.route('/add/<request_id>', methods=['GET', 'POST'])
+def add_comment(request_id):
     comment_form = CommentForm()
     filename = None
 
-    # Check if file was uploaded
-    if comment_form.file.data is not None:
-        filename = secure_filename(comment_form.file.data.filename)
-        file_data = comment_form.file.data
+    if comment_form.validate_on_submit():
+        # Check if file was uploaded
+        if comment_form.file.data is not None:
+            filename = secure_filename(comment_form.file.data.filename)
+            file_data = comment_form.file.data
 
-        if not allowed_file(file_data.filename):
-            flash("Invalid File Type")
-            return redirect(url_for('request.display_request', request_id=comment_form.request_id.data))
+            if not allowed_file(file_data.filename):
+                flash("Invalid File Type")
+                return redirect(url_for('request.display_request', request_id=comment_form.request_id.data))
 
-        if file_data.filename != '' and file_data and allowed_file(file_data.filename):
-            filename = secure_filename(datetime.datetime.now().strftime("%Y%m%d-%H%M") + file_data.filename)
-            file_data.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+            if file_data.filename != '' and file_data and allowed_file(file_data.filename):
+                filename = secure_filename(datetime.datetime.now().strftime("%Y%m%d-%H%M") + file_data.filename)
+                file_data.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
 
-    # Add comment to database
-    new_comment = Comment(
-        request_id=comment_form.request_id.data,
-        user_id=current_user.id,
-        timestamp=datetime.datetime.now(),
-        content=comment_form.content.data,
-        filepath=filename
-    )
-    db.session.add(new_comment)
-    db.session.commit()
+        # Add comment to database
+        new_comment = Comment(
+            request_id=request_id,
+            user_id=current_user.id,
+            timestamp=datetime.datetime.now(),
+            content=comment_form.content.data,
+            filepath=filename,
+            editable=True
+        )
+        db.session.add(new_comment)
+        db.session.commit()
 
-    # Email notification for edit
-    receivers = []
+        # Email notification for edit
+        receivers = []
 
-    request, requestor = db.session.query(Request, User).filter(Request.id == comment_form.request_id.data). \
-        filter(User.id == Request.creator_id).first()
-    receivers.append(requestor.email)
+        request, requestor = db.session.query(Request, User).filter(Request.id == request_id). \
+            filter(User.id == Request.creator_id).first()
+        receivers.append(requestor.email)
 
-    div_query = db.session.query(User).filter(User.role == roles.DIV). \
-        filter(User.email != requestor.email). \
-        filter(User.division == requestor.division).all()
-    for query in div_query:
-        receivers.append(query.email)
+        div_query = db.session.query(User).filter(User.role == roles.DIV). \
+            filter(User.email != requestor.email). \
+            filter(User.division == requestor.division).all()
+        for query in div_query:
+            receivers.append(query.email)
 
-    proc_query = db.session.query(User).filter(User.role == roles.PROC). \
-        filter(User.email != requestor.email). \
-        filter(User.division == requestor.division).all()
-    for query in proc_query:
-        receivers.append(query.email)
+        proc_query = db.session.query(User).filter(User.role == roles.PROC). \
+            filter(User.email != requestor.email). \
+            filter(User.division == requestor.division).all()
+        for query in proc_query:
+            receivers.append(query.email)
 
-    send_email(receivers, "New Comment Added to Request {}".format(comment_form.request_id.data),
-               'request/comment_added',
-               user=current_user,
-               comment_form=comment_form)
+        send_email(receivers, "New Comment Added to Request {}".format(request_id),
+                   'request/comment_added',
+                   user=current_user,
+                   request_id=request_id,
+                   comment_form=comment_form)
 
-    return redirect(url_for('request.display_request', request_id=comment_form.request_id.data))
+    else:
+        flash_errors(comment_form)
+
+    return redirect(url_for('request.display_request', request_id=request_id))
 
 
 @request.route('/delete', methods=['GET', 'POST'])
 def delete_comment():
     delete_form = DeleteCommentForm()
+    comment = Comment.query.filter(Comment.id == delete_form.comment_id.data).first()
+    # delete attached files if any
+    if comment.filepath is not None:
+        os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], comment.filepath))
     Comment.query.filter(Comment.id == delete_form.comment_id.data).delete()
     db.session.commit()
     return redirect(url_for('request.display_request', request_id=delete_form.request_id.data))
