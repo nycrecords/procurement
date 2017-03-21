@@ -194,4 +194,5 @@ class Comment(db.Model):
     timestamp = db.Column(db.DateTime)
     content = db.Column(db.String())
     filepath = db.Column(db.String())
+    editable = db.Column(db.Boolean, nullable=False, default=True)
     user = db.relationship("User", backref="user")

@@ -219,7 +219,7 @@
                     (Creator)
                 {% endif %}
                 </label>
-                {% if current_user.role == "Administrator" or current_user.id == comment.user_id %}
+                {% if (current_user.role == "Administrator" or current_user.id == comment.user_id) and comment.editable %}
                     {{ delete_form.request_id(value=request.id) }}
                     {{ delete_form.comment_id(value=comment.id) }}
                     {{ delete_form.submit }}
