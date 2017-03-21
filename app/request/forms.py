@@ -87,7 +87,6 @@ class RequestForm(Form):
     request_vendor_taxid = StringField(u'Vendor Tax ID')
     request_vendor_mwbe = BooleanField(u'mwbe')
     status = SelectField(u'status', validators=[], choices=request_statuses, default=status.NDA)
-    # comment = TextAreaField(validators=[Length(0, 500)])
     submit = SubmitField(u'Submit Request')
 
 

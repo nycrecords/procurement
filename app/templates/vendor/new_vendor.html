@@ -35,9 +35,9 @@
         </div>
 
         <div class="form-group row">
-            {% for message in form.vendor_phone.errors %}
-                <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
-            {% endfor %}
+{#            {% for message in form.vendor_phone.errors %}#}
+{#                <div class="alert alert-danger" id="missing_justification">{{ message }}</div>#}
+{#            {% endfor %}#}
             <label for="request_vendor_phone" class="col-sm-3 form-control-label">Vendor Phone:</label>
             <div class="col-sm-5">
                 {{ form.vendor_phone(id="vendor_phone", class="form-control", type="tel") }}
@@ -45,9 +45,9 @@
         </div>
 
         <div class="form-group row">
-            {% for message in form.vendor_fax.errors %}
-                <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
-            {% endfor %}
+{#            {% for message in form.vendor_fax.errors %}#}
+{#                <div class="alert alert-danger" id="missing_justification">{{ message }}</div>#}
+{#            {% endfor %}#}
             <label for="request_vendor_fax" class="col-sm-3 form-control-label">Vendor Fax:</label>
             <div class="col-sm-5">
                 {{ form.vendor_fax(id="vendor_fax", class="form-control", type="tel") }}

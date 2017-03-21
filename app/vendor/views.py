@@ -16,6 +16,7 @@ from app import db
 from app.models import Vendor
 from app.vendor.forms import NewVendorForm, EditVendorForm
 from app.vendor import vendor as vendor
+from app.errors import flash_errors
 
 
 @vendor.route('/', methods=['GET'])
@@ -34,7 +35,7 @@ def display_vendors():
 def new_vendor():
     """Return page to create a new vendor."""
     form = NewVendorForm()
-    if request.method == "POST":
+    if request.method == "POST" and form.validate_on_submit():
         vendor_name = str(form.vendor_name.data)
         vendor_address = form.vendor_address.data
         vendor_phone = str(form.vendor_phone.data)
@@ -54,6 +55,10 @@ def new_vendor():
         db.session.commit()
         flash("Vendor was successfully added!")
         return redirect(url_for('vendor.display_vendors'))
+
+    else:
+        flash_errors(form)
+
     return render_template('vendor/new_vendor.html', form=form)
 
 
@@ -71,7 +76,7 @@ def edit_vendor(vendor_id):
     """Return page to edit vendor information."""
     vendor = Vendor.query.filter_by(id=vendor_id).first()
     form = EditVendorForm()
-    if request.method == "POST":
+    if request.method == "POST" and form.validate_on_submit():
         vendor.name = str(form.vendor_name.data)
         vendor.address = form.vendor_address.data
         vendor.phone = str(form.vendor_phone.data)
@@ -82,4 +87,8 @@ def edit_vendor(vendor_id):
         db.session.commit()
         flash("Vendor information was successfully updated!")
         return redirect(url_for('vendor.display_vendors'))
+
+    else:
+        flash_errors(form)
+
     return render_template('vendor/edit_vendor.html', vendor=vendor, form=form)
