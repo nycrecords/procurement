@@ -62,17 +62,18 @@ class CommentForm(Form):
 
 class RequestForm(Form):
     """Form for creating a new request."""
-    request_name = StringField(u'Name*(required)')
-    division = SelectField(u'Division*', choices=divisions, default='')
-    item = TextAreaField(u'Item*(required)')
+    #request_name = StringField(u'Name*(required)')
+    # division = SelectField(u'Division*', choices=divisions, default='')
+    item = TextAreaField(u'Item*(required)', validators=[
+        DataRequired('Please enter the item')])
     quantity = IntegerField(u'Quantity*', validators=[
         DataRequired('Please enter the quantity')])
     unit_price = DecimalField(u'Price per item*', validators=[
         DataRequired('Please enter the price per item')])
     total_cost = DecimalField(u'Total price*', validators=[
         DataRequired('Please enter the total price')])
-    funding_source = SelectField(u'Funding*', choices=funding,
-                                 validators=[DataRequired('Please select the funding source')])
+    funding_source = SelectField(u'Funding*', choices=funding, validators=[
+        DataRequired('Please select the funding source')])
     funding_source_description = StringField(u'Funding Other')
     grant_name = StringField(u'Grant Name')
     project_name = StringField(u'Project Name')
@@ -85,8 +86,27 @@ class RequestForm(Form):
     request_vendor_email = StringField(u'Email')
     request_vendor_taxid = StringField(u'Vendor Tax ID')
     request_vendor_mwbe = BooleanField(u'mwbe')
-    status = SelectField(u'status', validators=[], choices=request_statuses, default=status.NDA)
+    #status = SelectField(u'status', validators=[], choices=request_statuses, default=status.NDA)
     submit = SubmitField(u'Submit Request')
+
+    def validate(self):
+        if not Form.validate(self):
+            return False
+
+        if self.funding_source.data == "Other" and self.funding_source_description.data is None:
+            self.funding_source.errors.append("You must specify if you entered Other")
+            return False
+
+        if self.funding_source.data == "Grant" and (self.grant_name.data is None or self.project_name.data is None):
+            self.funding_source.errors.append("You must include a grant and project name if you entered Grant")
+            return False
+
+        print(self.funding_source.data)
+        print(self.funding_source_description.data)
+        print(self.grant_name.data)
+        print(self.project_name.data)
+
+        return True
 
 
 class DeleteCommentForm(Form):
