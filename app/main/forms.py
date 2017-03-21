@@ -8,20 +8,20 @@ from flask_wtf import Form
 from wtforms import StringField, SelectField, TextAreaField, SubmitField, BooleanField, DecimalField, IntegerField
 from wtforms.validators import DataRequired, Length, Email
 from wtforms_alchemy import PhoneNumberField
-from app.constants import division
+from app.constants import division, roles
 
 app = Flask(__name__)
 
-divisions = [
-    ('', ''),
-    ('MRMD', 'MRMD'),
-    ('Archives', 'Archives'),
-    ('Grants', 'Grants'),
-    ('Library', 'Library'),
-    ('Executive', 'Executive'),
-    ('Tech', 'Tech'),
-    ('Administration', 'Administration')
-]
+# divisions = [
+#     ('', ''),
+#     ('MRMD', 'MRMD'),
+#     ('Archives', 'Archives'),
+#     ('Grants', 'Grants'),
+#     ('Library', 'Library'),
+#     ('Executive', 'Executive'),
+#     ('Tech', 'Tech'),
+#     ('Administration', 'Administration')
+# ]
 
 funding = [
     ('', ''),
@@ -31,6 +31,20 @@ funding = [
     ('KOCH', 'KOCH'),
     ('Other', 'Other')
 ]
+
+divisions = [(division.MRMD, division.MRMD),
+             (division.ARC, division.ARC),
+             (division.GRA, division.GRA),
+             (division.LIB, division.LIB),
+             (division.EXEC, division.EXEC),
+             (division.TECH, division.TECH),
+             (division.ADM, division.ADM)]
+
+roles = [(roles.REG, roles.REG),
+         (roles.DIV, roles.DIV),
+         (roles.PROC, roles.PROC),
+         (roles.COM, roles.COM),
+         (roles.ADMIN, roles.ADMIN)]
 
 
 class RequestForm(Form):
@@ -62,13 +76,7 @@ class UserForm(Form):
     """Form for creating a new user."""
     first_name = StringField('first_name', validators=[DataRequired(), Length(1, 100)])
     last_name = StringField('last_name', validators=[DataRequired(), Length(1, 100)])
-    division = SelectField('division', validators=[DataRequired()], choices=[(division.MRMD, division.MRMD),
-                                                                             (division.ARC, division.ARC),
-                                                                             (division.GRA, division.GRA),
-                                                                             (division.LIB, division.LIB),
-                                                                             (division.EXEC, division.EXEC),
-                                                                             (division.TECH, division.TECH),
-                                                                             (division.ADM, division.ADM)])
+    division = SelectField('division', validators=[DataRequired()], choices=divisions)
     email = StringField('Email', validators=[DataRequired(), Length(1, 100), Email()])
     submit = SubmitField(u'Create User')
 
@@ -77,5 +85,6 @@ class EditUserForm(Form):
     """Form for updating user information."""
     user_first_name = StringField(u'First Name*(required)', validators=[DataRequired(), Length(1, 100)])
     user_last_name = StringField(u'Last Name*(required)', validators=[DataRequired(), Length(1, 100)])
+    user_role = SelectField('division', validators=[DataRequired()], choices=roles)
     user_email = StringField(u'Email*(required)', validators=[DataRequired(), Length(1, 100), Email()])
     update = SubmitField(u'Update Information')

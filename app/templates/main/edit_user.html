@@ -40,6 +40,18 @@
         </div>
 
         <div class="form-group row">
+            {% for message in form.user_last_name.errors %}
+                <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
+            {% endfor %}
+
+            <label for="quantity" class="col-sm-3 form-control-label">User Role</label>
+            <div class="col-sm-5">
+                {{ form.user_role(id="user_role", class="form-control", default=user.role) }}
+                <div class="small">Edit role if applicable.</div>
+            </div>
+        </div>
+
+        <div class="form-group row">
             {% for message in form.user_email.errors %}
                 <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
             {% endfor %}
