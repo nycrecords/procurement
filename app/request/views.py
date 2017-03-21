@@ -97,7 +97,7 @@ def new_request():
                                     tax_id=form.request_vendor_taxid.data,
                                     mwbe=request_vendor_mwbe)
                 db.session.add(new_vendor)
-                new_request.set_vendor_id(new_vendor.id)
+                new_request.set_vendor_id(new_vendor.name)
             else:
                 new_request.set_vendor_id(vendor_form)
             db.session.add(new_request)
