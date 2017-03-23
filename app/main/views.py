@@ -40,11 +40,13 @@ def edit_profile():
                 user_role = form.user_role.data
                 user_email = form.user_email.data
                 user_phone = str(form.user_phone.data)
+                user_address = form.user_address.data
                 current_user.first_name = user_first_name
                 current_user.last_name = user_last_name
                 current_user.role = user_role
                 current_user.email = user_email
                 current_user.phone = user_phone
+                current_user.address = user_address
                 db.session.commit()
                 flash('User information successfully updated!')
                 return redirect(url_for('main.profile'))
@@ -97,6 +99,7 @@ def manage_users():
         if form.validate_on_submit():
             new_user = User(email=form.email.data,
                             phone=str(form.phone.data),
+                            address=form.address.data,
                             division=form.division.data,
                             password='Change4me',
                             first_name=form.first_name.data,
@@ -127,11 +130,13 @@ def edit_user(id):
                 user_role = form.user_role.data
                 user_email = form.user_email.data
                 user_phone = str(form.user_phone.data)
+                user_address = form.user_address.data
                 user.first_name = user_first_name
                 user.last_name = user_last_name
                 user.role = user_role
                 user.email = user_email
                 user.phone = user_phone
+                user.address = user_address
                 db.session.commit()
                 flash('User information successfully updated!')
                 return redirect(url_for('main.manage_users'))
