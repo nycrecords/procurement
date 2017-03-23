@@ -55,6 +55,13 @@ def edit_profile():
     return render_template('main/edit_user.html', user=current_user, form=form)
 
 
+@main.route('/profile/reset', methods=['GET', 'POST'])
+@login_required
+def profile_password_reset():
+    token = current_user.generate_reset_token()
+    return redirect(url_for('auth.password_reset', token=token))
+
+
 @main.route('/divisions', methods=['GET'])
 def divisions():
     divisions = {

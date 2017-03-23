@@ -87,8 +87,10 @@ def password_reset_request():
 
 @auth.route('/reset/<token>', methods=['GET', 'POST'])
 def password_reset(token):
-    if not current_user.is_anonymous:
-        return redirect(url_for('main.index'))
+    if current_user.is_anonymous:
+        signed_in = False
+    else:
+        signed_in = True
     form = PasswordResetForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -96,10 +98,12 @@ def password_reset(token):
             return redirect(url_for('main.index'))
         if user.reset_password(token, form.password.data):
             flash('Your password has been updated.')
+            if signed_in:
+                return redirect(url_for('main.profile'))
             return redirect(url_for('auth.login'))
         else:
             flash('Password must be at least 8 characters with at least 1 UPPERCASE and 1 NUMBER')
-    return render_template('auth/reset_password.html', form=form)
+    return render_template('auth/reset_password.html', form=form, signed_in=signed_in)
 
 
 @auth.route('/sign_up', methods=['GET', 'POST'])  # FIX TO ALLOW DIVISON TO BE SELECTED IN FORMS/VIEWS/HTML
