@@ -20,6 +20,7 @@ class User(UserMixin, db.Model):
     first_name = db.Column(db.String(100))
     last_name = db.Column(db.String(100))
     email = db.Column(db.String(100), unique=True, index=True)
+    phone = db.Column(db.String(), nullable=True)
     division = db.Column(db.Enum(division.MRMD,
                                  division.ARC,
                                  division.GRA,

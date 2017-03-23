@@ -39,6 +39,7 @@
             </div>
         </div>
 
+        {% if current_user.id != user.id %}
         <div class="form-group row">
             {% for message in form.user_last_name.errors %}
                 <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
@@ -50,6 +51,7 @@
                 <div class="small">Edit role if applicable.</div>
             </div>
         </div>
+        {% endif %}
 
         <div class="form-group row">
             {% for message in form.user_email.errors %}
@@ -64,12 +66,26 @@
         </div>
 
         <div class="form-group row">
-            <label for="quantity" class="col-sm-3 form-control-label">Reset Email</label>
+            {% for message in form.user_phone.errors %}
+                <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
+            {% endfor %}
+
+            <label for="quantity" class="col-sm-3 form-control-label">User Phone Number</label>
+            <div class="col-sm-5">
+                {{ form.user_phone(id="user_phone", class="form-control", type="text", value=user.phone) }}
+                <div class="small">Edit phone number if applicable.</div>
+            </div>
+        </div>
+
+        {% if current_user.id != user.id %}
+        <div class="form-group row">
+            <label for="quantity" class="col-sm-3 form-control-label">Reset Password</label>
             <div class="col-sm-5">
                 <a class="btn btn-danger btn-small" href="/manage_users/users/reset/{{ user.id }}">Reset Password</a>
                 <div class="small">Click to reset user password.</div>
             </div>
         </div>
+        {% endif %}
 
         <div class="form-group row">
             <div class="spacer">

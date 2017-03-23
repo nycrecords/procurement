@@ -19,7 +19,7 @@
         <ul class="nav navbar-nav pull-right">
             {% if current_user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" href=""><b>{{ current_user.first_name }} {{ current_user.last_name }}</b></a>
+                    <a class="nav-link" href="{{ url_for('main.profile') }}"><b>{{ current_user.first_name }} {{ current_user.last_name }}</b></a>
                 </li>
                 {% if current_user.role == "Administrator" %}
                     <li class="nav-item">

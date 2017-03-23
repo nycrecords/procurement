@@ -18,6 +18,43 @@ def index():
     return render_template('main/index.html')
 
 
+@main.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    """Displays user information (redirects to profile page."""
+    return render_template('main/profile.html',
+                           current_user=current_user)
+
+
+@main.route('/profile/edit', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    """Allows a user to edit their own information"""
+    form = EditUserForm(user_role=current_user.role)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            if current_user.email == form.user_email.data or \
+                            len(User.query.filter_by(email=form.user_email.data).all()) == 0:
+                user_first_name = form.user_first_name.data
+                user_last_name = form.user_last_name.data
+                user_role = form.user_role.data
+                user_email = form.user_email.data
+                user_phone = str(form.user_phone.data)
+                current_user.first_name = user_first_name
+                current_user.last_name = user_last_name
+                current_user.role = user_role
+                current_user.email = user_email
+                current_user.phone = user_phone
+                db.session.commit()
+                flash('User information successfully updated!')
+                return redirect(url_for('main.profile'))
+            else:
+                flash('User email already exists.')
+        else:
+            print(form.errors)
+    return render_template('main/edit_user.html', user=current_user, form=form)
+
+
 @main.route('/divisions', methods=['GET'])
 def divisions():
     divisions = {
@@ -47,11 +84,12 @@ def manage_users():
     if not current_user.role == roles.ADMIN:
         return redirect('requests')
 
-    users = User.query.all()
+    users = User.query.filter(User.id != current_user.id).order_by(User.last_name).all()
     form = UserForm()
     if request.method == 'POST':
         if form.validate_on_submit():
             new_user = User(email=form.email.data,
+                            phone=str(form.phone.data),
                             division=form.division.data,
                             password='Change4me',
                             first_name=form.first_name.data,
@@ -81,13 +119,16 @@ def edit_user(id):
                 user_last_name = form.user_last_name.data
                 user_role = form.user_role.data
                 user_email = form.user_email.data
+                user_phone = str(form.user_phone.data)
                 user.first_name = user_first_name
                 user.last_name = user_last_name
                 user.role = user_role
                 user.email = user_email
+                user.phone = user_phone
                 db.session.commit()
                 flash('User information successfully updated!')
-                return render_template('main/edit_user.html', user=user, form=form)
+                return redirect(url_for('main.manage_users'))
+                # return render_template('main/edit_user.html', user=user, current_user=current_user, form=form)
             else:
                 flash('User email already exists.')
         else:

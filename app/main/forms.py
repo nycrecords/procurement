@@ -78,6 +78,7 @@ class UserForm(Form):
     last_name = StringField('last_name', validators=[DataRequired(), Length(1, 100)])
     division = SelectField('division', validators=[DataRequired()], choices=divisions)
     email = StringField('Email', validators=[DataRequired(), Length(1, 100), Email()])
+    phone = PhoneNumberField(region='US', display_format='national', validators=[DataRequired()])
     submit = SubmitField(u'Create User')
 
 
@@ -87,4 +88,5 @@ class EditUserForm(Form):
     user_last_name = StringField(u'Last Name*(required)', validators=[DataRequired(), Length(1, 100)])
     user_role = SelectField('division', validators=[DataRequired()], choices=roles)
     user_email = StringField(u'Email*(required)', validators=[DataRequired(), Length(1, 100), Email()])
+    user_phone = PhoneNumberField(region='US', display_format='national', validators=[DataRequired()])
     update = SubmitField(u'Update Information')

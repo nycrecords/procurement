@@ -84,6 +84,18 @@
                         </div>
 
                         <div class="form-group row">
+                            {% for message in form.phone.errors %}
+                                <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
+                            {% endfor %}
+
+                            <label for="quantity" class="col-sm-3 form-control-label">User Phone Number</label>
+                            <div class="col-sm-5">
+                                {{ form.phone(id="user_phone", class="form-control", type="text") }}
+                                <div class="small">Phone number is required.</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
                             <div class="spacer">
                                 <button type="submit" class="btn btn-primary btn-lg btn-block">Create User</button>
                             </div>

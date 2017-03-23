@@ -21,8 +21,8 @@ class ChangePasswordForm(Form):
     """Form for changing password."""
     old_password = PasswordField('Old password', validators=[DataRequired()])
     password = PasswordField('New password', validators=[
-        DataRequired(), EqualTo('password2', message='Passwords must match')])
-    password2 = PasswordField('Confirm new password', validators=[DataRequired()])
+        DataRequired(), Length(8), EqualTo('password2', message='Passwords must match')])
+    password2 = PasswordField('Confirm new password', validators=[DataRequired(), Length(8)])
     submit = SubmitField('Update Password')
 
 
@@ -36,8 +36,8 @@ class PasswordResetForm(Form):
     """Password reset form after email confirmation."""
     email = StringField('Email', validators=[DataRequired(), Length(1, 100), Email()])
     password = PasswordField('New Password',
-                             validators=[DataRequired(), EqualTo('password2', message='Passwords must match')])
-    password2 = PasswordField('Confirm password', validators=[DataRequired()])
+                             validators=[DataRequired(), Length(8), EqualTo('password2', message='Passwords must match')])
+    password2 = PasswordField('Confirm password', validators=[DataRequired(), Length(8)])
     submit = SubmitField('Reset Password')
 
     def validate_email(self, field):
