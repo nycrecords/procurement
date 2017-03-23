@@ -93,18 +93,18 @@ class RequestForm(Form):
         if not Form.validate(self):
             return False
 
-        if self.funding_source.data == "Other" and self.funding_source_description.data is None:
+        if self.funding_source.data == "Other" and not self.funding_source_description.data:
             self.funding_source.errors.append("You must specify if you entered Other")
             return False
 
-        if self.funding_source.data == "Grant" and (self.grant_name.data is None or self.project_name.data is None):
+        if self.funding_source.data == "Grant" and (not self.grant_name.data or not self.project_name.data):
             self.funding_source.errors.append("You must include a grant and project name if you entered Grant")
             return False
 
-        print(self.funding_source.data)
-        print(self.funding_source_description.data)
-        print(self.grant_name.data)
-        print(self.project_name.data)
+        print("funding source: {}".format(self.funding_source.data))
+        print("desc: {}".format(self.funding_source_description.data))
+        print("grant: {}".format(self.grant_name.data))
+        print("project: {}".format(self.project_name.data))
 
         return True
 
