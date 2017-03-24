@@ -133,7 +133,7 @@
                 If Other, specify:</label>
             <div class="col-sm-5">
                 {{ form.funding_source_description(id="funding_source_description", class="form-control",
-                        text="text", maxlength="100", value=request.funding_source_description) }}
+                        text="text", maxlength="100", value=request.funding_source_description or '') }}
             </div>
         </div>
 
@@ -141,7 +141,7 @@
             <label for="grant_name" class="col-sm-offset-1 col-sm-3 form-control-label">
                 Grant Name:</label>
             <div class="col-sm-5">
-                {{ form.grant_name(id="grant_name", class="form-control", text="text", maxlength="100", value=request.grant_name) }}
+                {{ form.grant_name(id="grant_name", class="form-control", text="text", maxlength="100", value=request.grant_name or '') }}
             </div>
         </div>
 
@@ -149,7 +149,7 @@
             <label for="project_name" class="col-sm-offset-1 col-sm-3 form-control-label">
                 Project Name:</label>
             <div class="col-sm-5">
-                {{ form.project_name(id="project_name", class="form-control", text="text", maxlength="100", value=request.project_name) }}
+                {{ form.project_name(id="project_name", class="form-control", text="text", maxlength="100", value=request.project_name or '') }}
             </div>
         </div>
 

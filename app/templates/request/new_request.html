@@ -251,6 +251,25 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
+            if ($('#funding_source').val() == 'Other') {
+                $('#funding_source_description').show();
+                $('#grant_name').hide();
+                $('#project_name').hide();
+            }
+            else if ($('#funding_source').val() == 'Grant') {
+                $('#grant_name').show();
+                $('#project_name').show();
+                $('#funding_source_description').hide();
+            }
+            else {
+                $('#funding_source_description').hide();
+                $('#grant_name').hide();
+                $('#project_name').hide();
+            }
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
             $('#funding_source').on('change', function () {
                 if ($('#funding_source').val() == 'Other') {
                     $('#funding_source_description').show();
