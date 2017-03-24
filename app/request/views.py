@@ -79,7 +79,7 @@ def new_request():
         if new_request.funding_source == "Grant":
             new_request.grant_name = form.grant_name.data
             new_request.project_name = form.project_name.data
-        elif new_request == "Other":
+        elif new_request.funding_source == "Other":
             new_request.funding_source_description = form.funding_source_description.data
 
         request_vendor_name = str(form.request_vendor_name.data)
