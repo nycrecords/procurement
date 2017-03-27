@@ -206,7 +206,7 @@
         {% endif %}
 
         {% for comment in comments %}
-            <div class="form-group col">
+            <div class="well">
                 <form action="{{ url_for('request.delete_comment') }}"
                       method="post" value="{{ comment.id }}">
                     <label>{{ comment.timestamp.strftime("%m/%d/%Y %I:%M:%S %p") }} |
@@ -223,7 +223,7 @@
                     {% if (current_user.role == "Administrator" or current_user.id == comment.user_id) and comment.editable %}
                         {{ delete_form.request_id(value=request.id) }}
                         {{ delete_form.comment_id(value=comment.id) }}
-                        {{ delete_form.submit }}
+                        {{ delete_form.submit(class="btn btn-danger btn-small", style="float: right;") }}
                     {% endif %}
                 </form>
                 <div>{{ comment.content }}</div>

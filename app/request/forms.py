@@ -113,10 +113,10 @@ class DeleteCommentForm(Form):
     """Form for deleting a comment."""
     request_id = HiddenField()
     comment_id = HiddenField()
-    submit = SubmitField(u'delete')
+    submit = SubmitField(u'Delete')
 
 
 class StatusForm(Form):
     """Form for updating status of a request."""
-    status = SelectField(u'status', validators=[DataRequired()])
+    status = SelectField(u'Status', validators=[DataRequired()])
     submit = SubmitField(u'Update')
