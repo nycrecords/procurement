@@ -298,6 +298,16 @@ def edit_request(request_id):
 
         return redirect(url_for('request.display_request', request_id=request_id))
 
+    else:
+        print(form.errors)
+
+    return render_template('request/edit_request.html',
+                           form=form,
+                           vendors=vendors,
+                           selected_vendor_id=vendor.id,
+                           user=user,
+                           request=request)
+
 
 def allowed_file(filename):
     return '.' in filename and \
