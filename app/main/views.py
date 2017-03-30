@@ -14,7 +14,7 @@ from app.constants import roles
 
 @main.route('/')
 def index():
-    """Return homepage with a button redirecting to the procurement request form."""
+    """Return homepage with a button redirecting to the procurement request history."""
     return render_template('main/index.html')
 
 

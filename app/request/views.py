@@ -48,6 +48,25 @@ def new_request():
     if flask_request.method == 'POST' and form.validate_on_submit():
         date_submitted = datetime.datetime.now()
 
+        # determine ID using fiscal year
+        if date_submitted.month < 7:
+            id_first = "FY" + str(date_submitted.year - 1) + "-"
+        else:
+            id_first = "FY" + str(date_submitted.year) + "-"
+
+        last_request = Request.query.filter(Request.id.like(id_first + "%")).order_by(Request.id.desc()).first()
+        if last_request:
+            id_last = str(int(last_request.id[-4:]) + 1)
+            while len(id_last) < 4:
+                id_last = '0' + id_last
+            if len(id_last) > 4:
+                id_last = id_last[-4:]
+        else:
+            id_last = "0000"
+
+        request_id = id_first + id_last
+        print(request_id)
+
         current_status = status.NDA
         if current_user.role == roles.DIV:
             current_status = status.NCA
@@ -61,6 +80,7 @@ def new_request():
             current_status = status.NCA
 
         new_request = Request(
+            request_id=request_id,
             division=current_user.division,
             date_submitted=date_submitted,
             item=form.item.data,
@@ -223,7 +243,7 @@ def display_request(request_id):
         abort(404)
 
 
-@request.route('/edit/<int:request_id>', methods=['GET', 'POST'])
+@request.route('/edit/<request_id>', methods=['GET', 'POST'])
 @login_required
 def edit_request(request_id):
     """Return page to edit a specific request."""
@@ -321,6 +341,7 @@ def add_comment(request_id):
 
     if comment_form.validate_on_submit():
         # Check if file was uploaded
+        file_path = None
         if comment_form.file.data is not None:
             filename = secure_filename(comment_form.file.data.filename)
             file_data = comment_form.file.data
@@ -331,7 +352,8 @@ def add_comment(request_id):
 
             if file_data.filename != '' and file_data and allowed_file(file_data.filename):
                 filename = secure_filename(datetime.datetime.now().strftime("%Y%m%d-%H%M") + file_data.filename)
-                file_data.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+                file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+                file_data.save(file_path)
 
         # Add comment to database
         new_comment = Comment(
@@ -366,6 +388,7 @@ def add_comment(request_id):
 
         send_email(receivers, "New Comment Added to Request {}".format(request_id),
                    'request/comment_added',
+                   file_path=file_path,
                    user=current_user,
                    request_id=request_id,
                    comment_form=comment_form)
@@ -396,7 +419,7 @@ def download(comment_id):
                                as_attachment=True, attachment_filename=comment.filepath[13:])
 
 
-@request.route('/status/<int:request_id>', methods=['GET', 'POST'])
+@request.route('/status/<request_id>', methods=['GET', 'POST'])
 def update_status(request_id):
     status_form = StatusForm()
     request = Request.query.filter_by(id=request_id).first()

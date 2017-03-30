@@ -192,7 +192,7 @@
     {% endif %}
 
     <div class="page-footer">
-        <h3 class="col-sm-7">Notes</h3>
+        <h3 class="col-sm-7">Comments</h3>
         {% if current_user.role != "Regular User" or current_user.id == request.creator_id %}
             <div class="form-group col">
                 <form action="{{ url_for('request.add_comment', request_id=request.id) }}" method="post"
@@ -204,7 +204,6 @@
                 </form>
             </div><br>
         {% endif %}
-
         {% for comment in comments %}
             <div class="well">
                 <form action="{{ url_for('request.delete_comment') }}"

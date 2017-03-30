@@ -81,7 +81,7 @@ def load_user(user_id):
 class Request(db.Model):
     """The procurement request class"""
     __tablename__ = 'request'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String(11), primary_key=True)
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     division = db.Column(db.String(100))
     date_submitted = db.Column(db.DateTime)
@@ -103,6 +103,7 @@ class Request(db.Model):
 
     def __init__(
             self,
+            request_id,
             division,
             date_submitted,
             item,
@@ -117,6 +118,7 @@ class Request(db.Model):
             status,
             creator_id
     ):
+        self.id = request_id
         self.division = division
         self.date_submitted = date_submitted
         # self.date_closed = date_closed
@@ -191,7 +193,7 @@ class Comment(db.Model):
     """Comment and/or file that can be added to a specific request"""
     __tablename__ = 'comment'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
+    request_id = db.Column(db.String(11), db.ForeignKey('request.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     timestamp = db.Column(db.DateTime)
     content = db.Column(db.String())
