@@ -351,8 +351,8 @@ def add_comment(request_id):
                 return redirect(url_for('request.display_request', request_id=comment_form.request_id.data))
 
             if file_data.filename != '' and file_data and allowed_file(file_data.filename):
-                filename = secure_filename(datetime.datetime.now().strftime("%Y%m%d-%H%M") + file_data.filename)
-                file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+                fixed_filename = secure_filename(datetime.datetime.now().strftime("%Y%m%d-%H%M") + file_data.filename)
+                file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], fixed_filename)
                 file_data.save(file_path)
 
         # Add comment to database
@@ -361,7 +361,7 @@ def add_comment(request_id):
             user_id=current_user.id,
             timestamp=datetime.datetime.now(),
             content=comment_form.content.data,
-            filepath=filename,
+            filepath=fixed_filename,
             editable=True
         )
         db.session.add(new_comment)
@@ -388,7 +388,7 @@ def add_comment(request_id):
 
         send_email(receivers, "New Comment Added to Request {}".format(request_id),
                    'request/comment_added',
-                   file_path=file_path,
+                   filename=fixed_filename,
                    user=current_user,
                    request_id=request_id,
                    comment_form=comment_form)
