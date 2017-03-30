@@ -93,18 +93,23 @@ class RequestForm(Form):
         if not Form.validate(self):
             return False
 
+        # check if user selected other and filled out the field
         if self.funding_source.data == "Other" and not self.funding_source_description.data:
             self.funding_source.errors.append("You must specify if you entered Other")
             return False
 
+        # check if user selected grant and filled out the fields
         if self.funding_source.data == "Grant" and (not self.grant_name.data or not self.project_name.data):
             self.funding_source.errors.append("You must include a grant and project name if you entered Grant")
             return False
 
-        print("funding source: {}".format(self.funding_source.data))
-        print("desc: {}".format(self.funding_source_description.data))
-        print("grant: {}".format(self.grant_name.data))
-        print("project: {}".format(self.project_name.data))
+        # check if user filled out the vendor fields
+        # if not (self.request_vendor_name.data and self.request_vendor_address.data and
+        #         self.request_vendor_address.data and self.request_vendor_phone.data and
+        #         self.request_vendor_fax.data and self.request_vendor_email.data and
+        #         self.request_vendor_taxid.data):
+        #     self.request_vendor_name.errors.append("You must fill out all fields for Vendor Information")
+        #     return False
 
         return True
 

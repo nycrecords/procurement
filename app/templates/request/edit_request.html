@@ -167,6 +167,10 @@
         <p><i><strong>Vendor Information</strong></i></p>
 
         <div class="form-group row">
+        {% for message in form.request_vendor_name.errors %}
+                <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
+        {% endfor %}
+
             <label for="request_vendor" class="col-sm-3 sr-only form-control-label">Vendor Information:</label>
             <div class="col-sm-10">
                 <select name="vendor" class="form-control" id="vendor">
