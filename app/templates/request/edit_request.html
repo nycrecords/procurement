@@ -173,16 +173,17 @@
 
             <label for="request_vendor" class="col-sm-3 sr-only form-control-label">Vendor Information:</label>
             <div class="col-sm-10">
-                <select name="vendor" class="form-control" id="vendor">
-                    <option id="default" value="default" selected value>Select Vendor or Enter New Vendor Below</option>
-                    {% for vendor in vendors %}
-                        {% if vendor.id == selected_vendor_id %}
-                            <option id={{ vendor.id }} value={{ vendor.id }} selected value> {{ vendor.name }} </option>
-                        {% else %}
-                            <option id={{ vendor.id }} value={{ vendor.id }}> {{ vendor.name }} </option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
+{#                <select name="vendor" class="form-control" id="vendor">#}
+{#                    <option id="default" value="default" selected value>Select Vendor or Enter New Vendor Below</option>#}
+{#                    {% for vendor in vendors %}#}
+{#                        {% if vendor.id == selected_vendor_id %}#}
+{#                            <option id={{ vendor.id }} value={{ vendor.id }} selected value> {{ vendor.name }} </option>#}
+{#                        {% else %}#}
+{#                            <option id={{ vendor.id }} value={{ vendor.id }}> {{ vendor.name }} </option>#}
+{#                        {% endif %}#}
+{#                    {% endfor %}#}
+{#                </select>#}
+                {{ form.request_vendor_dropdown(id="vendor_information", class="form-control") }}
             </div>
         </div>
 
@@ -299,15 +300,14 @@
         });
     </script>
     <script>
-        $("#vendor").change(function () {
+        $("#vendor_information").change(function () {
             $.ajax({
                 url: "/parse_vendor",
                 type: "GET",
                 data: {
-                    vendor: $("#vendor").children(":selected").attr("id")
+                    vendor: $("#vendor_information").children(":selected").attr("value")
                 },
                 success: function (data) {
-                    console.log(data)
 
                     var dis = false;
                     var vendor_name = $("#vendor_name");
@@ -351,15 +351,14 @@
 
     </script>
     <script>
-        $("#vendor").load("edit_request.html", function () {
+        $("#vendor_information").load("edit_request.html", function () {
             $.ajax({
                 url: "/parse_vendor",
                 type: "GET",
                 data: {
-                    vendor: $("#vendor").children(":selected").attr("id")
+                    vendor: $("#vendor_information").children(":selected").attr("value")
                 },
                 success: function (data) {
-                    console.log(data)
 
                     var dis = false;
                     var vendor_name = $("#vendor_name");

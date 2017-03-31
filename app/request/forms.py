@@ -63,6 +63,7 @@ class CommentForm(Form):
 
 class RequestForm(Form):
     """Form for creating a new request."""
+
     item = TextAreaField(u'Item*(required)', validators=[
         DataRequired('Please enter the item')])
     quantity = IntegerField(u'Quantity*', validators=[
@@ -87,6 +88,19 @@ class RequestForm(Form):
     request_vendor_taxid = StringField(u'Vendor Tax ID')
     request_vendor_mwbe = BooleanField(u'mwbe')
     submit = SubmitField(u'Submit Request')
+
+    # def __init__(self):
+    #     super(RequestForm, self).__init__()
+    #
+    #     from app.models import Vendor
+    #     vendors = Vendor.query.order_by(Vendor.name).all()
+    #     vendor_dropdown = [
+    #         ('default', 'Select Vendor or Enter New Vendor Below')
+    #     ]
+    #     for vendor in vendors:
+    #         vendor_dropdown.append((str(vendor.id), vendor.name))
+    #     self.request_vendor_dropdown.choices = vendor_dropdown
+
 
     def validate(self):
         if not Form.validate(self):

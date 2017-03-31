@@ -44,12 +44,6 @@ def new_request():
     form = RequestForm()
 
     vendors = Vendor.query.order_by(Vendor.name).all()
-    vendor_dropdown = [
-        ('default', 'Select Vendor or Enter New Vendor Below')
-    ]
-    for vendor in vendors:
-        vendor_dropdown.append((str(vendor.id), vendor.name))
-    form.request_vendor_dropdown.choices = vendor_dropdown
 
     if flask_request.method == 'POST' and form.validate_on_submit():
         date_submitted = datetime.datetime.now()
@@ -256,11 +250,13 @@ def edit_request(request_id):
     if not current_user.role == roles.ADMIN:
         return redirect('requests')
 
+    form = RequestForm()
+
     vendors = Vendor.query.order_by(Vendor.name).all()
+
     request, user, vendor = db.session.query(Request, User, Vendor).filter(Request.id == request_id). \
         filter(User.id == Request.creator_id). \
         filter(Request.vendor_id == Vendor.id).first()
-    form = RequestForm()
 
     if flask_request.method == 'GET':
         form = RequestForm(item=request.item,
@@ -306,7 +302,7 @@ def edit_request(request_id):
         request_vendor_fax = str(form.request_vendor_fax.data)
         request_vendor_mwbe = form.request_vendor_mwbe.data
 
-        vendor_form = flask_request.form["vendor"]
+        vendor_form = flask_request.form["request_vendor_dropdown"]
         if vendor_form == "default":
             new_vendor = Vendor(name=request_vendor_name,
                                 address=form.request_vendor_address.data,
@@ -316,9 +312,10 @@ def edit_request(request_id):
                                 tax_id=form.request_vendor_taxid.data,
                                 mwbe=request_vendor_mwbe)
             db.session.add(new_vendor)
+            db.session.commit()
             new_request.set_vendor_id(new_vendor.id)
         else:
-            request.set_vendor_id(vendor_form)
+            request.set_vendor_id(int(vendor_form))
         db.session.commit()
         flash("Request was successfully updated!")
 
