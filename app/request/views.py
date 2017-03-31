@@ -342,6 +342,7 @@ def add_comment(request_id):
     if comment_form.validate_on_submit():
         # Check if file was uploaded
         file_path = None
+        fixed_filename = None
         if comment_form.file.data is not None:
             filename = secure_filename(comment_form.file.data.filename)
             file_data = comment_form.file.data
