@@ -44,6 +44,12 @@ def new_request():
     form = RequestForm()
 
     vendors = Vendor.query.order_by(Vendor.name).all()
+    vendor_dropdown = [
+        ('default', 'Select Vendor or Enter New Vendor Below')
+    ]
+    for vendor in vendors:
+        vendor_dropdown.append((str(vendor.id), vendor.name))
+    form.request_vendor_dropdown.choices = vendor_dropdown
 
     if flask_request.method == 'POST' and form.validate_on_submit():
         date_submitted = datetime.datetime.now()
@@ -65,7 +71,6 @@ def new_request():
             id_last = "0000"
 
         request_id = id_first + id_last
-        print(request_id)
 
         current_status = status.NDA
         if current_user.role == roles.DIV:
@@ -107,7 +112,7 @@ def new_request():
         request_vendor_fax = str(form.request_vendor_fax.data)
         request_vendor_mwbe = form.request_vendor_mwbe.data
 
-        vendor_form = flask_request.form["vendor"]
+        vendor_form = flask_request.form["request_vendor_dropdown"]
         if vendor_form == "default":
             new_vendor = Vendor(name=request_vendor_name,
                                 address=form.request_vendor_address.data,
@@ -117,9 +122,10 @@ def new_request():
                                 tax_id=form.request_vendor_taxid.data,
                                 mwbe=request_vendor_mwbe)
             db.session.add(new_vendor)
-            new_request.set_vendor_id(new_vendor.name)
+            db.session.commit()
+            new_request.set_vendor_id(new_vendor.id)
         else:
-            new_request.set_vendor_id(vendor_form)
+            new_request.set_vendor_id(int(vendor_form))
         db.session.add(new_request)
         db.session.commit()
 

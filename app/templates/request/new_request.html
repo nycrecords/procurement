@@ -172,12 +172,13 @@
 
             <label for="request_vendor" class="col-sm-3 sr-only form-control-label">Vendor Information:</label>
             <div class="col-sm-10">
-                <select name="vendor" class="form-control" id="vendor">
-                    <option id="default" value="default" selected value>Select Vendor or Enter New Vendor Below</option>
-                    {% for vendor in vendors %}
-                        <option id={{ vendor.id }} value={{ vendor.id }}> {{ vendor.name }} </option>
-                    {% endfor %}
-                </select>
+{#                <select name="vendor" class="form-control" id="vendor">#}
+{#                    <option id="default" value="default" selected value>Select Vendor or Enter New Vendor Below</option>#}
+{#                    {% for vendor in vendors %}#}
+{#                        <option id={{ vendor.id }} value={{ vendor.id }}> {{ vendor.name }} </option>#}
+{#                    {% endfor %}#}
+{#                </select>#}
+                {{ form.request_vendor_dropdown(id="vendor_information", class="form-control") }}
             </div>
         </div>
 
@@ -294,15 +295,64 @@
         });
     </script>
     <script>
-        $("#vendor").change(function () {
+        $("#vendor_information").change(function () {
             $.ajax({
                 url: "/parse_vendor",
                 type: "GET",
                 data: {
-                    vendor: $("#vendor").children(":selected").attr("id")
+                    vendor: $("#vendor_information").children(":selected").attr("value")
                 },
                 success: function (data) {
-                    console.log(data)
+{#                    console.log("data: ");#}
+{#                    console.log(data);#}
+
+                    var dis = false;
+                    var vendor_name = $("#vendor_name");
+                    var vendor_address = $("#vendor_address");
+                    var vendor_phone = $("#vendor_phone");
+                    var vendor_fax = $("#vendor_fax");
+                    var vendor_email = $("#vendor_email");
+                    var vendor_taxid = $("#vendor_taxid");
+                    var vendor_mwbe = $("#request_vendor_mwbe");
+
+                    if (data == "") {
+                        vendor_name.val("");
+                        vendor_address.val("");
+                        vendor_phone.val("");
+                        vendor_fax.val("");
+                        vendor_email.val("");
+                        vendor_taxid.val("");
+                        vendor_mwbe.prop("checked", false);
+                    }
+                    else {
+                        dis = true;
+                        vendor_name.val(data[0]);
+                        vendor_address.val(data[1]);
+                        vendor_phone.val(data[2]);
+                        vendor_fax.val(data[3]);
+                        vendor_email.val(data[4]);
+                        vendor_taxid.val(data[5]);
+                        vendor_mwbe.prop("checked", data[6]);
+                    }
+
+                    vendor_name.attr("disabled", dis);
+                    vendor_address.attr("disabled", dis);
+                    vendor_phone.attr("disabled", dis);
+                    vendor_fax.attr("disabled", dis);
+                    vendor_email.attr("disabled", dis);
+                    vendor_taxid.attr("disabled", dis);
+                    vendor_mwbe.attr("disabled", dis);
+                }
+            });
+        });
+    $("#vendor_information").load("new_request.html", function () {
+            $.ajax({
+                url: "/parse_vendor",
+                type: "GET",
+                data: {
+                    vendor: $("#vendor_information").children(":selected").attr("value")
+                },
+                success: function (data) {
 
                     var dis = false;
                     var vendor_name = $("#vendor_name");

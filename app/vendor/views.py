@@ -23,7 +23,7 @@ from app.errors import flash_errors
 @login_required
 def display_vendors():
     """Return page that displays all vendors."""
-    vendors = Vendor.query.all()
+    vendors = Vendor.query.order_by(Vendor.name).all()
     if vendors:
         return render_template('vendor/vendors.html', vendors=vendors)
     else:

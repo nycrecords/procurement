@@ -11,6 +11,7 @@ from wtforms.validators import DataRequired, Length
 from wtforms_alchemy import PhoneNumberField
 from app.constants import status
 
+
 divisions = [
     ('', ''),
     ('MRMD', 'MRMD'),
@@ -62,8 +63,6 @@ class CommentForm(Form):
 
 class RequestForm(Form):
     """Form for creating a new request."""
-    #request_name = StringField(u'Name*(required)')
-    # division = SelectField(u'Division*', choices=divisions, default='')
     item = TextAreaField(u'Item*(required)', validators=[
         DataRequired('Please enter the item')])
     quantity = IntegerField(u'Quantity*', validators=[
@@ -79,6 +78,7 @@ class RequestForm(Form):
     project_name = StringField(u'Project Name')
     justification = TextAreaField(u'Justification*(required)', validators=[
         DataRequired('You must enter a justification for your request'), Length(1, 500)])
+    request_vendor_dropdown = SelectField(u'Vendor Information*')
     request_vendor_name = StringField(u'Vendor Name')
     request_vendor_address = StringField(u'Vendor Address')
     request_vendor_phone = PhoneNumberField(region='US', display_format='national')
@@ -86,7 +86,6 @@ class RequestForm(Form):
     request_vendor_email = StringField(u'Email')
     request_vendor_taxid = StringField(u'Vendor Tax ID')
     request_vendor_mwbe = BooleanField(u'mwbe')
-    #status = SelectField(u'status', validators=[], choices=request_statuses, default=status.NDA)
     submit = SubmitField(u'Submit Request')
 
     def validate(self):
@@ -104,12 +103,13 @@ class RequestForm(Form):
             return False
 
         # check if user filled out the vendor fields
-        # if not (self.request_vendor_name.data and self.request_vendor_address.data and
-        #         self.request_vendor_address.data and self.request_vendor_phone.data and
-        #         self.request_vendor_fax.data and self.request_vendor_email.data and
-        #         self.request_vendor_taxid.data):
-        #     self.request_vendor_name.errors.append("You must fill out all fields for Vendor Information")
-        #     return False
+        if self.request_vendor_dropdown.data == "default" and not \
+                (self.request_vendor_name.data and self.request_vendor_address.data and
+                self.request_vendor_address.data and self.request_vendor_phone.data and
+                self.request_vendor_fax.data and self.request_vendor_email.data and
+                self.request_vendor_taxid.data):
+            self.request_vendor_name.errors.append("You must fill out all fields for Vendor Information")
+            return False
 
         return True
 

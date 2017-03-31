@@ -82,7 +82,7 @@ def divisions():
 def jsonify_fields():
     if request.args['vendor'] == "default":
         return jsonify("")
-    v = Vendor.query.filter_by(id=request.args['vendor']).first()
+    v = Vendor.query.filter_by(id=int(request.args['vendor'])).first()
     return jsonify(v.name, v.address, v.phone, v.fax, v.email, v.tax_id, v.mwbe)
 
 

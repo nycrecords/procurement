@@ -176,7 +176,7 @@ class Vendor(db.Model):
         self.name = name
         self.address = address
         self.phone = phone
-        self.fax = fax,
+        self.fax = fax
         self.email = email
         self.tax_id = tax_id
         self.mwbe = mwbe
