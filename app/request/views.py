@@ -44,6 +44,12 @@ def new_request():
     form = RequestForm()
 
     vendors = Vendor.query.order_by(Vendor.name).all()
+    # vendor_dropdown = [
+    #         ('default', 'Select Vendor or Enter New Vendor Below')
+    #     ]
+    # for vendor in vendors:
+    #     vendor_dropdown.append((str(vendor.id), vendor.name))
+    # form.request_vendor_dropdown.choices = vendor_dropdown
 
     if flask_request.method == 'POST' and form.validate_on_submit():
         date_submitted = datetime.datetime.now()
@@ -267,7 +273,8 @@ def edit_request(request_id):
                            grant_name=request.grant_name,
                            project_name=request.project_name,
                            funding_source_description=request.funding_source_description,
-                           justification=request.justification)
+                           justification=request.justification,
+                           request_vendor_dropdown=str(request.vendor_id))
 
         return render_template('request/edit_request.html',
                                form=form,
