@@ -131,24 +131,24 @@ def new_request():
 
         # Email Notifications
         receivers = [current_user.email]
-        admin_query = db.session.query(User).filter(User.role == roles.ADMIN).\
-                                                filter(User.id != current_user.id).all()
+        admin_query = db.session.query(User).filter(User.role == roles.ADMIN). \
+            filter(User.id != current_user.id).all()
         for query in admin_query:
-                receivers.append(query.email)
+            receivers.append(query.email)
         header = ""
         if current_status == status.NDA:
-            div_query = db.session.query(User).filter(User.role == roles.DIV).\
-                                                filter(User.id != current_user.id).\
-                                                filter(User.division == current_user.division).all()
+            div_query = db.session.query(User).filter(User.role == roles.DIV). \
+                filter(User.id != current_user.id). \
+                filter(User.division == current_user.division).all()
             for query in div_query:
                 receivers.append(query.email)
 
             header = "Request {} has been Routed for Approval".format(new_request.id)
 
         elif current_status == status.NCA:
-            comm_query = db.session.query(User).filter(User.role == roles.COM).\
-                                                filter(User.id != current_user.id).\
-                                                filter(User.division == current_user.division).all()
+            comm_query = db.session.query(User).filter(User.role == roles.COM). \
+                filter(User.id != current_user.id). \
+                filter(User.division == current_user.division).all()
             for query in comm_query:
                 receivers.append(query.email)
 
@@ -233,18 +233,16 @@ def display_request(request_id):
     status_form.status.choices = choices
 
     if request:
-        return render_template(
-                                'request/request.html',
-                                current_user=current_user,
-                                request=request,
-                                user=user,
-                                vendor=vendor,
-                                comments=comments,
-                                comment_form=comment_form,
-                                status_form=status_form,
-                                delete_form=delete_form,
-                                allowed_to_update=allowed_to_update
-                            )
+        return render_template('request/request.html',
+                               current_user=current_user,
+                               request=request,
+                               user=user,
+                               vendor=vendor,
+                               comments=comments,
+                               comment_form=comment_form,
+                               status_form=status_form,
+                               delete_form=delete_form,
+                               allowed_to_update=allowed_to_update)
     else:
         abort(404)
 
@@ -443,8 +441,8 @@ def update_status(request_id):
     # Email Notifications
     if old_status != request.status:
         receivers = [requester.email]
-        admin_query = db.session.query(User).filter(User.role == roles.ADMIN).\
-                                            filter(User.id != requester.id).all()
+        admin_query = db.session.query(User).filter(User.role == roles.ADMIN). \
+            filter(User.id != requester.id).all()
         for query in admin_query:
             receivers.append(query.email)
         header = ""
@@ -453,45 +451,45 @@ def update_status(request_id):
             # record the denial time
             date_denied = datetime.datetime.now()
             new_comment = Comment(
-                            request_id=request_id,
-                            user_id=current_user.id,
-                            timestamp=date_denied,
-                            content="Request has been denied",
-                            editable=False
+                request_id=request_id,
+                user_id=current_user.id,
+                timestamp=date_denied,
+                content="Request has been denied",
+                editable=False
             )
             db.session.add(new_comment)
             db.session.commit()
             header = "Request {} has been Denied".format(request.id)
 
         elif request.status == status.NDA:
-            div_query = db.session.query(User).filter(User.role == roles.DIV).\
-                                                    filter(User.id != current_user.id).\
-                                                    filter(User.division == requester.division).all()
+            div_query = db.session.query(User).filter(User.role == roles.DIV). \
+                filter(User.id != current_user.id). \
+                filter(User.division == requester.division).all()
             for query in div_query:
                 receivers.append(query.email)
 
             header = "Request {} has been Routed for Approval".format(request.id)
 
         elif request.status == status.NCA:
-            comm_query = db.session.query(User).filter(User.role == roles.COM).\
-                                                    filter(User.id != current_user.id).\
-                                                    filter(User.division == requester.division).all()
+            comm_query = db.session.query(User).filter(User.role == roles.COM). \
+                filter(User.id != current_user.id). \
+                filter(User.division == requester.division).all()
             for query in comm_query:
                 receivers.append(query.email)
 
             header = "Request {} needs High Level Approval".format(request.id)
 
         elif request.status == status.APR:
-            proc_query = db.session.query(User).filter(User.role == roles.PROC).\
-                                                filter(User.id != requester.id).all()
+            proc_query = db.session.query(User).filter(User.role == roles.PROC). \
+                filter(User.id != requester.id).all()
             for query in proc_query:
                 receivers.append(query.email)
 
             header = "Request {} has been Approved".format(request.id)
 
         elif request.status == status.HOLD:
-            proc_query = db.session.query(User).filter(User.role == roles.PROC).\
-                                                filter(User.id != requester.id).all()
+            proc_query = db.session.query(User).filter(User.role == roles.PROC). \
+                filter(User.id != requester.id).all()
             for query in proc_query:
                 receivers.append(query.email)
 
@@ -505,10 +503,10 @@ def update_status(request_id):
             header = "Request {} has been Resolved".format(request.id)
 
         send_email(receivers, header,
-                           'request/status_update',
-                           user=current_user,
-                           request=request,
-                           old_status=old_status)
+                   'request/status_update',
+                   user=current_user,
+                   request=request,
+                   old_status=old_status)
 
     return redirect(url_for('request.display_request', request_id=request_id))
 

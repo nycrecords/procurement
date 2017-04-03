@@ -13,139 +13,136 @@
             <a class="btn btn-primary btn-small" href="{{ url_for('request.edit_request', request_id=request.id) }}">Edit
                 Request</a>
         {% endif %}
-    </div>
+        <hr>
 
-    <div class="page-body">
-        <div class="container">
-            <div class="col-sm-6">
-                <div class="table-responsive">
-                    <table id="requests" class="table table-bordered table-striped">
-                        <colgroup>
-                            <col class="col-xs-2">
-                            <col class="col-xs-4">
-                        </colgroup>
-                        <tbody>
-                        <tr>
-                            <th scope="row" colspan="2">Request Information</th>
-                        </tr>
-                        <tr>
-                            <th scope="row">Request ID:</th>
-                            <td>{{ request.id }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Requester:</th>
-                            <td><a href="mailto:{{ user.email }}">{{ user.name }}</a></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Division:</th>
-                            <td>{{ user.division }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Item:</th>
-                            <td><a href="#" id="item">{{ request.item }}</a></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Quantity:</th>
-                            <td><a href="#" id="quantity">{{ request.quantity }}</a></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Unit Price:</th>
-                            <td><a href="#" id="unit_price">${{ request.unit_price }}</a></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Total Price:</th>
-                            {% if request.total_cost %}
-                                <td><a href="#" id="total_cost">${{ request.total_cost }}</a></td>
-                            {% else %}
-                                <td>$0.00</td>
-                            {% endif %}
-                        </tr>
-                        <tr>
-                            <th scope="row">Funding Source:</th>
-                            <td><a href="#" id="funding_source">{{ request.funding_source }}</a></td>
-                        </tr>
-                        {% if request.funding_source == "Grant" %}
-                            <tr>
-                                <th scope="row">Grant Name:</th>
-                                <td><a href="#" id="grant_name">{{ request.grant_name }}</a></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Project Name:</th>
-                                <td><a href="#" id="project_name">{{ request.project_name }}</a></td>
-                            </tr>
-                        {% elif request.funding_source == "Other" %}
-                            <tr>
-                                <th scope="row">Funding Source Description:</th>
-                                <td><a href="#" id="grant_name">{{ request.funding_source_description }}</a></td>
-                            </tr>
+        <div class="col-sm-6">
+            <div class="table-responsive">
+                <table id="requests" class="table table-bordered table-striped">
+                    <colgroup>
+                        <col class="col-xs-2">
+                        <col class="col-xs-4">
+                    </colgroup>
+                    <tbody>
+                    <tr>
+                        <th scope="row" colspan="2">Request Information</th>
+                    </tr>
+                    <tr>
+                        <th scope="row">Request ID:</th>
+                        <td>{{ request.id }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Requester:</th>
+                        <td><a href="mailto:{{ user.email }}">{{ user.name }}</a></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Division:</th>
+                        <td>{{ user.division }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Item:</th>
+                        <td><a href="#" id="item">{{ request.item }}</a></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Quantity:</th>
+                        <td><a href="#" id="quantity">{{ request.quantity }}</a></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Unit Price:</th>
+                        <td><a href="#" id="unit_price">${{ request.unit_price }}</a></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Total Price:</th>
+                        {% if request.total_cost %}
+                            <td><a href="#" id="total_cost">${{ request.total_cost }}</a></td>
+                        {% else %}
+                            <td>$0.00</td>
                         {% endif %}
+                    </tr>
+                    <tr>
+                        <th scope="row">Funding Source:</th>
+                        <td><a href="#" id="funding_source">{{ request.funding_source }}</a></td>
+                    </tr>
+                    {% if request.funding_source == "Grant" %}
                         <tr>
-                            <th scope="row">Justification:</th>
-                            <td><a href="#" id="justification">{{ request.justification }}</a></td>
+                            <th scope="row">Grant Name:</th>
+                            <td><a href="#" id="grant_name">{{ request.grant_name }}</a></td>
                         </tr>
                         <tr>
-                            <th scope="row">Status:</th>
-                            <td>
-                                <a href="#" id="status">{{ request.status }}</a>
-                                {% if allowed_to_update %}
-                                    <a class="btn btn-primary btn-sm pull-right"
-                                       data-toggle="modal" data-target="#update_status">Update</a>
-                                {% endif %}
-                            </td>
+                            <th scope="row">Project Name:</th>
+                            <td><a href="#" id="project_name">{{ request.project_name }}</a></td>
                         </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="col-sm-6">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped">
-                        <colgroup>
-                            <col class="col-xs-1">
-                            <col class="col-xs-5">
-                        </colgroup>
-                        <tbody>
+                    {% elif request.funding_source == "Other" %}
                         <tr>
-                            <th scope="row" colspan="2">Vendor Information</th>
+                            <th scope="row">Funding Source Description:</th>
+                            <td><a href="#" id="grant_name">{{ request.funding_source_description }}</a></td>
                         </tr>
-                        <tr>
-                            <th scope="row">Name:</th>
-                            <td><a href="#" id="vendor_name">{{ vendor.name }}</a></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Address:</th>
-                            <td><a href="#" id="vendor_address">{{ vendor.address }}</a></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Phone:</th>
-                            <td><a href="#" id="vendor_phone">{{ vendor.phone }}</a></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Fax:</th>
-                            <td><a href="#" id="vendor_fax">{{ vendor.fax }}</a></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Email:</th>
-                            <td><a href="mailto:{{ vendor.email }}" id="vendor_email">{{ vendor.email }}</a></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Tax ID:</th>
-                            <td><a href="#" id="vendor_taxid">{{ vendor.tax_id }}</a></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">M/WBE:</th>
-                            {% if vendor.mwbe %}
-                                <td><a href="#" id="vendor_mwbe">Yes</a></td>
-                            {% else %}
-                                <td><a href="#" id="vendor_mwbe">No</a></td>
+                    {% endif %}
+                    <tr>
+                        <th scope="row">Justification:</th>
+                        <td><a href="#" id="justification">{{ request.justification }}</a></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Status:</th>
+                        <td>
+                            <a href="#" id="status">{{ request.status }}</a>
+                            {% if allowed_to_update %}
+                                <a class="btn btn-primary btn-sm pull-right"
+                                   data-toggle="modal" data-target="#update_status">Update</a>
                             {% endif %}
-                        </tr>
-                        </tbody>
-                    </table>
-                    <a class="btn btn-primary btn-small"
-                       href="{{ url_for('request.display_requests') }}">Return to Request History</a>
-                </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <colgroup>
+                        <col class="col-xs-1">
+                        <col class="col-xs-5">
+                    </colgroup>
+                    <tbody>
+                    <tr>
+                        <th scope="row" colspan="2">Vendor Information</th>
+                    </tr>
+                    <tr>
+                        <th scope="row">Name:</th>
+                        <td><a href="#" id="vendor_name">{{ vendor.name }}</a></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Address:</th>
+                        <td><a href="#" id="vendor_address">{{ vendor.address }}</a></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Phone:</th>
+                        <td><a href="#" id="vendor_phone">{{ vendor.phone }}</a></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Fax:</th>
+                        <td><a href="#" id="vendor_fax">{{ vendor.fax }}</a></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Email:</th>
+                        <td><a href="mailto:{{ vendor.email }}" id="vendor_email">{{ vendor.email }}</a></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Tax ID:</th>
+                        <td><a href="#" id="vendor_taxid">{{ vendor.tax_id }}</a></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">M/WBE:</th>
+                        {% if vendor.mwbe %}
+                            <td><a href="#" id="vendor_mwbe">Yes</a></td>
+                        {% else %}
+                            <td><a href="#" id="vendor_mwbe">No</a></td>
+                        {% endif %}
+                    </tr>
+                    </tbody>
+                </table>
+                <a class="btn btn-primary btn-small"
+                   href="{{ url_for('request.display_requests') }}">Return to Request History</a>
             </div>
         </div>
     </div>
@@ -193,7 +190,7 @@
         </div>
     {% endif %}
 
-    <div class="container">
+    <div style="display: inline-block; width: 100%;">
         <h3>Comments</h3>
         {% if current_user.role != "Regular User" or current_user.id == request.creator_id %}
             <div class="form-group col">
@@ -237,7 +234,7 @@
                 </div><br>
             {% endfor %}
         {% else %}
-            <div class="well">There are currently no comments. :(</div>
+            <div class="well">There are currently no comments.</div>
         {% endif %}
     </div>
 
