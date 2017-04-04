@@ -100,7 +100,6 @@ class RequestForm(Form):
             vendor_dropdown.append((str(vendor.id), vendor.name))
         self.request_vendor_dropdown.choices = vendor_dropdown
 
-
     def validate(self):
         if not Form.validate(self):
             return False
