@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}
+    Records Procurement - View Vendor
+{% endblock %}
+{% block custom_css_links %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-editable.css') }}"/>
+{% endblock %}
+{% block content %}
+
+    <div class="page-header">
+        <h1>{{ vendor.name }}</h1>
+        {% if current_user.role == "Administrator" %}
+            <a class="btn btn-primary btn-small"
+               href="{{ url_for('vendor.edit_vendor', vendor_id=vendor.id) }}">Edit Vendor</a>
+        {% endif %}
+
+        <hr>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <colgroup>
+                    <col class="col-xs-1">
+                    <col class="col-xs-5">
+                </colgroup>
+                <tbody>
+                <tr>
+                    <th scope="row" colspan="2">Vendor Information</th>
+                </tr>
+                <tr>
+                    <th scope="row">Name:</th>
+                    <td><a id="vendor_name">{{ vendor.name }}</a></td>
+                </tr>
+                <tr>
+                    <th scope="row">Address:</th>
+                    <td><a id="vendor_address">{{ vendor.address }}</a></td>
+                </tr>
+                <tr>
+                    <th scope="row">Phone:</th>
+                    <td><a id="vendor_phone">{{ vendor.phone }}</a></td>
+                </tr>
+                <tr>
+                    <th scope="row">Fax:</th>
+                    <td><a id="vendor_fax">{{ vendor.fax }}</a></td>
+                </tr>
+                <tr>
+                    <th scope="row">Email:</th>
+                    <td><a href="mailto:{{ vendor.email }}" id="vendor_email">{{ vendor.email }}</a></td>
+                </tr>
+                <tr>
+                    <th scope="row">Tax ID:</th>
+                    <td><a id="vendor_taxid">{{ vendor.tax_id }}</a></td>
+                </tr>
+                <tr>
+                    <th scope="row">M/WBE:</th>
+                    {% if vendor.mwbe %}
+                        <td><a href="#" id="vendor_mwbe">Yes</a></td>
+                    {% else %}
+                        <td><a href="#" id="vendor_mwbe">No</a></td>
+                    {% endif %}
+                </tr>
+                </tbody>
+            </table>
+
+            <a class="btn btn-primary btn-small"
+               href="{{ url_for('vendor.display_vendors') }}">Return to Vendor List</a>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-editable.js') }}"></script>
+    {% block request_xeditable %}
+{#        {% include "request/request_x-editable.html" %}#}
+    {% endblock %}
+{% endblock %}
+
+

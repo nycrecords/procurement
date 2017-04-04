@@ -1,0 +1,404 @@
+{% extends "base.html" %}
+{% block title %}
+    Records Procurement - Edit Request
+{% endblock title %}
+{% block custom_css_links %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+{% endblock custom_css_links %}
+{% block content %}
+
+    <div class="page-header">
+        <h1>Edit Request</h1>
+    </div>
+
+    <p><i><strong>Purchase Information</strong></i></p>
+    <script type="text/javascript">
+        var currentDate = new Date();
+        var day = currentDate.getDate();
+        var month = currentDate.getMonth() + 1;
+        var year = currentDate.getFullYear();
+        document.write("<b>" + "Date: " + month + "/" + day + "/" + year + "</b>")
+    </script>
+    <br>
+
+    <br>
+    <form name="new_request" class="form-horizontal" id="submitRequest" method="POST" action="">
+        {{ form.hidden_tag() }}
+
+        {% if current_user.is_authenticated %}
+            <div class="form-group row">
+                <label for="item" class="col-sm-3 form-control-label">Requester Name:</label>
+                <div class="col-sm-8">
+                    {{ user.name }}
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="item" class="col-sm-3 form-control-label">Division:</label>
+                <div class="col-sm-8">
+                    {{ user.division }}
+                </div>
+            </div>
+        {% else %}
+            <div class="form-group row">
+                {% for message in form.request_name.errors %}
+                    <div class="alert alert-danger" id="missing_name">{{ message }}</div>
+                {% endfor %}
+
+                <label for="request_name" class="col-sm-3 form-control-label">Name</label>
+                <div class="col-sm-5">
+                    {{ form.request_name(id="request_name", class="form-control", type="text") }}
+                </div>
+            </div>
+
+            <div class="form-group row">
+                {% for message in form.division.errors %}
+                    <div class="alert alert-danger" id="missing_division">{{ message }}</div>
+                {% endfor %}
+
+                <label for="division" class="col-sm-3 form-control-label">Division</label>
+                <div class="col-sm-5">
+                    {{ form.division(id="division", class="form-control") }}
+                </div>
+            </div>
+        {% endif %}
+
+
+        <div class="form-group row">
+            {% for message in form.item.errors %}
+                <div class="alert alert-danger" id="missing_item">{{ message }}</div>
+            {% endfor %}
+
+            <label for="item" class="col-sm-3 form-control-label">Item</label>
+            <div class="col-sm-8">
+                {{ form.item(id="item", class="form-control", rows="2", maxlength="500", type="text") }}
+                <div class="small">Please insert FULL description</div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            {% for message in form.quantity.errors %}
+                <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
+            {% endfor %}
+
+            <label for="quantity" class="col-sm-3 form-control-label">Quantity</label>
+            <div class="col-sm-5">
+                {{ form.quantity(id="quantity", class="form-control", type="text") }}
+                <div class="small">i.e. Quantity of boxes, cases, singles</div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            {% for message in form.unit_price.errors %}
+                <div class="alert alert-danger" id="missing_unit_price">{{ message }}</div>
+            {% endfor %}
+
+            <label for="unit_price" class="col-sm-3 form-control-label">Price per Item:</label>
+            <div class="col-sm-3">
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    {{ form.unit_price(id="unit_price", class="form-control", type="text") }}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            {% for message in form.total_cost.errors %}
+                <div class="alert alert-danger" id="missing_total_cost">{{ message }}</div>
+            {% endfor %}
+
+            <label for="total_cost" class="col-sm-3 form-control-label">Total:</label>
+            <div class="col-sm-3">
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    {{ form.total_cost(id="total_cost", class="form-control", type="text") }}
+                </div>
+                <div class="small">Please include all additional costs, i.e. S&H</div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            {% for message in form.funding_source.errors %}
+                <div class="alert alert-danger" id="missing_funding_source">{{ message }}</div>
+            {% endfor %}
+
+            <label for="funding_source" class="col-sm-3 form-control-label">Funding Source</label>
+            <div class="col-sm-5">
+                {{ form.funding_source(id="funding_source", class="form-control") }}
+            </div>
+        </div>
+
+        <div id="funding_source_description" class="form-group row" style="display: None;">
+            <label for="funding_source_description" class="col-sm-offset-1 col-sm-3 form-control-label">
+                If Other, specify:</label>
+            <div class="col-sm-5">
+                {{ form.funding_source_description(id="funding_source_description", class="form-control",
+                        text="text", maxlength="100", value=request.funding_source_description or '') }}
+            </div>
+        </div>
+
+        <div id="grant_name" class="form-group row required" style="display: None;">
+            <label for="grant_name" class="col-sm-offset-1 col-sm-3 form-control-label">
+                Grant Name:</label>
+            <div class="col-sm-5">
+                {{ form.grant_name(id="grant_name", class="form-control", text="text", maxlength="100", value=request.grant_name or '') }}
+            </div>
+        </div>
+
+        <div id="project_name" class="form-group row required" style="display: None;">
+            <label for="project_name" class="col-sm-offset-1 col-sm-3 form-control-label">
+                Project Name:</label>
+            <div class="col-sm-5">
+                {{ form.project_name(id="project_name", class="form-control", text="text", maxlength="100", value=request.project_name or '') }}
+            </div>
+        </div>
+
+        <div class="form-group row">
+            {% for message in form.justification.errors %}
+                <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
+            {% endfor %}
+
+            <label for="justification" class="col-sm-3 form-control-label">Justification:</label>
+            <div class="col-sm-8">
+                {{ form.justification(id="justification", rows="3", class="form-control", maxlength="500") }}
+            </div>
+        </div>
+
+        <p><i><strong>Vendor Information</strong></i></p>
+
+        <div class="form-group row">
+        {% for message in form.request_vendor_name.errors %}
+                <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
+        {% endfor %}
+
+            <label for="request_vendor" class="col-sm-3 sr-only form-control-label">Vendor Information:</label>
+            <div class="col-sm-10">
+{#                <select name="vendor" class="form-control" id="vendor">#}
+{#                    <option id="default" value="default" selected value>Select Vendor or Enter New Vendor Below</option>#}
+{#                    {% for vendor in vendors %}#}
+{#                        {% if vendor.id == selected_vendor_id %}#}
+{#                            <option id={{ vendor.id }} value={{ vendor.id }} selected value> {{ vendor.name }} </option>#}
+{#                        {% else %}#}
+{#                            <option id={{ vendor.id }} value={{ vendor.id }}> {{ vendor.name }} </option>#}
+{#                        {% endif %}#}
+{#                    {% endfor %}#}
+{#                </select>#}
+                {{ form.request_vendor_dropdown(id="vendor_information", class="form-control") }}
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="request_vendor_name" class="col-sm-3 form-control-label">Vendor Name:</label>
+            <div class="col-sm-5">
+                {{ form.request_vendor_name(id="vendor_name", class="form-control", maxlength="100") }}
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="request_vendor_address" class="col-sm-3 form-control-label">Vendor Address:</label>
+            <div class="col-sm-5">
+                {{ form.request_vendor_address(id="vendor_address", class="form-control", maxlength="100") }}
+            </div>
+        </div>
+
+        <div class="form-group row">
+            {% for message in form.request_vendor_phone.errors %}
+                <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
+            {% endfor %}
+            <label for="request_vendor_phone" class="col-sm-3 form-control-label">Vendor Phone:</label>
+            <div class="col-sm-5">
+                {{ form.request_vendor_phone(id="vendor_phone", class="form-control", type="tel") }}
+            </div>
+        </div>
+
+        <div class="form-group row">
+            {% for message in form.request_vendor_fax.errors %}
+                <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
+            {% endfor %}
+            <label for="request_vendor_fax" class="col-sm-3 form-control-label">Vendor Fax:</label>
+            <div class="col-sm-5">
+                {{ form.request_vendor_fax(id="vendor_fax", class="form-control", type="tel") }}
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="request_vendor_email" class="col-sm-3 form-control-label">Vendor Email:</label>
+            <div class="col-sm-5">
+                {{ form.request_vendor_email(id="vendor_email", class="form-control", maxlength="100") }}
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="request_vendor_taxid" class="col-sm-3 form-control-label">Vendor/Tax ID:</label>
+            <div class="col-sm-5">
+                {{ form.request_vendor_taxid(id="vendor_taxid", class="form-control", maxlength="100") }}
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="request_request_vendor_mwbe" class="col-sm-3 form-control-label">M/WBE:</label>
+            <div class="col-sm-5">
+                {{ form.request_vendor_mwbe(id="request_vendor_mwbe", class="radio-inline") }}
+            </div>
+        </div>
+
+{#        <div class="form-group row">#}
+{#            <label for="request_request_vendor_mwbe" class="col-sm-3 form-control-label">Status:</label>#}
+{#            <div class="col-sm-5">#}
+{#                {{ form.status(id="status", class='form-control') }}#}
+{#            </div>#}
+{#        </div>#}
+
+        <div class="form-group row">
+            <div class="spacer">
+                <button type="submit" class="btn btn-primary btn-lg btn-block">Submit Request</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if ($('#funding_source').val() == 'Other') {
+                $('#funding_source_description').show();
+                $('#grant_name').hide();
+                $('#project_name').hide();
+            }
+            else if ($('#funding_source').val() == 'Grant') {
+                $('#grant_name').show();
+                $('#project_name').show();
+                $('#funding_source_description').hide();
+            }
+            else {
+                $('#funding_source_description').hide();
+                $('#grant_name').hide();
+                $('#project_name').hide();
+            }
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#funding_source').on('change', function () {
+                if ($('#funding_source').val() == 'Other') {
+                    $('#funding_source_description').show();
+                    $('#grant_name').hide();
+                    $('#project_name').hide();
+                }
+                else if ($('#funding_source').val() == 'Grant') {
+                    $('#grant_name').show();
+                    $('#project_name').show();
+                    $('#funding_source_description').hide();
+                }
+                else {
+                    $('#funding_source_description').hide();
+                    $('#grant_name').hide();
+                    $('#project_name').hide();
+                }
+            })
+        });
+    </script>
+    <script>
+        $("#vendor_information").change(function () {
+            $.ajax({
+                url: "/parse_vendor",
+                type: "GET",
+                data: {
+                    vendor: $("#vendor_information").children(":selected").attr("value")
+                },
+                success: function (data) {
+
+                    var dis = false;
+                    var vendor_name = $("#vendor_name");
+                    var vendor_address = $("#vendor_address");
+                    var vendor_phone = $("#vendor_phone");
+                    var vendor_fax = $("#vendor_fax");
+                    var vendor_email = $("#vendor_email");
+                    var vendor_taxid = $("#vendor_taxid");
+                    var vendor_mwbe = $("#request_vendor_mwbe");
+
+                    if (data == "") {
+                        vendor_name.val("");
+                        vendor_address.val("");
+                        vendor_phone.val("");
+                        vendor_fax.val("");
+                        vendor_email.val("");
+                        vendor_taxid.val("");
+                        vendor_mwbe.prop("checked", false);
+                    }
+                    else {
+                        dis = true;
+                        vendor_name.val(data[0]);
+                        vendor_address.val(data[1]);
+                        vendor_phone.val(data[2]);
+                        vendor_fax.val(data[3]);
+                        vendor_email.val(data[4]);
+                        vendor_taxid.val(data[5]);
+                        vendor_mwbe.prop("checked", data[6]);
+                    }
+
+                    vendor_name.attr("disabled", dis);
+                    vendor_address.attr("disabled", dis);
+                    vendor_phone.attr("disabled", dis);
+                    vendor_fax.attr("disabled", dis);
+                    vendor_email.attr("disabled", dis);
+                    vendor_taxid.attr("disabled", dis);
+                    vendor_mwbe.attr("disabled", dis);
+                }
+            });
+        });
+
+    </script>
+    <script>
+        $("#vendor_information").load("edit_request.html", function () {
+            $.ajax({
+                url: "/parse_vendor",
+                type: "GET",
+                data: {
+                    vendor: $("#vendor_information").children(":selected").attr("value")
+                },
+                success: function (data) {
+
+                    var dis = false;
+                    var vendor_name = $("#vendor_name");
+                    var vendor_address = $("#vendor_address");
+                    var vendor_phone = $("#vendor_phone");
+                    var vendor_fax = $("#vendor_fax");
+                    var vendor_email = $("#vendor_email");
+                    var vendor_taxid = $("#vendor_taxid");
+                    var vendor_mwbe = $("#request_vendor_mwbe");
+
+                    if (data == "") {
+                        vendor_name.val("");
+                        vendor_address.val("");
+                        vendor_phone.val("");
+                        vendor_fax.val("");
+                        vendor_email.val("");
+                        vendor_taxid.val("");
+                        vendor_mwbe.prop("checked", false);
+                    }
+                    else {
+                        dis = true;
+                        vendor_name.val(data[0]);
+                        vendor_address.val(data[1]);
+                        vendor_phone.val(data[2]);
+                        vendor_fax.val(data[3]);
+                        vendor_email.val(data[4]);
+                        vendor_taxid.val(data[5]);
+                        vendor_mwbe.prop("checked", data[6]);
+                    }
+
+                    vendor_name.attr("disabled", dis);
+                    vendor_address.attr("disabled", dis);
+                    vendor_phone.attr("disabled", dis);
+                    vendor_fax.attr("disabled", dis);
+                    vendor_email.attr("disabled", dis);
+                    vendor_taxid.attr("disabled", dis);
+                    vendor_mwbe.attr("disabled", dis);
+                }
+            });
+        });
+
+    </script>
+{% endblock %}

@@ -1,0 +1,13 @@
+<p>
+    {% if user.role != "Regular User" %}
+    {{ user.role }}:
+    {% endif %}
+    {{ user.first_name }} {{ user.last_name }}
+    has commented on Request {{ request_id }}:</p>
+<p>{{ comment_form.content.data }}</p>
+<p><a href="{{ url_for('request.display_request', request_id=request_id, _external=True) }}">Click here</a>
+    to view this request.
+</p>
+<p>
+    <small>Note: replies to this email address are not monitored.</small>
+</p>

@@ -1,0 +1,55 @@
+/* Message flashing */
+.alert {
+    padding: 8px 35px 8px 14px;
+    margin-bottom: 20px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    background-color: #fcf8e3;
+    border: 1px solid #fbeed5;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+.alert-danger,
+.alert-error {
+    color: #b94a48;
+    background-color: #f2dede;
+    border-color: #eed3d7;
+}
+
+.container-fluid-content {
+    padding-right: 200px;
+    padding-left: 200px;
+}
+
+.table-nonfluid {
+    width: auto !important;
+    table-layout: fixed;
+    max-width: none;
+    word-wrap: break-word;
+}
+
+.hiddenRow {
+    display: none;
+}
+
+.navbar {
+    margin-top: -20px;
+}
+
+.table-row {
+cursor:pointer;
+}
+
+.btn-large {
+    padding: 12px 20px;
+    font-size: 17.5px;
+}
+
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+  background-color: #c4e3f3;
+}
+
+div.spacer {
+	margin-bottom: 100px;
+}
