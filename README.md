@@ -28,7 +28,7 @@ Install postgresql with the following command:
 Initialize the database by entering the following in the psql line:
 
     psql
-        username=# create database procurements;
+        username=# create database procurement;
 
 Upgrade the database by entering the following in the command line:
 
