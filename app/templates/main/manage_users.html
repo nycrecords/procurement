@@ -156,10 +156,12 @@
                         <td><a class="btn btn-primary btn-small" href="/manage_users/users/{{ user.id }}">Edit</a></td>
                         <td>
                             {% if user.login == True %}
-                                <a class="btn btn-danger btn-small"
+                                Enabled
+                                <a class="btn btn-danger btn-small pull-right"
                                    href="/manage_users/users/disable/{{ user.id }}">Disable</a></td>
                             {% else %}
-                                <a class="btn btn-primary btn-small"
+                                Disabled
+                                <a class="btn btn-primary btn-small pull-right"
                                    href="/manage_users/users/enable/{{ user.id }}">Enable</a></td>
                             {% endif %}
                     </tr>
