@@ -60,6 +60,7 @@ def edit_profile():
 @main.route('/profile/reset', methods=['GET', 'POST'])
 @login_required
 def profile_password_reset():
+    """Allows a user to reset their password from their profile"""
     token = current_user.generate_reset_token()
     return redirect(url_for('auth.password_reset', token=token))
 

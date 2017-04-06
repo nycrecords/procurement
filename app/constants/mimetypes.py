@@ -1,5 +1,7 @@
 """
+.. module:: constants.mimetypes.
 
+    :synopsis: Defines the extensions that are allowed to be uploaded to the application
 """
 
 ALLOWED_EXTENSIONS = set(['txt', 'pdf',

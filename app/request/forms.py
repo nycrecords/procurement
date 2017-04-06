@@ -12,16 +12,16 @@ from wtforms_alchemy import PhoneNumberField
 from app.constants import status
 
 
-divisions = [
-    ('', ''),
-    ('MRMD', 'MRMD'),
-    ('Archives', 'Archives'),
-    ('Grants', 'Grants'),
-    ('Library', 'Library'),
-    ('Executive', 'Executive'),
-    ('Tech', 'Tech'),
-    ('Administration', 'Administration')
-]
+# divisions = [
+#     ('', ''),
+#     ('MRMD', 'MRMD'),
+#     ('Archives', 'Archives'),
+#     ('Grants', 'Grants'),
+#     ('Library', 'Library'),
+#     ('Executive', 'Executive'),
+#     ('Tech', 'Tech'),
+#     ('Administration', 'Administration')
+# ]
 
 funding = [
     ('', ''),
@@ -33,25 +33,25 @@ funding = [
     ('Other', 'Other')
 ]
 
-statuses = [
-    ('', ''),
-    ('Submitted', 'Submitted'),
-    ('Needs Division Approval', 'Needs Division Approval'),
-    ('Needs Commissioner Approval', 'Needs Commissioner Approval'),
-    ('Pending - Approved', 'Pending - Approved'),
-    ('Denied', 'Denied'),
-    ('Resolved', 'Resolved'),
-    ('Hold', 'Hold')
-]
+# statuses = [
+#     ('', ''),
+#     ('Submitted', 'Submitted'),
+#     ('Needs Division Approval', 'Needs Division Approval'),
+#     ('Needs Commissioner Approval', 'Needs Commissioner Approval'),
+#     ('Pending - Approved', 'Pending - Approved'),
+#     ('Denied', 'Denied'),
+#     ('Resolved', 'Resolved'),
+#     ('Hold', 'Hold')
+# ]
 
-request_statuses = [
-    (status.NDA, status.NDA),
-    (status.NCA, status.NCA),
-    (status.APR, status.APR),
-    (status.DEN, status.DEN),
-    (status.RES, status.RES),
-    (status.HOLD, status.HOLD)
-]
+# request_statuses = [
+#     (status.NDA, status.NDA),
+#     (status.NCA, status.NCA),
+#     (status.APR, status.APR),
+#     (status.DEN, status.DEN),
+#     (status.RES, status.RES),
+#     (status.HOLD, status.HOLD)
+# ]
 
 
 class CommentForm(Form):
@@ -89,6 +89,7 @@ class RequestForm(Form):
     submit = SubmitField(u'Submit Request')
 
     def __init__(self, *args, **kwargs):
+        """Fill the vendor dropdown with values from the database upon initialization"""
         super(RequestForm, self).__init__(*args, **kwargs)
 
         from app.models import Vendor
