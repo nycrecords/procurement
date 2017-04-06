@@ -21,14 +21,11 @@ Create a virtual environment and install the requirements:
     source procurements/bin/activate
     pip install -r requirements.txt
 
-Install postgresql with the following command:
-
-    sudo apt-get install postgresql
-
 Initialize the database by entering the following in the psql line:
 
     psql
         username=# create database procurement;
+        username=# \q
 
 Upgrade the database by entering the following in the command line:
 
