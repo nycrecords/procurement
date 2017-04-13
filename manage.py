@@ -1,6 +1,8 @@
+from werkzeug.security import generate_password_hash
 import os
 from app import create_app, db
 from app.models import User, Request
+from app.constants import division, roles
 from flask import url_for
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
@@ -46,6 +48,20 @@ def test():
     import unittest
     tests = unittest.TestLoader().discover('tests')
     unittest.TextTestRunner(verbosity=2).run(tests)
+
+
+@manager.command
+def create_admin(first_name, last_name, email, division=division.MRMD):
+    with app.app_context():
+        newuser = User(email=email,
+                       division=division,
+                       password_hash=generate_password_hash("Change4me"),
+                       first_name=first_name,
+                       last_name=last_name,
+                       role=roles.ADMIN)
+        db.session.add(newuser)
+        print("Account successfully created! "
+              "Password is 'Change4me' by default. Please change password after initial login")
 
 
 if __name__ == '__main__':
