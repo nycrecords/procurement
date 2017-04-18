@@ -24,10 +24,7 @@ from app.errors import flash_errors
 def display_vendors():
     """Return page that displays all vendors."""
     vendors = Vendor.query.order_by(Vendor.name).all()
-    if vendors:
-        return render_template('vendor/vendors.html', vendors=vendors)
-    else:
-        abort(404)
+    return render_template('vendor/vendors.html', vendors=vendors)
 
 
 @vendor.route('/new', methods=['GET', 'POST'])

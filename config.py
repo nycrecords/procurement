@@ -10,8 +10,8 @@ class Config:
     SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/procurement'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     # MAIL_SERVER = 'localhost'
-    MAIL_SERVER = '10.0.0.1'
-    MAIL_PORT = 2500
+    MAIL_SERVER = 'doittsmtp.nycnet'
+    MAIL_PORT = 25
     MAIL_USE_TLS = False
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
