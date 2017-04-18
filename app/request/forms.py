@@ -11,18 +11,6 @@ from wtforms.validators import DataRequired, Length
 from wtforms_alchemy import PhoneNumberField
 from app.constants import status
 
-
-# divisions = [
-#     ('', ''),
-#     ('MRMD', 'MRMD'),
-#     ('Archives', 'Archives'),
-#     ('Grants', 'Grants'),
-#     ('Library', 'Library'),
-#     ('Executive', 'Executive'),
-#     ('Tech', 'Tech'),
-#     ('Administration', 'Administration')
-# ]
-
 funding = [
     ('', ''),
     ('Expense', 'Expense'),
@@ -32,26 +20,6 @@ funding = [
     ('KOCH', 'KOCH'),
     ('Other', 'Other')
 ]
-
-# statuses = [
-#     ('', ''),
-#     ('Submitted', 'Submitted'),
-#     ('Needs Division Approval', 'Needs Division Approval'),
-#     ('Needs Commissioner Approval', 'Needs Commissioner Approval'),
-#     ('Pending - Approved', 'Pending - Approved'),
-#     ('Denied', 'Denied'),
-#     ('Resolved', 'Resolved'),
-#     ('Hold', 'Hold')
-# ]
-
-# request_statuses = [
-#     (status.NDA, status.NDA),
-#     (status.NCA, status.NCA),
-#     (status.APR, status.APR),
-#     (status.DEN, status.DEN),
-#     (status.RES, status.RES),
-#     (status.HOLD, status.HOLD)
-# ]
 
 
 class CommentForm(Form):

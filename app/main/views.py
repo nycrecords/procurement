@@ -21,7 +21,7 @@ def index():
 @main.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
-    """Displays user information (redirects to profile page."""
+    """Displays user information (redirects to profile page)."""
     return render_template('main/profile.html',
                            current_user=current_user)
 
@@ -141,7 +141,6 @@ def edit_user(id):
                 db.session.commit()
                 flash('User information successfully updated!')
                 return redirect(url_for('main.manage_users'))
-                # return render_template('main/edit_user.html', user=user, current_user=current_user, form=form)
             else:
                 flash('User email already exists.')
         else:

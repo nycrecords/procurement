@@ -304,14 +304,11 @@ def allowed_file(filename):
 def add_comment(request_id):
     """Adds a comment to the current request"""
     comment_form = CommentForm()
-    # filename = None
 
     if comment_form.validate_on_submit():
         # Check if file was uploaded
-        # file_path = None
         fixed_filename = None
         if comment_form.file.data is not None:
-            # filename = secure_filename(comment_form.file.data.filename)
             file_data = comment_form.file.data
 
             if not allowed_file(file_data.filename):
@@ -384,7 +381,6 @@ def delete_comment():
 def download(comment_id):
     """Allows users to download files from comments"""
     comment = Comment.query.filter(Comment.id == comment_id).first()
-    # print(comment.filepath)
     return send_from_directory(current_app.config['UPLOAD_FOLDER'], comment.filepath,
                                as_attachment=True, attachment_filename=comment.filepath[13:])
 
