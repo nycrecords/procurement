@@ -15,24 +15,23 @@ Clone the git repository and make it your current directory:
     git clone https://mlaikhram@bitbucket.org/nycrecordswebdev/doris_procurements.git
     cd doris_procurements
 
-Run the build scripts:
+Create a virtual environment and install the requirements:
 
-    sudo sh build_scripts/web_setup/web_setup.sh single_server
-    sudo sh build_scripts/app_setup/app_setup.sh single_server
-    sudo sh build_scripts/db_setup/db_setup.sh single_server
-    sudo sh build_scripts/db_setup/db_user_setup.sh
+    virtualenv procurements
+    source procurements/bin/activate
+    pip install -r requirements.txt
+
+Initialize the database by entering the following in the psql line:
+
+    psql
+        username=# create database procurement;
+        username=# \q
 
 Upgrade the database by entering the following in the command line:
 
     python manage.py db upgrade
 
-Add admins to the database:
-
-    python manage.py db create_admin first_name last_name email
-
-Note that each admin should update their profile upon logging in by filling out the required fields and updating the password.
-
-Locally run the intranet:
+Locally run the intranet by entering the following in the command line:
 
     python manage.py runserver
 
