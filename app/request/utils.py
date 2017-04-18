@@ -26,7 +26,7 @@ def determine_fiscal_id(date_submitted):
         if len(id_last) > 4:
             id_last = id_last[-4:]
     else:
-        id_last = "0000"
+        id_last = "0001"
 
     request_id = id_first + id_last
     return request_id
