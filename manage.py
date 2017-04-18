@@ -52,6 +52,7 @@ def test():
 
 @manager.command
 def create_admin(first_name, last_name, email, division=division.MRMD):
+    """Allows the user to create an admin account from the command line"""
     with app.app_context():
         newuser = User(email=email,
                        division=division,
