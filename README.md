@@ -15,11 +15,12 @@ Clone the git repository and make it your current directory:
     git clone https://mlaikhram@bitbucket.org/nycrecordswebdev/doris_procurements.git
     cd doris_procurements
 
-Create a virtual environment and install the requirements:
+Run the build scripts:
 
-    virtualenv procurements
-    source procurements/bin/activate
-    pip install -r requirements.txt
+    sudo sh build_scripts/web_setup/web_setup.sh single_server
+    sudo sh build_scripts/app_setup/app_setup.sh single_server
+    sudo sh build_scripts/db_setup/db_setup.sh single_server
+    sudo sh build_scripts/db_setup/db_user_setup.sh
 
 Initialize the database by entering the following in the psql line:
 
