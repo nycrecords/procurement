@@ -26,13 +26,13 @@ Upgrade the database by entering the following in the command line:
 
     python manage.py db upgrade
 
-Add admins to the database by entering the following in the command line:
+Add admins to the database:
 
     python manage.py db create_admin first_name last_name email
 
 Note that each admin should update their profile upon logging in by filling out the required fields and updating the password.
 
-Locally run the intranet by entering the following in the command line:
+Locally run the intranet:
 
     python manage.py runserver
 
