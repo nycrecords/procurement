@@ -29,8 +29,8 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/procurement'
-    # SQLALCHEMY_DATABASE_URI = 'postgresql://developer@127.0.0.1:5432/procurement'
+    # SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/procurement'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://developer@127.0.0.1:5432/procurement'
 
 
 class TestingConfig(Config):
