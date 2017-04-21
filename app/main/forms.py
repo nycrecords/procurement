@@ -12,17 +12,6 @@ from app.constants import division, roles
 
 app = Flask(__name__)
 
-# divisions = [
-#     ('', ''),
-#     ('MRMD', 'MRMD'),
-#     ('Archives', 'Archives'),
-#     ('Grants', 'Grants'),
-#     ('Library', 'Library'),
-#     ('Executive', 'Executive'),
-#     ('Tech', 'Tech'),
-#     ('Administration', 'Administration')
-# ]
-
 funding = [
     ('', ''),
     ('Expense', 'Expense'),
@@ -42,8 +31,8 @@ divisions = [(division.MRMD, division.MRMD),
 
 roles = [(roles.REG, roles.REG),
          (roles.DIV, roles.DIV),
-         (roles.PROC, roles.PROC),
          (roles.COM, roles.COM),
+         (roles.PROC, roles.PROC),
          (roles.ADMIN, roles.ADMIN)]
 
 

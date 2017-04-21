@@ -156,10 +156,12 @@
                         <td><a class="btn btn-primary btn-small" href="/manage_users/users/{{ user.id }}">Edit</a></td>
                         <td>
                             {% if user.login == True %}
-                                <a class="btn btn-danger btn-small"
+                                Enabled
+                                <a class="btn btn-danger btn-small pull-right"
                                    href="/manage_users/users/disable/{{ user.id }}">Disable</a></td>
                             {% else %}
-                                <a class="btn btn-primary btn-small"
+                                Disabled
+                                <a class="btn btn-primary btn-small pull-right"
                                    href="/manage_users/users/enable/{{ user.id }}">Enable</a></td>
                             {% endif %}
                     </tr>
@@ -172,7 +174,7 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
     <script type="text/javascript"
             src="{{ url_for('static', filename='js/plugins/bootstrap.min.js') }}"></script>
     <script type="text/javascript"

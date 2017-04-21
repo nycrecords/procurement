@@ -17,6 +17,7 @@ def send_async_email(app, msg):
 
 
 def send_email(to_list, subject, template, filename=None, **kwargs):
+    """Sends email to all emails in to_list, with the appropriate subject line, template, and file attachment if any"""
     app = current_app._get_current_object()
     msg = Message(app.config['FLASKY_MAIL_SUBJECT_PREFIX'] + ' ' + subject,
                   sender=app.config['FLASKY_MAIL_SENDER'], recipients=to_list)

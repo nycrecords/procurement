@@ -24,6 +24,7 @@ from app.request.forms import RequestForm, CommentForm, DeleteCommentForm, Statu
 from app.models import Request, User, Vendor, Comment
 from app.request import request as request
 from app.constants import roles, status, mimetypes
+from app.request.utils import determine_fiscal_id, email_setup
 
 
 @request.route('/', methods=['GET', 'POST'])
@@ -44,34 +45,13 @@ def new_request():
     form = RequestForm()
 
     vendors = Vendor.query.order_by(Vendor.name).all()
-    # vendor_dropdown = [
-    #         ('default', 'Select Vendor or Enter New Vendor Below')
-    #     ]
-    # for vendor in vendors:
-    #     vendor_dropdown.append((str(vendor.id), vendor.name))
-    # form.request_vendor_dropdown.choices = vendor_dropdown
 
     if flask_request.method == 'POST' and form.validate_on_submit():
         date_submitted = datetime.datetime.now()
 
-        # determine ID using fiscal year
-        if date_submitted.month < 7:
-            id_first = "FY" + str(date_submitted.year - 1) + "-"
-        else:
-            id_first = "FY" + str(date_submitted.year) + "-"
+        request_id = determine_fiscal_id(date_submitted)
 
-        last_request = Request.query.filter(Request.id.like(id_first + "%")).order_by(Request.id.desc()).first()
-        if last_request:
-            id_last = str(int(last_request.id[-4:]) + 1)
-            while len(id_last) < 4:
-                id_last = '0' + id_last
-            if len(id_last) > 4:
-                id_last = id_last[-4:]
-        else:
-            id_last = "0000"
-
-        request_id = id_first + id_last
-
+        # determine what possible routes a request can take based on the request and the current user role
         current_status = status.NDA
         if current_user.role == roles.DIV:
             current_status = status.NCA
@@ -130,34 +110,12 @@ def new_request():
         db.session.commit()
 
         # Email Notifications
-        receivers = [current_user.email]
-        admin_query = db.session.query(User).filter(User.role == roles.ADMIN). \
-            filter(User.id != current_user.id).all()
-        for query in admin_query:
-            receivers.append(query.email)
-        header = ""
-        if current_status == status.NDA:
-            div_query = db.session.query(User).filter(User.role == roles.DIV). \
-                filter(User.id != current_user.id). \
-                filter(User.division == current_user.division).all()
-            for query in div_query:
-                receivers.append(query.email)
-
-            header = "Request {} has been Routed for Approval".format(new_request.id)
-
-        elif current_status == status.NCA:
-            comm_query = db.session.query(User).filter(User.role == roles.COM). \
-                filter(User.id != current_user.id). \
-                filter(User.division == current_user.division).all()
-            for query in comm_query:
-                receivers.append(query.email)
-
-            header = "Request {} needs High Level Approval".format(new_request.id)
+        receivers, header = email_setup(current_user, new_request)
 
         send_email(receivers, header,
                    'request/new_request_notification',
                    user=current_user,
-                   request=new_request)
+                   request=request)
 
         flash("Request was successfully created!")
         return redirect(url_for('request.display_request', request_id=new_request.id))
@@ -185,7 +143,6 @@ def display_request(request_id):
     delete_form = DeleteCommentForm()
     status_form = StatusForm(status=request.status)
 
-    # COST_LIMIT = 1000
     allowed_to_update = True
     choices = []
 
@@ -338,21 +295,20 @@ def edit_request(request_id):
 
 
 def allowed_file(filename):
+    """Determines if filename is one of the allowed file types"""
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in mimetypes.ALLOWED_EXTENSIONS
 
 
 @request.route('/add/<request_id>', methods=['GET', 'POST'])
 def add_comment(request_id):
+    """Adds a comment to the current request"""
     comment_form = CommentForm()
-    filename = None
 
     if comment_form.validate_on_submit():
         # Check if file was uploaded
-        file_path = None
         fixed_filename = None
         if comment_form.file.data is not None:
-            filename = secure_filename(comment_form.file.data.filename)
             file_data = comment_form.file.data
 
             if not allowed_file(file_data.filename):
@@ -376,7 +332,7 @@ def add_comment(request_id):
         db.session.add(new_comment)
         db.session.commit()
 
-        # Email notification for edit
+        # Email notification for comment
         receivers = []
 
         request, requestor = db.session.query(Request, User).filter(Request.id == request_id). \
@@ -410,6 +366,7 @@ def add_comment(request_id):
 
 @request.route('/delete', methods=['GET', 'POST'])
 def delete_comment():
+    """Deletes the selected comment"""
     delete_form = DeleteCommentForm()
     comment = Comment.query.filter(Comment.id == delete_form.comment_id.data).first()
     # delete attached files if any
@@ -422,14 +379,15 @@ def delete_comment():
 
 @request.route('/download/<int:comment_id>', methods=['GET'])
 def download(comment_id):
+    """Allows users to download files from comments"""
     comment = Comment.query.filter(Comment.id == comment_id).first()
-    print(comment.filepath)
     return send_from_directory(current_app.config['UPLOAD_FOLDER'], comment.filepath,
                                as_attachment=True, attachment_filename=comment.filepath[13:])
 
 
 @request.route('/status/<request_id>', methods=['GET', 'POST'])
 def update_status(request_id):
+    """Updates the status of the current request"""
     status_form = StatusForm()
     request = Request.query.filter_by(id=request_id).first()
     old_status = request.status
@@ -440,67 +398,7 @@ def update_status(request_id):
 
     # Email Notifications
     if old_status != request.status:
-        receivers = [requester.email]
-        admin_query = db.session.query(User).filter(User.role == roles.ADMIN). \
-            filter(User.id != requester.id).all()
-        for query in admin_query:
-            receivers.append(query.email)
-        header = ""
-
-        if request.status == status.DEN:
-            # record the denial time
-            date_denied = datetime.datetime.now()
-            new_comment = Comment(
-                request_id=request_id,
-                user_id=current_user.id,
-                timestamp=date_denied,
-                content="Request has been denied",
-                editable=False
-            )
-            db.session.add(new_comment)
-            db.session.commit()
-            header = "Request {} has been Denied".format(request.id)
-
-        elif request.status == status.NDA:
-            div_query = db.session.query(User).filter(User.role == roles.DIV). \
-                filter(User.id != current_user.id). \
-                filter(User.division == requester.division).all()
-            for query in div_query:
-                receivers.append(query.email)
-
-            header = "Request {} has been Routed for Approval".format(request.id)
-
-        elif request.status == status.NCA:
-            comm_query = db.session.query(User).filter(User.role == roles.COM). \
-                filter(User.id != current_user.id). \
-                filter(User.division == requester.division).all()
-            for query in comm_query:
-                receivers.append(query.email)
-
-            header = "Request {} needs High Level Approval".format(request.id)
-
-        elif request.status == status.APR:
-            proc_query = db.session.query(User).filter(User.role == roles.PROC). \
-                filter(User.id != requester.id).all()
-            for query in proc_query:
-                receivers.append(query.email)
-
-            header = "Request {} has been Approved".format(request.id)
-
-        elif request.status == status.HOLD:
-            proc_query = db.session.query(User).filter(User.role == roles.PROC). \
-                filter(User.id != requester.id).all()
-            for query in proc_query:
-                receivers.append(query.email)
-
-            header = "Request {} has been put on Hold".format(request.id)
-
-        elif request.status == status.RES:
-            # record the resolution time
-            date_closed = datetime.datetime.now()
-            request.date_closed = date_closed
-            db.session.commit()
-            header = "Request {} has been Resolved".format(request.id)
+        receivers, header = email_setup(requester, request)
 
         send_email(receivers, header,
                    'request/status_update',
