@@ -40,51 +40,51 @@
                     </tr>
                     <tr>
                         <th scope="row">Item:</th>
-                        <td><a href="#" id="item">{{ request.item }}</a></td>
+                        <td>{{ request.item }}</td>
                     </tr>
                     <tr>
                         <th scope="row">Quantity:</th>
-                        <td><a href="#" id="quantity">{{ request.quantity }}</a></td>
+                        <td>{{ request.quantity }}</td>
                     </tr>
                     <tr>
                         <th scope="row">Unit Price:</th>
-                        <td><a href="#" id="unit_price">${{ request.unit_price }}</a></td>
+                        <td>${{ request.unit_price }}</td>
                     </tr>
                     <tr>
                         <th scope="row">Total Price:</th>
                         {% if request.total_cost %}
-                            <td><a href="#" id="total_cost">${{ request.total_cost }}</a></td>
+                            <td>${{ request.total_cost }}</td>
                         {% else %}
                             <td>$0.00</td>
                         {% endif %}
                     </tr>
                     <tr>
                         <th scope="row">Funding Source:</th>
-                        <td><a href="#" id="funding_source">{{ request.funding_source }}</a></td>
+                        <td>{{ request.funding_source }}</td>
                     </tr>
                     {% if request.funding_source == "Grant" %}
                         <tr>
                             <th scope="row">Grant Name:</th>
-                            <td><a href="#" id="grant_name">{{ request.grant_name }}</a></td>
+                            <td>{{ request.grant_name }}</td>
                         </tr>
                         <tr>
                             <th scope="row">Project Name:</th>
-                            <td><a href="#" id="project_name">{{ request.project_name }}</a></td>
+                            <td>{{ request.project_name }}</td>
                         </tr>
                     {% elif request.funding_source == "Other" %}
                         <tr>
                             <th scope="row">Funding Source Description:</th>
-                            <td><a href="#" id="grant_name">{{ request.funding_source_description }}</a></td>
+                            <td>{{ request.funding_source_description }}</td>
                         </tr>
                     {% endif %}
                     <tr>
                         <th scope="row">Justification:</th>
-                        <td><a href="#" id="justification">{{ request.justification }}</a></td>
+                        <td>{{ request.justification }}</td>
                     </tr>
                     <tr>
                         <th scope="row">Status:</th>
                         <td>
-                            <a href="#" id="status">{{ request.status }}</a>
+                            {{ request.status }}
                             {% if allowed_to_update %}
                                 <a class="btn btn-primary btn-sm pull-right"
                                    data-toggle="modal" data-target="#update_status">Update</a>
@@ -109,19 +109,19 @@
                     </tr>
                     <tr>
                         <th scope="row">Name:</th>
-                        <td><a href="#" id="vendor_name">{{ vendor.name }}</a></td>
+                        <td>{{ vendor.name }}</td>
                     </tr>
                     <tr>
                         <th scope="row">Address:</th>
-                        <td><a href="#" id="vendor_address">{{ vendor.address }}</a></td>
+                        <td>{{ vendor.address }}</td>
                     </tr>
                     <tr>
                         <th scope="row">Phone:</th>
-                        <td><a href="#" id="vendor_phone">{{ vendor.phone }}</a></td>
+                        <td>{{ vendor.phone }}</td>
                     </tr>
                     <tr>
                         <th scope="row">Fax:</th>
-                        <td><a href="#" id="vendor_fax">{{ vendor.fax }}</a></td>
+                        <td>{{ vendor.fax }}</td>
                     </tr>
                     <tr>
                         <th scope="row">Email:</th>
@@ -129,14 +129,14 @@
                     </tr>
                     <tr>
                         <th scope="row">Tax ID:</th>
-                        <td><a href="#" id="vendor_taxid">{{ vendor.tax_id }}</a></td>
+                        <td>{{ vendor.tax_id }}</td>
                     </tr>
                     <tr>
                         <th scope="row">M/WBE:</th>
                         {% if vendor.mwbe %}
-                            <td><a href="#" id="vendor_mwbe">Yes</a></td>
+                            <td>Yes</td>
                         {% else %}
-                            <td><a href="#" id="vendor_mwbe">No</a></td>
+                            <td>No</td>
                         {% endif %}
                     </tr>
                     </tbody>
