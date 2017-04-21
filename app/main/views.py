@@ -97,7 +97,7 @@ def manage_users():
     form = UserForm()
     if request.method == 'POST':
         if form.validate_on_submit():
-            new_user = User(email=form.email.data,
+            new_user = User(email=form.email.data.lower(),
                             phone=str(form.phone.data),
                             address=form.address.data,
                             division=form.division.data,
