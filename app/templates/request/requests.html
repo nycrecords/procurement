@@ -19,7 +19,7 @@
         </div>
     </div>
 
-    <div id="test" class="row">
+    <div class="row">
         <div class="col-lg-12">
             <table id="display_requests" class="table table-nonfluid table-hover"
                    style="border-collapse:collapse"
@@ -53,13 +53,13 @@
                 </thead>
                 <tbody>
                 {% for request in requests %}
-                    <tr class="table-row" data-href="/requests/{{ request.id }}">
+                    <tr id="request-row" class="table-row" data-href="/requests/{{ request.id }}">
                         <td> {{ request.id }} </td>
                         <td> {{ request.date_submitted.date() }} </td>
                         <td> {{ request.division }} </td>
                         <td> {{ request.item }} </td>
                         <td> {{ request.status }} </td>
-                        <td class="text-success"> ${{ request.total_cost }} </td>
+                        <td> ${{ request.total_cost }} </td>
                         {% if current_user.role == "Administrator" %}
                             <td><a class="btn btn-danger btn-small" href="/requests/edit/{{ request.id }}">Edit</a></td>
                         {% endif %}

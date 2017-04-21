@@ -8,7 +8,7 @@
 {% block content %}
 
     <div class="page-header">
-        <h1>{{ vendor.name }}</h1>
+        <h1 id="vendor-title">{{ vendor.name }}</h1>
         {% if current_user.role == "Administrator" %}
             <a class="btn btn-primary btn-small"
                href="{{ url_for('vendor.edit_vendor', vendor_id=vendor.id) }}">Edit Vendor</a>
@@ -21,7 +21,7 @@
                     <col class="col-xs-1">
                     <col class="col-xs-5">
                 </colgroup>
-                <tbody>
+                <tbody id="vendor-table">
                 <tr>
                     <th scope="row" colspan="2">Vendor Information</th>
                 </tr>
