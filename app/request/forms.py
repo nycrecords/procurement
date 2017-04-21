@@ -7,7 +7,7 @@ from flask_wtf import Form
 from wtforms import StringField, SelectField, TextAreaField, BooleanField, HiddenField, SubmitField, DecimalField, \
     IntegerField
 from flask_wtf.file import FileField
-from wtforms.validators import DataRequired, Length, Email
+from wtforms.validators import DataRequired, Length, Email, Regexp
 from wtforms_alchemy import PhoneNumberField
 from app.constants import status
 
@@ -20,6 +20,9 @@ funding = [
     ('KOCH', 'KOCH'),
     ('Other', 'Other')
 ]
+
+regexp_message = "Must be at least 5 characters and must only contain alphanumeric characters or the following " \
+                 "characters: ' ,-."
 
 
 class CommentForm(Form):
@@ -47,8 +50,12 @@ class RequestForm(Form):
     justification = TextAreaField(u'Justification*(required)', validators=[
         DataRequired('You must enter a justification for your request'), Length(1, 500)])
     request_vendor_dropdown = SelectField(u'Vendor Information*')
-    request_vendor_name = StringField(u'Vendor Name')
-    request_vendor_address = StringField(u'Vendor Address')
+    request_vendor_name = StringField(u'Vendor Name', validators=[
+        Regexp("^[\w, '-.]+$", message=regexp_message),
+        Length(5)])
+    request_vendor_address = StringField(u'Vendor Address', validators=[
+        Regexp("^[\w, '-.]+$", message=regexp_message),
+        Length(5)])
     request_vendor_phone = PhoneNumberField(region='US', display_format='national')
     request_vendor_fax = PhoneNumberField(region='US', display_format='national')
     request_vendor_email = StringField(u'Email', validators=[Email()])
@@ -86,9 +93,9 @@ class RequestForm(Form):
         # check if user filled out the vendor fields
         if self.request_vendor_dropdown.data == "default" and not \
                 (self.request_vendor_name.data and self.request_vendor_address.data and
-                self.request_vendor_address.data and self.request_vendor_phone.data and
-                self.request_vendor_fax.data and self.request_vendor_email.data and
-                self.request_vendor_taxid.data):
+                     self.request_vendor_address.data and self.request_vendor_phone.data and
+                     self.request_vendor_fax.data and self.request_vendor_email.data and
+                     self.request_vendor_taxid.data):
             self.request_vendor_name.errors.append("You must fill out all fields for Vendor Information")
             return False
 

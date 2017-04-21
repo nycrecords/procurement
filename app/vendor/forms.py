@@ -6,13 +6,22 @@
 from flask_wtf import Form
 from wtforms import StringField, SubmitField, BooleanField
 from wtforms_alchemy import PhoneNumberField
-from wtforms.validators import DataRequired, Length, Email
+from wtforms.validators import DataRequired, Length, Email, Regexp
+
+regexp_message = "Must be at least 5 characters and must only contain alphanumeric characters or the following " \
+                 "characters: ' ,-."
 
 
 class NewVendorForm(Form):
     """Form for creating new vendor."""
-    vendor_name = StringField(u'Vendor Name', validators=[DataRequired('Please enter the name')])
-    vendor_address = StringField(u'Vendor Address', validators=[DataRequired('Please enter the address')])
+    vendor_name = StringField(u'Vendor Name', validators=[
+        DataRequired('Please enter the name'),
+        Regexp("^[\w, '-.]+$", message=regexp_message),
+        Length(5)])
+    vendor_address = StringField(u'Vendor Address', validators=[
+        DataRequired('Please enter the address'),
+        Regexp("^[\w, '-.]+$", message=regexp_message),
+        Length(5)])
     vendor_phone = PhoneNumberField(region='US', display_format='national',
                                     validators=[DataRequired('Please enter the phone number')])
     vendor_fax = PhoneNumberField(region='US', display_format='national',
@@ -25,8 +34,14 @@ class NewVendorForm(Form):
 
 class EditVendorForm(Form):
     """Form for editing vendor."""
-    vendor_name = StringField(u'Vendor Name', validators=[DataRequired('Please enter the name')])
-    vendor_address = StringField(u'Vendor Address', validators=[DataRequired('Please enter the address')])
+    vendor_name = StringField(u'Vendor Name', validators=[
+        DataRequired('Please enter the name'),
+        Regexp("^[\w, '-.]+$", message=regexp_message),
+        Length(5)])
+    vendor_address = StringField(u'Vendor Address', validators=[
+        DataRequired('Please enter the address'),
+        Regexp("^[\w, '-.]+$", message=regexp_message),
+        Length(5)])
     vendor_phone = PhoneNumberField(region='US', display_format='national',
                                     validators=[DataRequired('Please enter the phone number')])
     vendor_fax = PhoneNumberField(region='US', display_format='national',
