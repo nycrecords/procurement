@@ -313,7 +313,7 @@ def add_comment(request_id):
 
             if not allowed_file(file_data.filename):
                 flash("Invalid File Type")
-                return redirect(url_for('request.display_request', request_id=comment_form.request_id.data))
+                return redirect(url_for('request.display_request', request_id=request_id))
 
             if file_data.filename != '' and file_data and allowed_file(file_data.filename):
                 fixed_filename = secure_filename(datetime.datetime.now().strftime("%Y%m%d-%H%M") + file_data.filename)
