@@ -115,7 +115,7 @@ def new_request():
         send_email(receivers, header,
                    'request/new_request_notification',
                    user=current_user,
-                   request=request)
+                   request=new_request)
 
         flash("Request was successfully created!")
         return redirect(url_for('request.display_request', request_id=new_request.id))
