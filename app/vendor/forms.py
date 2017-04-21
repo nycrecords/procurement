@@ -17,7 +17,7 @@ class NewVendorForm(Form):
                                     validators=[DataRequired('Please enter the phone number')])
     vendor_fax = PhoneNumberField(region='US', display_format='national',
                                   validators=[DataRequired('Please enter the fax number')])
-    vendor_email = StringField(u'Email', validators=[DataRequired('Please enter the email')])
+    vendor_email = StringField(u'Email', validators=[DataRequired('Please enter the email'), Email()])
     vendor_tax_id = StringField(u'Vendor Tax ID', validators=[DataRequired('Please enter the tax id')])
     vendor_mwbe = BooleanField(u'mwbe')
     submit = SubmitField(u'Create Vendor')
@@ -31,7 +31,7 @@ class EditVendorForm(Form):
                                     validators=[DataRequired('Please enter the phone number')])
     vendor_fax = PhoneNumberField(region='US', display_format='national',
                                   validators=[DataRequired('Please enter the fax number')])
-    vendor_email = StringField(u'Email', validators=[DataRequired('Please enter the email')])
+    vendor_email = StringField(u'Email', validators=[DataRequired('Please enter the email'), Email()])
     vendor_tax_id = StringField(u'Vendor Tax ID', validators=[DataRequired('Please enter the tax id')])
     vendor_mwbe = BooleanField(u'mwbe')
     submit = SubmitField(u'Edit Vendor')

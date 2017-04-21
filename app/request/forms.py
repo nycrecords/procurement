@@ -7,7 +7,7 @@ from flask_wtf import Form
 from wtforms import StringField, SelectField, TextAreaField, BooleanField, HiddenField, SubmitField, DecimalField, \
     IntegerField
 from flask_wtf.file import FileField
-from wtforms.validators import DataRequired, Length
+from wtforms.validators import DataRequired, Length, Email
 from wtforms_alchemy import PhoneNumberField
 from app.constants import status
 
@@ -51,7 +51,7 @@ class RequestForm(Form):
     request_vendor_address = StringField(u'Vendor Address')
     request_vendor_phone = PhoneNumberField(region='US', display_format='national')
     request_vendor_fax = PhoneNumberField(region='US', display_format='national')
-    request_vendor_email = StringField(u'Email')
+    request_vendor_email = StringField(u'Email', validators=[Email()])
     request_vendor_taxid = StringField(u'Vendor Tax ID')
     request_vendor_mwbe = BooleanField(u'mwbe')
     submit = SubmitField(u'Submit Request')
