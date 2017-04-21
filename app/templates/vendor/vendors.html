@@ -18,7 +18,7 @@
         </div>
     </div>
 
-    <div id="test" class="row">
+    <div class="row">
         <div class="col-lg-12">
             <table id="display_vendors" class="table table-nonfluid table-hover"
                    style="border-collapse:collapse"
@@ -51,7 +51,7 @@
                 </thead>
                 <tbody>
                 {% for vendor in vendors %}
-                    <tr class="table-row" data-href="/vendors/{{ vendor.id }}">
+                    <tr id="vendor-row" class="table-row" data-href="/vendors/{{ vendor.id }}">
                         <td> {{ vendor.name }} </td>
                         <td> {{ vendor.address }} </td>
                         <td> {{ vendor.phone }} </td>
