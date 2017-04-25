@@ -69,7 +69,7 @@ class RequestForm(Form):
         super(RequestForm, self).__init__(*args, **kwargs)
 
         from app.models import Vendor
-        vendors = Vendor.query.order_by(Vendor.name).all()
+        vendors = Vendor.query.filter_by(enabled=True).order_by(Vendor.name).all()
         vendor_dropdown = [
             ('default', 'Select Vendor or Enter New Vendor Below')
         ]

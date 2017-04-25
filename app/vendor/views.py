@@ -11,19 +11,23 @@ from flask import (
     url_for,
     flash
 )
-from flask_login import login_required
+from flask_login import login_required, current_user
 from app import db
-from app.models import Vendor
+from app.models import Vendor, User
 from app.vendor.forms import NewVendorForm, EditVendorForm
 from app.vendor import vendor as vendor
 from app.errors import flash_errors
+from app.constants import roles
 
 
 @vendor.route('/', methods=['GET'])
 @login_required
 def display_vendors():
     """Return page that displays all vendors."""
-    vendors = Vendor.query.order_by(Vendor.name).all()
+    if current_user.role == roles.ADMIN:
+        vendors = Vendor.query.order_by(Vendor.name).all()
+    else:
+        vendors = Vendor.query.filter_by(enabled=True).order_by(Vendor.name).all()
     return render_template('vendor/vendors.html', vendors=vendors)
 
 
@@ -89,3 +93,31 @@ def edit_vendor(vendor_id):
         flash_errors(form)
 
     return render_template('vendor/edit_vendor.html', vendor=vendor, form=form)
+
+
+@vendor.route('/disable/<int:id>', methods=['GET', 'POST'])
+@login_required
+def disable(id):
+    """Disables the vendor and redirects to vendors page."""
+    if not current_user.role == roles.ADMIN:
+        return redirect('requests')
+
+    vendor = Vendor.query.get_or_404(id)
+    vendor.enabled = False
+    db.session.commit()
+    flash('Vendor has been disabled.')
+    return redirect(url_for('vendor.display_vendors'))
+
+
+@vendor.route('/enable/<int:id>', methods=['GET', 'POST'])
+@login_required
+def enable(id):
+    """Enables the vendor and redirects to vendors page."""
+    if not current_user.role == roles.ADMIN:
+        return redirect('requests')
+
+    vendor = Vendor.query.get_or_404(id)
+    vendor.enabled = True
+    db.session.commit()
+    flash('Vendor has been enabled.')
+    return redirect(url_for('vendor.display_vendors'))

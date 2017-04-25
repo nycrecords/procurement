@@ -162,6 +162,7 @@ class Vendor(db.Model):
     email = db.Column(db.String(100), nullable=True)
     tax_id = db.Column(db.String(100), nullable=True)
     mwbe = db.Column(db.Boolean, nullable=False, default=False)
+    enabled = db.Column(db.Boolean, nullable=False, default=True)
 
     def __init__(
             self,
@@ -172,6 +173,7 @@ class Vendor(db.Model):
             email,
             tax_id,
             mwbe,
+            enabled
     ):
         self.name = name
         self.address = address
@@ -180,6 +182,7 @@ class Vendor(db.Model):
         self.email = email
         self.tax_id = tax_id
         self.mwbe = mwbe
+        self.enabled = True
 
     def __repr__(self):
         return '<Vendor {}>'.format(self.id)

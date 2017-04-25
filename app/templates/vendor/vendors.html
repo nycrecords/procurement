@@ -45,6 +45,7 @@
                     <th class="col-sm-1" data-field="mwbe" data-sortable="false">M/WBE</th>
                     {% if current_user.role == "Administrator" %}
                         <th class="col-sm-1" data-sortable="false">Edit</th>
+                        <th class="col-sm-1" data-sortable="true">Visibility</th>
                     {% endif %}
                     <th class="col-sm-1" data-sortable="false">View</th>
                 </tr>
@@ -61,6 +62,15 @@
                         <td> {{ vendor.mwbe }} </td>
                         {% if current_user.role == "Administrator" %}
                             <td><a class="btn btn-danger btn-small" href="/vendors/edit/{{ vendor.id }}">Edit</a></td>
+                            <td>
+                                {% if vendor.enabled == True %}
+                                    <a class="btn btn-danger btn-small"
+                                       href="{{ url_for('vendor.disable', id=vendor.id) }}">Disable</a></td>
+                                {% else %}
+                                    <a class="btn btn-primary btn-small"
+                                       href="{{ url_for('vendor.enable', id=vendor.id) }}">Enable</a></td>
+                                {% endif %}
+                            </td>
                         {% endif %}
                         <td><a class="btn btn-primary btn-small" href="/vendors/{{ vendor.id }}">View</a></td>
                     </tr>

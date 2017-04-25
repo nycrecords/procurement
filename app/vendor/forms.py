@@ -4,7 +4,7 @@
    :synopsis: Defines forms used to manage vendor information
 """
 from flask_wtf import Form
-from wtforms import StringField, SubmitField, BooleanField
+from wtforms import StringField, SubmitField, BooleanField, HiddenField
 from wtforms_alchemy import PhoneNumberField
 from wtforms.validators import DataRequired, Length, Email, Regexp
 
