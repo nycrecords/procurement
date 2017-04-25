@@ -25,14 +25,6 @@ funding = [
 regexp_message = "Must only contain alphanumeric characters or the following " \
                  "characters: ' ,-."
 
-# def alphanumeric_plus(field):
-#         """Requires a textfield.data and returns true if it passes the alphanumeric requirements"""
-#         if re.match("^[\w, '-.]+$", field.data):
-#             return True
-#         else:
-#             field.errors.append(regexp_message)
-#             return False
-
 
 class CommentForm(Form):
     """Form for creating a new comment."""
@@ -106,12 +98,8 @@ class RequestForm(Form):
                     self.request_vendor_address.data and self.request_vendor_phone.data and
                     self.request_vendor_fax.data and self.request_vendor_email.data and
                     self.request_vendor_taxid.data):
-                self.request_vendor_name.errors.append("You must fill out all fields for Vendor Information")
+                self.request_vendor_dropdown.errors.append("You must fill out all fields for Vendor Information")
                 return False
-
-            # # check special field requirements
-            # if not (alphanumeric_plus(self.request_vendor_name) and alphanumeric_plus(self.request_vendor_address)):
-            #     return False
 
         return True
 
