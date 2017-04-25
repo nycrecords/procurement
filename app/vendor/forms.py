@@ -8,7 +8,7 @@ from wtforms import StringField, SubmitField, BooleanField
 from wtforms_alchemy import PhoneNumberField
 from wtforms.validators import DataRequired, Length, Email, Regexp
 
-regexp_message = "Must be at least 5 characters and must only contain alphanumeric characters or the following " \
+regexp_message = "Must only contain alphanumeric characters or the following " \
                  "characters: ' ,-."
 
 

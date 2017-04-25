@@ -166,23 +166,22 @@
         <p><i><strong>Vendor Information</strong></i></p>
 
         <div class="form-group row">
-        {% for message in form.request_vendor_name.errors %}
-        <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
-        {% endfor %}
-
             <label for="request_vendor" class="col-sm-3 sr-only form-control-label">Vendor Information:</label>
             <div class="col-sm-10">
-{#                <select name="vendor" class="form-control" id="vendor">#}
-{#                    <option id="default" value="default" selected value>Select Vendor or Enter New Vendor Below</option>#}
-{#                    {% for vendor in vendors %}#}
-{#                        <option id={{ vendor.id }} value={{ vendor.id }}> {{ vendor.name }} </option>#}
-{#                    {% endfor %}#}
-{#                </select>#}
+                {#                <select name="vendor" class="form-control" id="vendor">#}
+                {#                    <option id="default" value="default" selected value>Select Vendor or Enter New Vendor Below</option>#}
+                {#                    {% for vendor in vendors %}#}
+                {#                        <option id={{ vendor.id }} value={{ vendor.id }}> {{ vendor.name }} </option>#}
+                {#                    {% endfor %}#}
+                {#                </select>#}
                 {{ form.request_vendor_dropdown(id="vendor_information", class="form-control") }}
             </div>
         </div>
 
         <div class="form-group row">
+            {% for message in form.request_vendor_name.errors %}
+                <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
+            {% endfor %}
             <label for="request_vendor_name" class="col-sm-3 form-control-label">Vendor Name:</label>
             <div class="col-sm-5">
                 {{ form.request_vendor_name(id="vendor_name", class="form-control", maxlength="100") }}
@@ -190,6 +189,9 @@
         </div>
 
         <div class="form-group row">
+            {% for message in form.request_vendor_address.errors %}
+                <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
+            {% endfor %}
             <label for="request_vendor_address" class="col-sm-3 form-control-label">Vendor Address:</label>
             <div class="col-sm-5">
                 {{ form.request_vendor_address(id="vendor_address", class="form-control", maxlength="100") }}
@@ -217,6 +219,9 @@
         </div>
 
         <div class="form-group row">
+            {% for message in form.request_vendor_email.errors %}
+                <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
+            {% endfor %}
             <label for="request_vendor_email" class="col-sm-3 form-control-label">Vendor Email:</label>
             <div class="col-sm-5">
                 {{ form.request_vendor_email(id="vendor_email", class="form-control", maxlength="100") }}
@@ -224,6 +229,9 @@
         </div>
 
         <div class="form-group row">
+            {% for message in form.request_vendor_taxid.errors %}
+                <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
+            {% endfor %}
             <label for="request_vendor_taxid" class="col-sm-3 form-control-label">Vendor/Tax ID:</label>
             <div class="col-sm-5">
                 {{ form.request_vendor_taxid(id="vendor_taxid", class="form-control", maxlength="100") }}
@@ -237,12 +245,12 @@
             </div>
         </div>
 
-{#        <div class="form-group row">#}
-{#            <label for="request_vendor_status" class="col-sm-3 form-control-label">Status:</label>#}
-{#            <div class="col-sm-5">#}
-{#                {{ form.status(id="status", class="form-control") }}#}
-{#            </div>#}
-{#        </div>#}
+        {#        <div class="form-group row">#}
+        {#            <label for="request_vendor_status" class="col-sm-3 form-control-label">Status:</label>#}
+        {#            <div class="col-sm-5">#}
+        {#                {{ form.status(id="status", class="form-control") }}#}
+        {#            </div>#}
+        {#        </div>#}
 
         <div class="form-group row">
             <div class="spacer">
@@ -303,8 +311,8 @@
                     vendor: $("#vendor_information").children(":selected").attr("value")
                 },
                 success: function (data) {
-{#                    console.log("data: ");#}
-{#                    console.log(data);#}
+                    {#                    console.log("data: ");#}
+                    {#                    console.log(data);#}
 
                     var dis = false;
                     var vendor_name = $("#vendor_name");
@@ -345,7 +353,7 @@
                 }
             });
         });
-    $("#vendor_information").load("new_request.html", function () {
+        $("#vendor_information").load("new_request.html", function () {
             $.ajax({
                 url: "/parse_vendor",
                 type: "GET",
