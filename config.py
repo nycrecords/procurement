@@ -7,7 +7,7 @@ class Config:
     WTF_CSRF_ENABLED = True
     SECRET_KEY = 'you-will-never-guess'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
-    SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/procurement'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://developer@127.0.0.1:5432/procurement'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     # MAIL_SERVER = 'localhost'
     MAIL_SERVER = 'doittsmtp.nycnet'
