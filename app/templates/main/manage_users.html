@@ -31,7 +31,7 @@
                 </div>
                 <div class="modal-body">
 
-                    <form name="new_user" class="form-horizontal" id="submitUser" method="POST">
+                    <form novalidate="new_user" class="form-horizontal" id="submitUser" method="POST">
 
                         {{ form.hidden_tag() }}
 
@@ -175,6 +175,15 @@
 
 {% block scripts %}
     <script src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript">
+        var formErrors = {% if form.errors %}true{% else %}false{% endif %};
+
+        $(document).ready(function () {
+            if (formErrors) {
+                $('.modal').modal('show');
+            }
+        });
+    </script>
     <script type="text/javascript"
             src="{{ url_for('static', filename='js/plugins/bootstrap.min.js') }}"></script>
     <script type="text/javascript"

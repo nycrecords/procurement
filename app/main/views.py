@@ -96,6 +96,7 @@ def manage_users():
 
     users = User.query.filter(User.id != current_user.id).order_by(User.last_name).all()
     form = UserForm()
+    errors = False
     if request.method == 'POST':
         if form.validate_on_submit():
             new_user = User(email=form.email.data.lower(),
@@ -111,7 +112,8 @@ def manage_users():
             return redirect(url_for('main.manage_users'))
         else:
             print(form.errors)
-    return render_template('main/manage_users.html', users=users, form=form)
+            errors = True
+    return render_template('main/manage_users.html', users=users, form=form, errors=errors)
 
 
 @main.route('/manage_users/users/<int:id>', methods=['GET', 'POST'])
