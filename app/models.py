@@ -172,8 +172,7 @@ class Vendor(db.Model):
             fax,
             email,
             tax_id,
-            mwbe,
-            enabled
+            mwbe
     ):
         self.name = name
         self.address = address
