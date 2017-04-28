@@ -2,13 +2,12 @@
 <html lang="en">
 
 <head>
-    <title>{% block title %}{% endblock title %}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/bootstrap.min.css') }}"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}"/>
     <link rel="stylesheet" href="https://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css"/>
 
     {% block custom_css_links %}
-
     {% endblock custom_css_links %}
 
 </head>
@@ -19,7 +18,8 @@
         <ul class="nav navbar-nav pull-right">
             {% if current_user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('main.profile') }}"><b>{{ current_user.first_name }} {{ current_user.last_name }}</b></a>
+                    <a class="nav-link"
+                       href="{{ url_for('main.profile') }}"><b>{{ current_user.first_name }} {{ current_user.last_name }}</b></a>
                 </li>
                 {% if current_user.role == "Administrator" %}
                     <li class="nav-item">
