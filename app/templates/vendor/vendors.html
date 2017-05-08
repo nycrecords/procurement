@@ -93,11 +93,11 @@
     <script type="text/javascript"
             src="{{ url_for('static', filename='js/plugins/bootstrap-table-export.min.js') }}"></script>
     <script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function ($) {
-            $(".table-row").click(function () {
-                window.document.location = $(this).data("href");
-            });
-        });
-    </script>
+{#    <script type="text/javascript">#}
+{#        $(document).ready(function ($) {#}
+{#            $(".table-row").click(function () {#}
+{#                window.document.location = $(this).data("href");#}
+{#            });#}
+{#        });#}
+{#    </script>#}
 {% endblock %}
