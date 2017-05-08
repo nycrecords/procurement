@@ -76,7 +76,8 @@ class EditUserForm(Form):
     """Form for updating user information."""
     user_first_name = StringField(u'First Name*(required)', validators=[DataRequired(), Length(1, 100)])
     user_last_name = StringField(u'Last Name*(required)', validators=[DataRequired(), Length(1, 100)])
-    user_role = SelectField('division', validators=[DataRequired()], choices=roles)
+    user_role = SelectField('role', validators=[DataRequired()], choices=roles)
+    user_division = SelectField('division', validators=[DataRequired()], choices=divisions)
     user_email = StringField(u'Email*(required)', validators=[DataRequired(), Length(1, 100), Email()])
     user_phone = PhoneNumberField('Phone', region='US', display_format='national', validators=[DataRequired()])
     user_address = StringField('Address', validators=[DataRequired()])

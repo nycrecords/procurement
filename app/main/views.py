@@ -124,19 +124,21 @@ def edit_user(id):
         return redirect('requests')
 
     user = User.query.get_or_404(id)
-    form = EditUserForm(user_role=user.role)
+    form = EditUserForm(user_role=user.role, user_division=user.division)
     if request.method == 'POST':
         if form.validate_on_submit():
             if user.email == form.user_email.data or len(User.query.filter_by(email=form.user_email.data).all()) == 0:
                 user_first_name = form.user_first_name.data
                 user_last_name = form.user_last_name.data
                 user_role = form.user_role.data
+                user_division = form.user_division.data
                 user_email = form.user_email.data
                 user_phone = str(form.user_phone.data)
                 user_address = form.user_address.data
                 user.first_name = user_first_name
                 user.last_name = user_last_name
                 user.role = user_role
+                user.division = user_division
                 user.email = user_email
                 user.phone = user_phone
                 user.address = user_address
