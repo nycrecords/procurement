@@ -38,11 +38,11 @@ class RequestForm(Form):
     item = TextAreaField(u'Item*(required)', validators=[
         DataRequired('Please enter the item')])
     quantity = IntegerField(u'Quantity*', validators=[
-        DataRequired('Please enter the quantity')])
+        DataRequired('Please enter the quantity (only numbers are allowed)')])
     unit_price = DecimalField(u'Price per item*', validators=[
-        DataRequired('Please enter the price per item')])
+        DataRequired('Please enter the price per item (only numbers are allowed)')])
     total_cost = DecimalField(u'Total price*', validators=[
-        DataRequired('Please enter the total price')])
+        DataRequired('Please enter the total price (only numbers are allowed)')])
     funding_source = SelectField(u'Funding*', choices=funding, validators=[
         DataRequired('Please select the funding source')])
     funding_source_description = StringField(u'Funding Other')
