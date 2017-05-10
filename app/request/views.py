@@ -164,11 +164,12 @@ def display_request(request_id):
             approved = status.APR
 
         choices = [(status.NDA, status.NDA),
+                   (status.HOLD, status.HOLD),
                    (approved, "Approved"),
                    (status.DEN, status.DEN)]
 
         if request.status != status.NDA:
-            allowed_to_update = False
+            allowed_to_update = True
 
     elif current_user.role == roles.COM:
         choices = [(status.NCA, status.NCA),
@@ -177,7 +178,7 @@ def display_request(request_id):
                    (status.DEN, status.DEN)]
 
         if request.status != status.NDA and request.status != status.NCA:
-            allowed_to_update = False
+            allowed_to_update = True
 
     elif current_user.role == roles.PROC:
         choices = [(status.NDA, status.NDA),
