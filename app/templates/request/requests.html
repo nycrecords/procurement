@@ -45,7 +45,7 @@
                     <th class="col-sm-5" data-sortable="false">Request Description</th>
                     <th class="col-sm-2" data-sortable="true">Status</th>
                     <th class="col-sm-1" data-sortable="false">Total Cost</th>
-                    {% if current_user.role == "Administrator" %}
+                    {% if current_user.role == "Administrator" or current_user.role == "Procurement Head" %}
                         <th class="col-sm-1" data-sortable="false">Edit</th>
                     {% endif %}
                     <th class="col-sm-1" data-sortable="false">View</th>
@@ -60,7 +60,7 @@
                         <td> {{ request.item }} </td>
                         <td> {{ request.status }} </td>
                         <td> ${{ request.total_cost }} </td>
-                        {% if current_user.role == "Administrator" %}
+                        {% if current_user.role == "Administrator" or current_user.role == "Procurement Head" %}
                             <td><a class="btn btn-danger btn-small" href="/requests/edit/{{ request.id }}">Edit</a></td>
                         {% endif %}
                         <td><a class="btn btn-primary btn-small" href="/requests/{{ request.id }}">View</a></td>

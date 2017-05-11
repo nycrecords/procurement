@@ -132,7 +132,7 @@ def display_request(request_id):
     """Return page to view a specific request."""
 
     request = Request.query.filter_by(id=request_id).first()
-    if current_user.role != roles.ADMIN and current_user.division != request.division:
+    if current_user.role not in [roles.ADMIN, roles.PROC] and current_user.division != request.division:
         return redirect('requests')
 
     user = User.query.filter_by(id=request.creator_id).first()
@@ -209,7 +209,7 @@ def display_request(request_id):
 @login_required
 def edit_request(request_id):
     """Return page to edit a specific request."""
-    if not current_user.role == roles.ADMIN:
+    if current_user.role not in [roles.ADMIN, roles.PROC]:
         return redirect('requests')
 
     form = RequestForm()
