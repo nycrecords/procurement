@@ -31,7 +31,7 @@ from app.request.utils import determine_fiscal_id, email_setup
 @login_required
 def display_requests():
     """Return requests page that displays all requests."""
-    if current_user.role == roles.ADMIN:
+    if current_user.role == roles.ADMIN or roles.PROC:
         requests = Request.query.order_by(Request.date_submitted.desc()).all()
     else:
         requests = Request.query.filter_by(division=current_user.division).order_by(Request.date_submitted.desc()).all()

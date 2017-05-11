@@ -12,7 +12,7 @@ DORIS Procurements is a Python web application built using the Flask framework f
 ## Setup Instructions
 Clone the git repository and make it your current directory:
 
-    git clone https://mlaikhram@bitbucket.org/nycrecordswebdev/doris_procurements.git
+    git clone git@gitlab.com:nycrecords/doris_procurements.git
     cd doris_procurements
 
 Create a virtual environment and install the requirements:
