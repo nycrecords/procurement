@@ -62,9 +62,7 @@
             <div class="col-sm-5">
                 {% if current_user.role == "Administrator" %}
                     {{ form.user_division(id="user_division", class="form-control", default=user.division) }}
-                {% endif %}
-
-                {% if current_user.role != "Administrator" %}
+                {% else %}
                     {{ form.user_division(id="user_division", class="form-control", default=user.division, disabled=true ) }}
                 {% endif %}
                     <div class="small">Edit division if applicable.</div>
