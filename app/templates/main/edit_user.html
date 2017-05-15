@@ -60,8 +60,14 @@
 
             <label for="quantity" class="col-sm-3 form-control-label">User Division</label>
             <div class="col-sm-5">
-                {{ form.user_division(id="user_division", class="form-control", default=user.division) }}
-                <div class="small">Edit division if applicable.</div>
+                {% if current_user.role == "Administrator" %}
+                    {{ form.user_division(id="user_division", class="form-control", default=user.division) }}
+                {% endif %}
+
+                {% if current_user.role != "Administrator" %}
+                    {{ form.user_division(id="user_division", class="form-control", default=user.division, disabled=true ) }}
+                {% endif %}
+                    <div class="small">Edit division if applicable.</div>
             </div>
         </div>
 
