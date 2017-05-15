@@ -31,7 +31,7 @@ from app.request.utils import determine_fiscal_id, email_setup
 @login_required
 def display_requests():
     """Return requests page that displays all requests."""
-    if current_user.role == roles.ADMIN or roles.PROC:
+    if current_user.role in (roles.ADMIN, roles.PROC, roles.COM):
         requests = Request.query.order_by(Request.date_submitted.desc()).all()
     else:
         requests = Request.query.filter_by(division=current_user.division).order_by(Request.date_submitted.desc()).all()
@@ -132,7 +132,7 @@ def display_request(request_id):
     """Return page to view a specific request."""
 
     request = Request.query.filter_by(id=request_id).first()
-    if current_user.role not in [roles.ADMIN, roles.PROC] and current_user.division != request.division:
+    if current_user.role not in [roles.ADMIN, roles.PROC, roles.COM] and current_user.division != request.division:
         return redirect('requests')
 
     user = User.query.filter_by(id=request.creator_id).first()
