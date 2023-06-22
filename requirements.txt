@@ -12,7 +12,7 @@ Flask-WTF==0.14.2
 infinity==1.4
 intervals==0.8.0
 itsdangerous==0.24
-Jinja2==2.9.4
+Jinja2==2.11.3
 Mako==1.0.6
 MarkupSafe==0.23
 phonenumbers==8.0.0
