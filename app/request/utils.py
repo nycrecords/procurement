@@ -7,7 +7,6 @@ from app import db
 from flask_login import current_user
 from app.models import Request, User, Comment
 from app.constants import roles, status
-from app.email_notification import send_email
 import datetime
 
 

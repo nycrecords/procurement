@@ -1,0 +1,81 @@
+<div
+  class="modal fade"
+  id="myModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Recent comments</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Modal content goes here -->
+        <div class="container">
+          <section>
+            <div class="container">
+              <div class="row d-flex justify-content-center">
+                <div class="col-md-12 col-lg-10">
+                  <div class="card text-dark">
+                    <!-- Check if there are any comments -->
+                    {% if comments %}
+                    <!-- Loop through comments here -->
+                    {% for comment in comments %}
+                    <div class="card-body p-4">
+                      <div class="d-flex flex-start">
+                        <div>
+                          <h6 class="fw-bold mb-1">
+                            {{ current_user.first_name }}
+                          </h6>
+                          <!-- Replace with user name associated with the comment if available -->
+                          <div class="d-flex align-items-center mb-3">
+                            <p class="mb-0">
+                              {{ comment.timestamp.strftime('%B %d, %Y, %I:%M %p') }}
+                            </p>
+                          </div>
+                          <p class="mb-0">{{ comment.content }}</p>
+                          <!-- Check if comment has a file -->
+                          {% if comment.filepath %}
+                          <p>
+                            <a
+                              href="{{ url_for('request.download', comment_id=comment.id) }}"
+                              >Download attached file</a
+                            >
+                          </p>
+                          {% endif %}
+                        </div>
+                      </div>
+                    </div>
+                    <hr class="my-0" />
+                    {% endfor %} {% else %}
+                    <!-- If there are no comments, display this message -->
+                    <div class="card-body p-4">
+                      <p>There are no comments.</p>
+                    </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
+        <!-- Add additional buttons or actions here if needed -->
+      </div>
+    </div>
+  </div>
+</div>

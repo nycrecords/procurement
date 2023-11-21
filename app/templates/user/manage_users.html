@@ -1,0 +1,111 @@
+{% extends 'base.html' %} {% block content %}
+
+<div
+  class="container-fluid mt-5"
+  style="display: flex; flex-direction: column; justify-content: center"
+>
+  <div class="mb-3">
+    <h1 class="display-4">Users List</h1>
+  </div>
+
+  <div class="input-group mb-1">
+    <input
+      class="form-control"
+      id="myInput"
+      type="text"
+      placeholder="Search.."
+      onkeyup="myFunction()"
+    />
+  </div>
+
+  <div class="table-responsive-sm mt-5">
+    <table class="table table-bordered table-striped" id="myTable">
+      <thead>
+        <tr>
+          <th>Vendor ID</th>
+          <th>Name</th>
+          <th>Address</th>
+          <th>Phone</th>
+          <th>Fax</th>
+          <th>Email</th>
+          <th>TaxID</th>
+          <th>MWBE</th>
+          <th>Enabled</th>
+          <th>Edit</th>
+          <th>Visibility</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for vendor in vendors.items %}
+        <tr>
+          <th scope="row">{{ vendor.id }}</th>
+          <td>{{ vendor.name }}</td>
+          <td>{{ vendor.address }}</td>
+          <td>{{ vendor.phone }}</td>
+          <td>{{ vendor.fax }}</td>
+          <td>{{ vendor.email }}</td>
+          <td>{{ vendor.tax_id }}</td>
+          <td>{{ 'Yes' if vendor.mwbe else 'No' }}</td>
+          <td>{{ '✔️' if vendor.enabled else '❌' }}</td>
+          <td>
+            <a
+              href="{{ url_for('vendor.edit_vendor', id=vendor.id) }}"
+              class="btn btn-primary"
+              >Edit Vendor</a
+            >
+          </td>
+          <td>
+            <form
+              action="{{ url_for('vendor.toggle_vendor', vendor_id=vendor.id) }}"
+              method="POST"
+            >
+              <button type="submit" class="btn btn-primary">
+                Toggle Visibility
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="pagination">
+      {% if vendors.has_prev %}
+      <a
+        class="btn btn-outline-info"
+        href="{{ url_for('vendor.vendors', page=vendors.prev_num) }}"
+        >Previous</a
+      >
+      {% endif %} {% if vendors.has_next %}
+      <a
+        class="btn btn-outline-info"
+        href="{{ url_for('vendor.vendors', page=vendors.next_num) }}"
+        >Next</a
+      >
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock %} {% block scripts %}
+<script>
+  // Add this script
+  function myFunction() {
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("myTable");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[0];
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  }
+</script>
+{% endblock %}

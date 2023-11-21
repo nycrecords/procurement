@@ -1,22 +1,23 @@
-"""
-.. module: models.
-
-    :synopsis: Defines the models and methods for database objects
-"""
-import re
-from flask import current_app
+from .extensions import db
+from datetime import datetime
 from flask_login import UserMixin
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from sqlalchemy.orm.attributes import set_attribute
 from werkzeug.security import generate_password_hash, check_password_hash
-from app import db, login_manager
+from itsdangerous import URLSafeTimedSerializer as Serializer
+from sqlalchemy.orm.attributes import set_attribute
+from flask import current_app
 from app.constants import division, roles
+from app.extensions import db, login_manager
+import re
+import uuid
+from sqlalchemy.dialects.postgresql import UUID
 
 
 class User(UserMixin, db.Model):
     """The User class containing user and login information"""
     __tablename__ = 'user'
-    id = db.Column(db.Integer, primary_key=True)
+    __table_args__ = {'schema': 'main'}
+    # Changed from db.Integer to UUID and added a default UUID generator
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     first_name = db.Column(db.String(100))
     last_name = db.Column(db.String(100))
     email = db.Column(db.String(100), unique=True, index=True)
@@ -79,49 +80,31 @@ def load_user(user_id):
 
 
 class Request(db.Model):
-    """The procurement request class"""
     __tablename__ = 'request'
-    id = db.Column(db.String(11), primary_key=True)
-    creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    __table_args__ = {'schema': 'main'}
+
+    id = db.Column(UUID(as_uuid=True), primary_key=True)
+    creator_id = db.Column(db.Integer, db.ForeignKey('main.user.id'))
     division = db.Column(db.String(100))
-    date_submitted = db.Column(db.DateTime)
+    date_submitted = db.Column(db.DateTime, default=datetime.utcnow)
     date_closed = db.Column(db.DateTime)
     item = db.Column(db.String(500))
     quantity = db.Column(db.Integer)
     unit_price = db.Column(db.Numeric)
     total_cost = db.Column(db.Numeric)
     funding_source = db.Column(db.String(100))
-    grant_name = db.Column(db.String(100))
-    project_name = db.Column(db.String(100))
+    grant_name = db.Column(db.String(100), nullable=True)
+    project_name = db.Column(db.String(100), nullable=True)
     funding_source_description = db.Column(db.String(100), nullable=True)
     justification = db.Column(db.String(500))
-    # Each request has a foreign key to a vendor in the Vendor table. Each request can only have ONE vendor.
-    vendor_id = db.Column(db.Integer, db.ForeignKey('vendor.id'))
-    # Each request has a foreign key to a creator in the User table. Each request can only have ONE creator.
-    creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     status = db.Column(db.String(100))
+    vendor_id = db.Column(UUID(as_uuid=True), db.ForeignKey('main.vendor.id'))
 
-    def __init__(
-            self,
-            request_id,
-            division,
-            date_submitted,
-            item,
-            quantity,
-            unit_price,
-            total_cost,
-            funding_source,
-            grant_name,
-            project_name,
-            funding_source_description,
-            justification,
-            status,
-            creator_id
-    ):
-        self.id = request_id
+    def __init__(self, division, item, quantity, unit_price, total_cost, funding_source, grant_name, project_name, funding_source_description, justification, status, creator_id, vendor_id=None):
+        self.id = str(uuid.uuid4())  # Generate a new UUID for each request
         self.division = division
-        self.date_submitted = date_submitted
-        # self.date_closed = date_closed
+        # This will automatically set the current date and time
+        self.date_submitted = datetime.utcnow()
         self.item = item
         self.quantity = quantity
         self.unit_price = unit_price
@@ -133,6 +116,9 @@ class Request(db.Model):
         self.justification = justification
         self.status = status
         self.creator_id = creator_id
+        self.vendor_id = vendor_id  # Set vendor_id
+
+    # Rest of the class code...
 
     def set_vendor_id(self, vendor_id):
         """Sets vendor_id in request table
@@ -154,8 +140,9 @@ class Request(db.Model):
 class Vendor(db.Model):
     """The vendor class containing vendor information"""
     __tablename__ = 'vendor'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100))
+    __table_args__ = {'schema': 'main'}
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)  #
+    name = db.Column(db.String(120), nullable=False)
     address = db.Column(db.String(100), nullable=True)
     phone = db.Column(db.String(), nullable=True)
     fax = db.Column(db.String(), nullable=True)
@@ -172,7 +159,8 @@ class Vendor(db.Model):
             fax,
             email,
             tax_id,
-            mwbe
+            mwbe,
+            enabled=True,
     ):
         self.name = name
         self.address = address
@@ -181,7 +169,7 @@ class Vendor(db.Model):
         self.email = email
         self.tax_id = tax_id
         self.mwbe = mwbe
-        self.enabled = True
+        self.enabled = enabled
 
     def __repr__(self):
         return '<Vendor {}>'.format(self.id)
@@ -194,11 +182,19 @@ class Vendor(db.Model):
 class Comment(db.Model):
     """Comment and/or file that can be added to a specific request"""
     __tablename__ = 'comment'
-    id = db.Column(db.Integer, primary_key=True, nullable=False)
-    request_id = db.Column(db.String(11), db.ForeignKey('request.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    __table_args__ = {'schema': 'main'}
+
+    id = db.Column(UUID(as_uuid=True), primary_key=True)
+    request_id = db.Column(
+        UUID(as_uuid=True), db.ForeignKey('main.request.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('main.user.id'))
     timestamp = db.Column(db.DateTime)
     content = db.Column(db.String())
     filepath = db.Column(db.String())
     editable = db.Column(db.Boolean, nullable=False, default=True)
     user = db.relationship("User", backref="user")
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))

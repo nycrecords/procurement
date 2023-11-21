@@ -1,39 +1,35 @@
-{% extends "base.html" %}
-{% block title %}Records Procurement - Login{% endblock title %}
-{% block content %}
-    <div class="page-header">
-        <h1>Login</h1>
+{% extends 'base.html' %} {% block content %}
+<section>
+  <div class="container mt-4 mb-5">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div class="card shadow-2-strong" style="border-radius: 1rem">
+          <div class="card-body p-5 text-center">
+            <img
+              class="img-fluid"
+              src="https://www.nyc.gov/assets/records/images/content/header/records_logo.svg"
+            />
+            <h3 class="mb-5">Sign in</h3>
+
+            <form action="/login_form" method="POST">
+              {{ form.hidden_tag() }}
+              <div class="form-outline mb-4">
+                {{ form.email.label(class="form-label mt-2") }} {{
+                form.email(class="form-control form-control-lg") }}
+              </div>
+              <div class="form-outline mb-4">
+                {{ form.password.label(class="form-label mt-2") }} {{
+                form.password(class="form-control form-control-lg") }}
+              </div>
+              <div class="d-grid">
+                {{ form.submit(class="btn btn-primary btn-lg btn-block") }}
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
-    <form name="login" id="login_form" method="POST" action="">
-        {{ form.hidden_tag() }}
-        {% for message in form.email.errors %}
-            <div class="alert alert-danger" id="missing_email">{{ message }}</div>
-        {% endfor %}
-        <div class="form-group row">
-            <div class="col-md-4">
-                <label for="email">Email</label>
-                {{ form.email(id="email", class="form-control", type="text") }}</div>
-        </div>
+  </div>
+</section>
 
-        {% for message in form.password.errors %}
-            <div class="alert alert-danger" id="missing_password">{{ message }}</div>
-        {% endfor %}
-        <div class="form-group row">
-            <div class="col-md-4">
-                <label for="password">Password</label>
-                {{ form.password(id="password", class="form-control") }}</div>
-        </div>
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Log In</button>
-        </div>
-{#        <div>#}
-{#            <p>Don't have an account? <a href="{{ url_for('auth.sign_up') }}">Sign Up</a>#}
-{#            </p>#}
-{#        </div>#}
-        <div class="spacer">
-            <p>Forgot your password? <a href="{{ url_for('auth.password_reset_request') }}">Click here to reset it</a>.
-            </p>
-        </div>
-
-    </form>
 {% endblock %}

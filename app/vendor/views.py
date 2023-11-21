@@ -1,123 +1,84 @@
-"""
-.. module:: vendor.views.
-
-   :synopsis: Provides routes for managing vendor information
-"""
-from flask import (
-    render_template,
-    abort,
-    request,
-    redirect,
-    url_for,
-    flash
-)
+from flask import render_template, request, redirect, url_for, flash, current_app
+from . import vendor
+from .forms import VendorForm
+from ..models import Vendor  # Import the Vendor model
+from .. import db
 from flask_login import login_required, current_user
-from app import db
-from app.models import Vendor, User
-from app.vendor.forms import NewVendorForm, EditVendorForm
-from app.vendor import vendor as vendor
-from app.errors import flash_errors
-from app.constants import roles
+from sqlalchemy.exc import OperationalError
 
 
-@vendor.route('/', methods=['GET'])
+@vendor.route('/edit_vendor/<vendor_id>', methods=['GET', 'POST'])
 @login_required
-def display_vendors():
-    """Return page that displays all vendors."""
-    if current_user.role == roles.ADMIN:
-        vendors = Vendor.query.order_by(Vendor.name).all()
-    else:
-        vendors = Vendor.query.filter_by(enabled=True).order_by(Vendor.name).all()
+def edit_vendor(vendor_id):
+    vendor_instance = Vendor.query.get_or_404(vendor_id)
+    # populate form with vendor instance
+    form = VendorForm(obj=vendor_instance)
+
+    if form.validate_on_submit():
+        vendor_instance.name = form.vendorName.data
+        vendor_instance.address = form.vendorAddress.data
+        vendor_instance.phone = form.vendorPhone.data
+        vendor_instance.fax = form.vendorFax.data
+        vendor_instance.email = form.vendorEmail.data
+        vendor_instance.tax_id = form.vendorTaxId.data
+        vendor_instance.enabled = form.enable.data
+        vendor_instance.mwbe = form.mWbe.data
+        db.session.commit()
+        flash('Vendor details updated successfully!', 'success')
+        return redirect(url_for('vendor.vendors'))
+
+    return render_template('vendor/edit_vendor.html', form=form, vendor=vendor_instance)
+
+
+@vendor.route('/vendors')
+@login_required
+def vendors():
+    page = request.args.get('page', 1, type=int)
+    per_page = 50  # change this to the number of items you want per page
+    try:
+        vendors = Vendor.query.order_by(Vendor.id).paginate(
+            page=page, per_page=per_page, error_out=False)
+    except OperationalError:
+        # Log the error for debugging
+        current_app.logger.error(
+            "Database connection error occurred.")  # <-- Change here
+        # You can return a custom error message to the user
+        return render_template('error.html', message="Unable to fetch vendors due to a database connection issue. Please try again later."), 500
     return render_template('vendor/vendors.html', vendors=vendors)
 
 
-@vendor.route('/new', methods=['GET', 'POST'])
+@vendor.route('/new_vendor', methods=['GET', 'POST'])
 @login_required
 def new_vendor():
-    """Return page to create a new vendor."""
-    form = NewVendorForm()
-    if request.method == "POST" and form.validate_on_submit():
-        vendor_name = str(form.vendor_name.data)
-        vendor_address = form.vendor_address.data
-        vendor_phone = str(form.vendor_phone.data)
-        vendor_fax = str(form.vendor_fax.data)
-        vendor_email = form.vendor_email.data
-        vendor_tax_id = form.vendor_tax_id.data
-        vendor_mwbe = form.vendor_mwbe.data
-        new_vendor = Vendor(name=vendor_name,
-                            address=vendor_address,
-                            phone=vendor_phone,
-                            fax=vendor_fax,
-                            email=vendor_email,
-                            tax_id=vendor_tax_id,
-                            mwbe=vendor_mwbe
-                            )
+    if request.method == 'POST':
+        name = request.form.get('vendorName')
+        address = request.form.get('vendorAddress')
+        phone = request.form.get('vendorPhone')
+        fax = request.form.get('vendorFax')
+        email = request.form.get('vendorEmail')
+        tax_id = request.form.get('vendorTaxId')
+        mwbe = 'mWbe' in request.form
+
+        # Check if name is None
+        if name is None:
+            flash('Error: Vendor Name is required.', 'danger')
+            return redirect(url_for('vendor.new_vendor'))
+
+        new_vendor = Vendor(name=name, address=address, phone=phone,
+                            fax=fax, email=email, tax_id=tax_id, mwbe=mwbe)
         db.session.add(new_vendor)
         db.session.commit()
-        flash("Vendor was successfully added!")
-        return redirect(url_for('vendor.display_vendors'))
 
-    else:
-        flash_errors(form)
+        flash('New vendor added successfully!', 'success')
+        return redirect(url_for('vendor.vendors'))
 
-    return render_template('vendor/new_vendor.html', form=form)
+    return render_template('vendor/new_vendor.html')
 
 
-@vendor.route('/<vendor_id>', methods=['GET'])
+@vendor.route('/toggle_vendor/<vendor_id>', methods=['POST'])
 @login_required
-def view_vendor(vendor_id):
-    """Return page to view a specific vendor."""
-    vendor = Vendor.query.filter_by(id=vendor_id).first()
-    return render_template('vendor/vendor.html', vendor=vendor)
-
-
-@vendor.route('/edit/<int:vendor_id>', methods=['GET', 'POST'])
-@login_required
-def edit_vendor(vendor_id):
-    """Return page to edit vendor information."""
-    vendor = Vendor.query.filter_by(id=vendor_id).first()
-    form = EditVendorForm()
-    if request.method == "POST" and form.validate_on_submit():
-        vendor.name = str(form.vendor_name.data)
-        vendor.address = form.vendor_address.data
-        vendor.phone = str(form.vendor_phone.data)
-        vendor.fax = str(form.vendor_fax.data)
-        vendor.email = form.vendor_email.data
-        vendor.tax_id = form.vendor_tax_id.data
-        vendor.mwbe = form.vendor_mwbe.data
-        db.session.commit()
-        flash("Vendor information was successfully updated!")
-        return redirect(url_for('vendor.display_vendors'))
-
-    else:
-        flash_errors(form)
-
-    return render_template('vendor/edit_vendor.html', vendor=vendor, form=form)
-
-
-@vendor.route('/disable/<int:id>', methods=['GET', 'POST'])
-@login_required
-def disable(id):
-    """Disables the vendor and redirects to vendors page."""
-    if not current_user.role == roles.ADMIN:
-        return redirect('requests')
-
-    vendor = Vendor.query.get_or_404(id)
-    vendor.enabled = False
+def toggle_vendor(vendor_id):
+    vendor = Vendor.query.get_or_404(vendor_id)
+    vendor.enabled = not vendor.enabled
     db.session.commit()
-    flash('Vendor has been disabled.')
-    return redirect(url_for('vendor.display_vendors'))
-
-
-@vendor.route('/enable/<int:id>', methods=['GET', 'POST'])
-@login_required
-def enable(id):
-    """Enables the vendor and redirects to vendors page."""
-    if not current_user.role == roles.ADMIN:
-        return redirect('requests')
-
-    vendor = Vendor.query.get_or_404(id)
-    vendor.enabled = True
-    db.session.commit()
-    flash('Vendor has been enabled.')
-    return redirect(url_for('vendor.display_vendors'))
+    return redirect(url_for('vendor.vendors'))

@@ -1,5 +1,5 @@
 from flask import Blueprint
 
-request = Blueprint('request', __name__, url_prefix='/requests')
+request_bp = Blueprint('request', __name__)
 
-from . import views
+from . import views   # This will import views.py where you will use request_bp

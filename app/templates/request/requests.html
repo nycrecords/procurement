@@ -1,94 +1,108 @@
-{% extends "base.html" %}
-{% block title %}
-    Records Procurement - Request History
-{% endblock title %}
-{% block custom_css_links %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/bootstrap-table.min.css') }}">
-{% endblock custom_css_links %}
+{% extends 'base.html' %} {% block content %}
 
-{% block content %}
-    <div class="page-header">
-        <div class="row">
-            <div class="col-sm-5">
-                <h2>Request History</h2>
-            </div>
-            <div class="col-sm-offset-4 col-sm-3">
-                <a href="{{ url_for('request.new_request') }}" class="btn btn-primary btn-large pull-right">New
-                    Request</a>
-            </div>
-        </div>
+<div class="container mt-5">
+  <div class="container-fluid mb-3">
+    <h1 class="display-4">Request History</h1>
+  </div>
+
+  <div class="input-group mb-1">
+    <input
+      class="form-control"
+      id="myInput"
+      type="text"
+      placeholder="Search.."
+    />
+  </div>
+
+  <div class="table-responsive-sm mt-5">
+    <table class="table table-bordered table-striped" id="myTable">
+      <thead>
+        <tr>
+          <th>Request#</th>
+          <th>Date Submmitted</th>
+          <th>Division</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>Total Cost</th>
+          <th>Edit</th>
+          <th>View</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for request in requests.items %}
+        <tr>
+          <th scope="row">{{ request.id }}</th>
+          <td>{{ request.date_submitted }}</td>
+          <td>{{ request.division }}</td>
+          <td>{{ request.item | truncate_by_words(10) }}</td>
+          <!-- use item as description -->
+          <td>{{ request.status }}</td>
+          <td>${{ request.total_cost }}</td>
+          <td>
+            <a
+              class="btn btn-primary btn-sm"
+              href="{{ url_for('request.edit_request', request_id=request.id) }}"
+            >
+              <i class="fas fa-edit"></i>Edit Request</a
+            >
+          </td>
+          <td>
+            <a
+              href="{{ url_for('request.view_request', request_id=request.id) }}"
+              class="btn btn-success btn-sm"
+            >
+              <i class="fas fa-eye"></i> View Request
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      {% if requests.has_prev %}
+      <a
+        class="btn btn-outline-info"
+        href="{{ url_for('request.home', page=requests.prev_num) }}"
+        >Previous</a
+      >
+      {% endif %} {% if requests.has_next %}
+      <a
+        class="btn btn-outline-info"
+        href="{{ url_for('request.home', page=requests.next_num) }}"
+        >Next</a
+      >
+      {% endif %}
     </div>
+  </div>
+</div>
 
-    <div class="row">
-        <div class="col-lg-12">
-            <table id="display_requests" class="table table-nonfluid table-hover"
-                   style="border-collapse:collapse"
-                   data-toggle="table"
-                   data-search="true"
-                   data-show-refresh="true"
-                   data-show-toggle="true"
-                   data-show-columns="true"
-                   data-filter-control="true"
-                   data-pagination="true"
-                   data-side-pagination="client"
-                   data-page-list="[5, 10, 20, 50, 100, 200]"
-                   data-show-export="true"
-                   data-toolbar="#toolbar">
+{% endblock %} {% block scripts %}
+<script>
+  document.addEventListener("DOMContentLoaded", (event) => {
+    function myFunction() {
+      var input, filter, table, tr, td, i, j, txtValue;
+      input = document.getElementById("myInput");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("myTable");
+      tr = table.getElementsByTagName("tr");
+      for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td");
+        for (j = 0; j < td.length; j++) {
+          if (td[j]) {
+            txtValue = td[j].textContent || td[j].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+              tr[i].style.display = "";
+              break;
+            } else {
+              tr[i].style.display = "none";
+            }
+          }
+        }
+      }
+    }
 
-                <thead>
-                <tr>
-                    <th data-field="id" class="col-sm-1" data-sortable="true">Request #</th>
-                    <th class="col-sm-1" data-field="date" data-sortable="true">Date Submitted</th>
-                    <th class="col-sm-2" data-field="division" data-sortable="true" data-filter-control="select">
-                        Division
-                    </th>
-                    <th class="col-sm-5" data-sortable="false">Request Description</th>
-                    <th class="col-sm-2" data-sortable="true">Status</th>
-                    <th class="col-sm-1" data-sortable="false">Total Cost</th>
-                    {% if current_user.role == "Administrator" or current_user.role == "Procurement Head" %}
-                        <th class="col-sm-1" data-sortable="false">Edit</th>
-                    {% endif %}
-                    <th class="col-sm-1" data-sortable="false">View</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for request in requests %}
-                    <tr id="request-row" class="table-row" data-href="/requests/{{ request.id }}">
-                        <td> {{ request.id }} </td>
-                        <td> {{ request.date_submitted.date() }} </td>
-                        <td> {{ request.division }} </td>
-                        <td> {{ request.item }} </td>
-                        <td> {{ request.status }} </td>
-                        <td> ${{ request.total_cost }} </td>
-                        {% if current_user.role == "Administrator" or current_user.role == "Procurement Head" %}
-                            <td><a class="btn btn-danger btn-small" href="/requests/edit/{{ request.id }}">Edit</a></td>
-                        {% endif %}
-                        <td><a class="btn btn-primary btn-small" href="/requests/{{ request.id }}">View</a></td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            <div class="spacer"></div>
-        </div>
-    </div>
-{% endblock %}
-
-{% block scripts %}
-    <script src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
-    <script type="text/javascript"
-            src="{{ url_for('static', filename='js/plugins/bootstrap.min.js') }}"></script>
-    <script type="text/javascript"
-            src="{{ url_for('static', filename='js/plugins/bootstrap-table.min.js') }}"></script>
-    <script type="text/javascript"
-            src="{{ url_for('static', filename='js/plugins/bootstrap-table-filter-control.min.js') }}"></script>
-    <script type="text/javascript"
-            src="{{ url_for('static', filename='js/plugins/bootstrap-table-export.min.js') }}"></script>
-    <script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
-{#    <script type="text/javascript">#}
-{#        $(document).ready(function ($) {#}
-{#            $(".table-row").click(function () {#}
-{#                window.location = $(this).data("href");#}
-{#            });#}
-{#        });#}
-{#    </script>#}
+    document.getElementById("myInput").addEventListener("keyup", myFunction);
+  });
+</script>
 {% endblock %}

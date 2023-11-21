@@ -1,0 +1,36 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+blinker = "*"
+click = "*"
+dnspython = "*"
+email-validator = "*"
+flask = "*"
+flask-login = "*"
+flask-sqlalchemy = "*"
+flask-wtf = "*"
+greenlet = "*"
+idna = "*"
+infinity = "*"
+intervals = "*"
+itsdangerous = "*"
+jinja2 = "*"
+markupsafe = "*"
+psycopg2-binary = "*"
+six = "*"
+sqlalchemy = "*"
+sqlalchemy-utils = "*"
+typing-extensions = "*"
+validators = "*"
+werkzeug = "==2.3.6"
+wtforms = "*"
+wtforms-alchemy = "*"
+wtforms-components = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"

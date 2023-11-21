@@ -1,41 +1,54 @@
-"""
-.. module:: __init__.
-
-    :synopsis: Sets up the procurement application
-"""
+import re
+import os
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
-from flask_mail import Mail
-from config import config
-
-mail = Mail()
-db = SQLAlchemy()
-
-login_manager = LoginManager()
-login_manager.session_protection = 'strong'
-login_manager.login_view = 'auth.login'
+from .extensions import db, login_manager
+from .request import request_bp
+from .vendor import vendor as vendor_blueprint
+from .user import user as user_blueprint
+from .auth import auth as auth_blueprint
+from .config import Config
+from .models import User
+from sqlalchemy.exc import OperationalError
 
 
-def create_app(config_name):
-    app = Flask(__name__)
-    app.config.from_object(config[config_name])
-    config[config_name].init_app(app)
+def is_valid_uuid(val):
+    regex = re.compile(r'^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}\Z', re.I)
+    match = regex.match(val)
+    return bool(match)
 
-    mail.init_app(app)
+
+@login_manager.user_loader
+def load_user(user_id):
+    try:
+        if is_valid_uuid(user_id):
+            return User.query.get(user_id)
+        else:
+            return None
+    except OperationalError:
+        print("Database connection error occurred.")
+        return None
+
+
+def create_app():
+    app = Flask(__name__, template_folder='./templates',
+                static_folder='./static')
+    app.config.from_object(Config)
+
+    app.secret_key = 'super secret key'
+    UPLOAD_FOLDER = os.path.join(os.getcwd(), 'app/uploads')
+    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
     db.init_app(app)
     login_manager.init_app(app)
+    login_manager.login_view = 'auth.login'
 
-    from .main import main as main_blueprint
-    app.register_blueprint(main_blueprint)
+    app.register_blueprint(request_bp)
+    app.register_blueprint(vendor_blueprint)
+    app.register_blueprint(user_blueprint)
+    app.register_blueprint(auth_blueprint)
 
-    from .request import request as request
-    app.register_blueprint(request, url_prefix='/requests')
-
-    from .vendor import vendor as vendor
-    app.register_blueprint(vendor, url_prefix='/vendors')
-
-    from .auth import auth as auth
-    app.register_blueprint(auth, url_prefix='/auth')
+    @app.route('/path')
+    def path():
+        return f"Upload Folder: {app.config['UPLOAD_FOLDER']}"
 
     return app
