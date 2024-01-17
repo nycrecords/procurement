@@ -16,6 +16,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField, SubmitField
 from wtforms.validators import DataRequired
 
+
 class VendorForm(FlaskForm):
     vendorName = StringField('Vendor Name', validators=[DataRequired()])
     vendorAddress = StringField('Vendor Address', validators=[DataRequired()])
@@ -28,11 +29,9 @@ class VendorForm(FlaskForm):
     submit = SubmitField('Submit')
 
 
-
-
 class NewVendorForm(FlaskForm):
     """Form for creating new vendor."""
-    vendor_name = StringField(u'Vendor Name', validators=[
+    vendor_name = StringField('Vendor Name', validators=[
         DataRequired('Please enter the name'),
         Regexp("^[\w, '-.]+$", message=regexp_message),
         Length(5)])
@@ -46,7 +45,7 @@ class NewVendorForm(FlaskForm):
                                   validators=[DataRequired('Please enter the fax number')])
     vendor_email = StringField(u'Email', validators=[DataRequired('Please enter the email'), Email()])
     vendor_tax_id = StringField(u'Vendor Tax ID', validators=[DataRequired('Please enter the tax id')])
-    vendor_mwbe = BooleanField(u'mwbe')
+    vendor_mwbe = BooleanField(u'M/WBE')
     enabled = BooleanField(u'Enabled') # New field
     submit = SubmitField(u'Create Vendor')
 

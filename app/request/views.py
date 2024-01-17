@@ -1,50 +1,59 @@
-from flask import render_template, redirect, url_for, jsonify, request
-from flask_login import login_required, current_user
-from . import request_bp
-from ..models import Vendor, Request, Comment
-from .forms import RequestForm
-from .. import db
 import datetime
-import uuid
-from werkzeug.utils import secure_filename
 import os
-from datetime import datetime
-from werkzeug.urls import url_parse
-from sqlalchemy.exc import OperationalError
-from uuid import UUID
-from flask import send_from_directory
-from flask import request
-from flask import current_app
-from flask import render_template, redirect, url_for, flash
-from .forms import EditRequestForm
-from ..models import Request, Vendor
-from app import db
-from flask import send_from_directory
-import os
-from uuid import UUID
 import re
+import uuid
+from datetime import datetime
+from time import strftime, localtime
+from uuid import UUID
+
 from flask import abort
+from flask import current_app
+from flask import jsonify
+from flask import render_template, redirect, url_for, flash
+from flask import request as flask_request
+from flask import send_from_directory
 from flask_login import current_user, login_required
+from sqlalchemy.exc import OperationalError
+from werkzeug.utils import secure_filename
+
+from app import db
+from . import request
+from .forms import EditRequestForm
+from .forms import RequestForm
+from ..constants.status import STATUS_DROPDOWN
+from ..email_utils import send_email
+from ..models import Request, Vendor, Comment
 
 
-@request_bp.route('/update_status', methods=['POST'])
-def update_status():
-    # Your code to update the status
-    ...
+@request.route('/update_status/<string:request_id>', methods=['POST'])
+def update_status(request_id):
+    request = Request.query.get(request_id)
+    new_status = flask_request.form.get("new_status")
+
+    request.status = new_status
+    db.session.add(request)
+    db.session.commit()
+    return jsonify(success=True)
+    # json = r.get_json(force=True)
+    # request = Request.query.get(request_id)
+    # new_status = json.get("status")
+    # # new_status = r.form.get('new_status')
+    #
+    # request.status = new_status
+    # db.session.add(request)
+    # db.session.commit()
+    # return redirect(url_for('request.home'))
 
 
-@request_bp.route('/')  # Define this as the root route
-@request_bp.route('/requests')  # Define this as another route
+@request.route('/')  # Define this as the root route
+@request.route('/requests')  # Define this as another route
 @login_required
 def home():
-    page = request.args.get('page', 1, type=int)
-    per_page = 50  # change this to the number of items you want per page
-    requests = Request.query.order_by(Request.date_submitted.desc()).paginate(
-        page=page, per_page=per_page, error_out=False)
-    return render_template('request/requests.html', requests=requests)
+    requests = Request.query.order_by(Request.date_submitted.desc()).paginate()
+    return render_template('request/requests.html', requests=requests, status=STATUS_DROPDOWN)
 
 
-@request_bp.route('/new_request', methods=['GET', 'POST'])
+@request.route('/new_request', methods=['GET', 'POST'])
 @login_required
 def new_request():
     form = RequestForm()
@@ -107,19 +116,28 @@ def new_request():
         db.session.add(new_request)
         db.session.commit()  # Commit the changes to add the request to the database
 
+        # TODO Change recipient based on new workflow
+        send_email(
+            current_app.config["TEST_EMAIL"].split(","),
+            f"Procurement Request {strftime('%Y-%m-%d %H:%M:%S', localtime())}",
+            "email_templates/new_request",
+
+        )
+
         return jsonify(success=True, request_id=str(new_request.id))
 
     current_date = datetime.now().strftime('%m/%d/%Y')
     # or the attribute that stores the user's name
     current_username = current_user.first_name
     current_division = current_user.division
+
     return render_template('request/new_request.html', form=form, current_date=current_date, current_username=current_username, current_division=current_division)
 
 
-@request_bp.route('/get_vendor/<string:vendor_id>')
+@request.route('/get_vendor/<string:vendor_id>')
 def get_vendor(vendor_id):
     # Convert the string vendor_id to a UUID
-    vendor_id = UUID(vendor_id)
+    vendor_id = vendor_id
 
     vendor = Vendor.query.get(vendor_id)
     if vendor is not None:
@@ -137,7 +155,7 @@ def get_vendor(vendor_id):
         return jsonify(error="Vendor not found"), 404
 
 
-@request_bp.app_template_filter()
+@request.app_template_filter()
 def truncate_by_words(s, num_words):
     words = s.split()
     if len(words) > num_words:
@@ -149,18 +167,19 @@ def truncate_by_words(s, num_words):
 UPLOAD_FOLDER = os.path.join(os.getcwd(), 'app/uploads')
 
 
-@request_bp.route('/request/<request_id>')
+@request.route('/request/<request_id>')
 @login_required
 def view_request(request_id):
     request_id_uuid = uuid.UUID(request_id)  # convert request_id to a UUID
-    request = Request.query.get_or_404(request_id_uuid)
+    # request = Request.query.get_or_404(request_id_uuid)
+    request = Request.query.get_or_404(request_id)
     vendor = Vendor.query.get_or_404(request.vendor_id)  # get vendor
     comments = Comment.query.filter_by(request_id=request_id_uuid).order_by(
         Comment.timestamp.desc()).all()  # get all comments ordered by timestamp
     return render_template('request/request.html', request=request, vendor=vendor, comments=comments)
 
 
-@request_bp.route('/submit_comment', methods=['POST'])
+@request.route('/submit_comment', methods=['POST'])
 @login_required
 def submit_comment():
     if current_user.is_authenticated:
@@ -198,7 +217,7 @@ def is_valid_uuid(uuid_string):
     return bool(pattern.match(uuid_string))
 
 
-@request_bp.route('/download/<string:comment_id>', methods=['GET'])
+@request.route('/download/<string:comment_id>', methods=['GET'])
 def download(comment_id):
     """Allows users to download files from comments"""
     if not is_valid_uuid(comment_id):
@@ -209,7 +228,7 @@ def download(comment_id):
     return send_from_directory(directory, filename, as_attachment=True)
 
 
-@request_bp.route('/edit_request/<request_id>', methods=['GET', 'POST'])
+@request.route('/edit_request/<request_id>', methods=['GET', 'POST'])
 def edit_request(request_id):
     try:
         req = Request.query.get_or_404(request_id)
@@ -223,7 +242,7 @@ def edit_request(request_id):
         current_username = current_user.first_name
         current_division = current_user.division
 
-        if request.method == 'GET':
+        if flask_request.method == 'GET':
             form.request_vendor_dropdown.data = req.vendor_id
 
         if form.validate_on_submit():

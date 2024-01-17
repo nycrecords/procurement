@@ -1,7 +1,42 @@
-*.pyc
-venv/
-.idea/
-.idea/workspace.xml
-**/.idea/workspace.xml
-Vagrantfile
-.vagrant/
+# Project Specific
+tmp/
+.pip-packages/
+logs/
+ldap/
+*.pem
+*.crt
+*.cert
+*.key
+*.htpasswd
+/saml/
+/flask_session/
+/app/uploads/
+
+# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
+# Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
+.idea
+__pycache__
+data
+.env
+
+# Production
+/build
+
+# Misc
+.DS_Store
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+app/static/files/*
+
+# Visual Studio Code
+.vscode/*
+.vscode
+
+# Development database
+*.db
+postgres-data/
+
+
+
+

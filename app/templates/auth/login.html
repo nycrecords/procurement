@@ -1,35 +1,47 @@
-{% extends 'base.html' %} {% block content %}
-<section>
-  <div class="container mt-4 mb-5">
-    <div class="row d-flex justify-content-center align-items-center h-100">
-      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-        <div class="card shadow-2-strong" style="border-radius: 1rem">
-          <div class="card-body p-5 text-center">
-            <img
-              class="img-fluid"
-              src="https://www.nyc.gov/assets/records/images/content/header/records_logo.svg"
-            />
-            <h3 class="mb-5">Sign in</h3>
+{% extends "base.html" %}
+{% block content %}
+    <main id="skip-header-target" role="main">
+        <section class="featured-panel device-lg">
+            <div class="card bg-primary">
+                <div class="container align-self-center my-3">
+                    <div class="narrow text-white text-center">
+                        <h1>Procurement</h1>
+                    </div>
+                </div>
 
-            <form action="/login_form" method="POST">
-              {{ form.hidden_tag() }}
-              <div class="form-outline mb-4">
-                {{ form.email.label(class="form-label mt-2") }} {{
-                form.email(class="form-control form-control-lg") }}
-              </div>
-              <div class="form-outline mb-4">
-                {{ form.password.label(class="form-label mt-2") }} {{
-                form.password(class="form-control form-control-lg") }}
-              </div>
-              <div class="d-grid">
-                {{ form.submit(class="btn btn-primary btn-lg btn-block") }}
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+                <img class="card-img full-opacity-on-device"
+                     src="{{ url_for("static", filename="/images/records-building.jpg") }}"
+                     alt="Card image">
 
+                <div class="card-img-overlay narrow d-flex">
+                    <div class="container align-self-center my-3">
+                        <div class="narrow text-white  text-center">
+                            {% if config['USE_SAML'] %}
+                                <button class="btn btn-lg rounded-sm btn-info"
+                                            type="button"
+                                            onclick="window.location.href='{{ url_for('auth.saml') }}'">Log In
+                                </button>
+                            {% else %}
+                                <h1 class="card-title display-6 font-weight-bold mb-3">Sign In</h1>
+                                <form action="" method="post">
+                                    {{ form.hidden_tag() }}
+                                    <div class="mb-2">
+                                        {{ form.username.label }}
+                                        {{ form.username(class="form-control rounded-sm", placeholder="Email") }}
+                                        {% for error in form.username.errors %}
+                                            <span>[{{ error }}]</span>
+                                        {% endfor %}
+                                    </div>
+
+                                    <h1 class="card-title display-4 font-weight-bold mb-3">
+                                        {{ form.submit(class="btn btn-lg rounded-sm btn-info") }}
+                                    </h1>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 {% endblock %}

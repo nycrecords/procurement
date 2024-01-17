@@ -4,7 +4,6 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-blinker = "*"
 click = "*"
 dnspython = "*"
 email-validator = "*"
@@ -25,12 +24,18 @@ sqlalchemy = "*"
 sqlalchemy-utils = "*"
 typing-extensions = "*"
 validators = "*"
-werkzeug = "==2.3.6"
+werkzeug = "==2.3.7"
 wtforms = "*"
 wtforms-alchemy = "*"
 wtforms-components = "*"
+isodate = "*"
+lxml = "*"
+python-dotenv = "*"
+flask-migrate = "*"
+flask-session = "*"
+flask-mail = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.9"
+python_version = "3.9.2"

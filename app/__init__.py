@@ -1,54 +1,66 @@
-import re
 import os
-from flask import Flask
-from .extensions import db, login_manager
-from .request import request_bp
-from .vendor import vendor as vendor_blueprint
-from .user import user as user_blueprint
-from .auth import auth as auth_blueprint
-from .config import Config
-from .models import User
-from sqlalchemy.exc import OperationalError
+from datetime import timedelta
+
+from flask import Flask, session, g
+from flask_login import current_user, LoginManager
+from flask_mail import Mail
+from flask_session import Session
+from flask_sqlalchemy import SQLAlchemy
+
+from config import config
+
+# Flask extensions
+db = SQLAlchemy()
+sess = Session()
+mail = Mail()
+login_manager = LoginManager()
 
 
-def is_valid_uuid(val):
-    regex = re.compile(r'^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}\Z', re.I)
-    match = regex.match(val)
-    return bool(match)
+def create_app(config_name):
+    """
+    Set up the Flask Application context
 
+    :param config_name: Configuration for specific application context
 
-@login_manager.user_loader
-def load_user(user_id):
-    try:
-        if is_valid_uuid(user_id):
-            return User.query.get(user_id)
-        else:
-            return None
-    except OperationalError:
-        print("Database connection error occurred.")
-        return None
-
-
-def create_app():
-    app = Flask(__name__, template_folder='./templates',
-                static_folder='./static')
-    app.config.from_object(Config)
-
-    app.secret_key = 'super secret key'
-    UPLOAD_FOLDER = os.path.join(os.getcwd(), 'app/uploads')
-    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
+    :return: Flask application
+    """
+    app = Flask(__name__)
+    app.config.from_object(config[config_name])
     db.init_app(app)
+    mail.init_app(app)
+
+    # UPLOAD_FOLDER = os.path.join(os.getcwd(), 'app/uploads')
+    # app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+    sess.init_app(app)
     login_manager.init_app(app)
     login_manager.login_view = 'auth.login'
 
-    app.register_blueprint(request_bp)
-    app.register_blueprint(vendor_blueprint)
-    app.register_blueprint(user_blueprint)
-    app.register_blueprint(auth_blueprint)
+    from .main import main as main_blueprint
+    app.register_blueprint(main_blueprint)
+
+    from .auth import auth
+    app.register_blueprint(auth, url_prefix="/auth")
+
+    from .request import request
+    app.register_blueprint(request)
+
+    from .vendor import vendor
+    app.register_blueprint(vendor)
+
+    from .admin import admin
+    app.register_blueprint(admin)
 
     @app.route('/path')
     def path():
         return f"Upload Folder: {app.config['UPLOAD_FOLDER']}"
 
+    @app.before_request
+    def before_request():
+        session.permanent = False
+        app.permanent_session_lifetime = timedelta(minutes=35)
+        session.modified = True
+        g.user = current_user
+
     return app
+
