@@ -4,7 +4,7 @@
     :synopsis: Defines forms used to create procurement requests
 """
 from flask import Flask
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField, TextAreaField, SubmitField, BooleanField, DecimalField, IntegerField
 from wtforms.validators import DataRequired, Length, Email
 from wtforms_alchemy import PhoneNumberField
@@ -36,7 +36,7 @@ roles = [(roles.REG, roles.REG),
          (roles.ADMIN, roles.ADMIN)]
 
 
-class RequestForm(Form):
+class RequestForm(FlaskForm):
     """Form for creating a new request."""
     request_name = StringField(u'Name*(required)')
     division = SelectField(u'Division*', choices=divisions, default='')
@@ -61,7 +61,7 @@ class RequestForm(Form):
     submit = SubmitField(u'Submit Request')
 
 
-class UserForm(Form):
+class UserForm(FlaskForm):
     """Form for creating a new user."""
     first_name = StringField('first_name', validators=[DataRequired(), Length(1, 100)])
     last_name = StringField('last_name', validators=[DataRequired(), Length(1, 100)])
@@ -72,7 +72,7 @@ class UserForm(Form):
     submit = SubmitField(u'Create User')
 
 
-class EditUserForm(Form):
+class EditUserForm(FlaskForm):
     """Form for updating user information."""
     user_first_name = StringField(u'First Name*(required)', validators=[DataRequired(), Length(1, 100)])
     user_last_name = StringField(u'Last Name*(required)', validators=[DataRequired(), Length(1, 100)])

@@ -22,14 +22,14 @@ from app.email_notification import send_email
 from app.errors import flash_errors
 from app.request.forms import RequestForm, CommentForm, DeleteCommentForm, StatusForm
 from app.models import Request, User, Vendor, Comment
-from app.request import request as request
+from app.request import request as requests
 from app.constants import roles, status, mimetypes
 from app.request.utils import determine_fiscal_id, email_setup
 
 
-@request.route('/', methods=['GET', 'POST'])
+@requests.route('/', methods=['GET', 'POST'])
 @login_required
-def display_requests():
+def index():
     """Return requests page that displays all requests."""
     if current_user.role in (roles.ADMIN, roles.PROC, roles.COM):
         requests = Request.query.order_by(Request.date_submitted.desc()).all()
@@ -38,7 +38,7 @@ def display_requests():
     return render_template('request/requests.html', requests=requests)
 
 
-@request.route('/new', methods=['GET', 'POST'])
+@requests.route('/new', methods=['GET', 'POST'])
 @login_required
 def new_request():
     """Return new request form for procurements."""
@@ -126,14 +126,14 @@ def new_request():
     return render_template('request/new_request.html', form=form, user=current_user, vendors=vendors)
 
 
-@request.route('/<request_id>', methods=['GET', 'POST'])
+@requests.route('/<request_id>', methods=['GET', 'POST'])
 @login_required
 def display_request(request_id):
     """Return page to view a specific request."""
 
     request = Request.query.filter_by(id=request_id).first()
     if current_user.role not in [roles.ADMIN, roles.PROC, roles.COM] and current_user.division != request.division:
-        return redirect('requests')
+        return redirect(url_for('request.index'))
 
     user = User.query.filter_by(id=request.creator_id).first()
     vendor = Vendor.query.filter_by(id=request.vendor_id).first()
@@ -205,7 +205,7 @@ def display_request(request_id):
         abort(404)
 
 
-@request.route('/edit/<request_id>', methods=['GET', 'POST'])
+@requests.route('/edit/<request_id>', methods=['GET', 'POST'])
 @login_required
 def edit_request(request_id):
     """Return page to edit a specific request."""
@@ -301,7 +301,7 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in mimetypes.ALLOWED_EXTENSIONS
 
 
-@request.route('/add/<request_id>', methods=['GET', 'POST'])
+@requests.route('/add/<request_id>', methods=['GET', 'POST'])
 def add_comment(request_id):
     """Adds a comment to the current request"""
     comment_form = CommentForm()
@@ -365,7 +365,7 @@ def add_comment(request_id):
     return redirect(url_for('request.display_request', request_id=request_id))
 
 
-@request.route('/delete', methods=['GET', 'POST'])
+@requests.route('/delete', methods=['GET', 'POST'])
 def delete_comment():
     """Deletes the selected comment"""
     delete_form = DeleteCommentForm()
@@ -378,15 +378,15 @@ def delete_comment():
     return redirect(url_for('request.display_request', request_id=delete_form.request_id.data))
 
 
-@request.route('/download/<int:comment_id>', methods=['GET'])
+@requests.route('/download/<int:comment_id>', methods=['GET'])
 def download(comment_id):
     """Allows users to download files from comments"""
     comment = Comment.query.filter(Comment.id == comment_id).first()
     return send_from_directory(current_app.config['UPLOAD_FOLDER'], comment.filepath,
-                               as_attachment=True, attachment_filename=comment.filepath[13:])
+                               as_attachment=True, download_name=comment.filepath[13:])
 
 
-@request.route('/status/<request_id>', methods=['GET', 'POST'])
+@requests.route('/status/<request_id>', methods=['GET', 'POST'])
 def update_status(request_id):
     """Updates the status of the current request"""
     status_form = StatusForm()
@@ -410,13 +410,13 @@ def update_status(request_id):
     return redirect(url_for('request.display_request', request_id=request_id))
 
 
-@request.errorhandler(404)
+@requests.errorhandler(404)
 def not_found(error):
     """Return a 404 error page."""
     return render_template('request/not_found.html'), 404
 
 
-@request.errorhandler(400)
+@requests.errorhandler(400)
 def bad_request(error):
     """Return a 400 error page."""
     return render_template('request/bad_request.html'), 400

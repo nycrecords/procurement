@@ -3,8 +3,8 @@
 
    :synopsis: Defines forms used to manage vendor information
 """
-from flask_wtf import Form
-from wtforms import StringField, SubmitField, BooleanField, HiddenField
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField, BooleanField
 from wtforms_alchemy import PhoneNumberField
 from wtforms.validators import DataRequired, Length, Email, Regexp
 
@@ -12,7 +12,7 @@ regexp_message = "Must only contain alphanumeric characters or the following " \
                  "characters: ' ,-."
 
 
-class NewVendorForm(Form):
+class NewVendorForm(FlaskForm):
     """Form for creating new vendor."""
     vendor_name = StringField(u'Vendor Name', validators=[
         DataRequired('Please enter the name'),
@@ -32,7 +32,7 @@ class NewVendorForm(Form):
     submit = SubmitField(u'Create Vendor')
 
 
-class EditVendorForm(Form):
+class EditVendorForm(FlaskForm):
     """Form for editing vendor."""
     vendor_name = StringField(u'Vendor Name', validators=[
         DataRequired('Please enter the name'),

@@ -61,9 +61,9 @@
                         <td> {{ request.status }} </td>
                         <td> ${{ request.total_cost }} </td>
                         {% if current_user.role == "Administrator" or current_user.role == "Procurement Head" %}
-                            <td><a class="btn btn-danger btn-small" href="/requests/edit/{{ request.id }}">Edit</a></td>
+                            <td><a class="btn btn-danger btn-small" href="{{ url_for("request.edit_request", request_id=request.id) }}">Edit</a></td>
                         {% endif %}
-                        <td><a class="btn btn-primary btn-small" href="/requests/{{ request.id }}">View</a></td>
+                        <td><a class="btn btn-primary btn-small" href="{{ url_for("request.display_request", request_id=request.id) }}">View</a></td>
                     </tr>
                 {% endfor %}
                 </tbody>

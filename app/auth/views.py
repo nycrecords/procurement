@@ -32,7 +32,7 @@ def login():
                 return redirect(url_for('auth.login'))
             if user is not None and user.verify_password(form.password.data):
                 login_user(user)
-                return redirect('requests')
+                return redirect(url_for('request.index'))
         flash('Invalid username or password.')
     return render_template('auth/login.html', form=form)
 

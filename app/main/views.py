@@ -5,6 +5,7 @@
 """
 from flask import render_template, request, redirect, url_for, jsonify, flash
 from flask_login import login_required, current_user
+from werkzeug.security import generate_password_hash
 from app import db
 from app.models import Vendor, User
 from app.main import main
@@ -103,7 +104,7 @@ def manage_users():
                             phone=str(form.phone.data),
                             address=form.address.data,
                             division=form.division.data,
-                            password='Change4me',
+                            password_hash=generate_password_hash("Change4me"),
                             first_name=form.first_name.data,
                             last_name=form.last_name.data)
             db.session.add(new_user)

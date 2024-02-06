@@ -6,7 +6,7 @@
 import re
 from flask import current_app
 from flask_login import UserMixin
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from itsdangerous import TimedSerializer as Serializer
 from sqlalchemy.orm.attributes import set_attribute
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db, login_manager
@@ -72,6 +72,24 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return '<User %r>' % self.first_name
 
+    def __init__(self,
+                 first_name,
+                 last_name,
+                 email,
+                 phone,
+                 address,
+                 division,
+                 password_hash,
+                 role):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.email = email
+        self.phone = phone
+        self.address = address
+        self.division = division
+        self.password_hash = password_hash
+        self.role = role
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -97,8 +115,6 @@ class Request(db.Model):
     justification = db.Column(db.String(500))
     # Each request has a foreign key to a vendor in the Vendor table. Each request can only have ONE vendor.
     vendor_id = db.Column(db.Integer, db.ForeignKey('vendor.id'))
-    # Each request has a foreign key to a creator in the User table. Each request can only have ONE creator.
-    creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     status = db.Column(db.String(100))
 
     def __init__(
