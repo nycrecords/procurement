@@ -11,7 +11,6 @@
         <h1>{{ current_user.first_name}} {{ current_user.last_name }}</h1>
         <a class="btn btn-primary btn-small" href="{{ url_for('main.edit_profile') }}">Edit
             Information</a>
-        <a class="btn btn-primary btn-danger" href="{{ url_for('main.profile_password_reset') }}">Reset Password</a>
     </div>
 
     <div class="col-sm-push-12">
@@ -34,6 +33,14 @@
                     <td>{{ current_user.last_name }}</td>
                 </tr>
                 <tr>
+                    <th scope="row">Role:</th>
+                    <td>{{ current_user.role }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Division:</th>
+                    <td>{{ current_user.division }}</td>
+                </tr>
+                <tr>
                     <th scope="row">Email:</th>
                     <td><a href="mailto:{{ current_user.email }}">{{ current_user.email }}</a></td>
                 </tr>
@@ -45,14 +52,6 @@
                     <th scope="row">Address:</th>
                     <td>{{ current_user.address }}</td>
                 </tr>
-                <tr>
-                    <th scope="row">Division:</th>
-                    <td>{{ current_user.division }}</td>
-                </tr>
-                <tr>
-                    <th scope="row">Role:</th>
-                    <td>{{ current_user.role }}</td>
-                </tr>
                 </tbody>
             </table>
         </div>
@@ -60,13 +59,7 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
-    <script type="text/javascript"
-            src="{{ url_for('static', filename='js/plugins/bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-editable.js') }}"></script>
-    {% block request_xeditable %}
-{#        {% include "request/request_x-editable.html" %}#}
-    {% endblock %}
 {% endblock %}
 
 

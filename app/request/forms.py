@@ -3,7 +3,7 @@
 
    :synopsis: Defines forms used to manage procurement requests
 """
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField, TextAreaField, BooleanField, HiddenField, SubmitField, DecimalField, \
     IntegerField
 from flask_wtf.file import FileField
@@ -26,14 +26,14 @@ regexp_message = "Must only contain alphanumeric characters or the following " \
                  "characters: ' ,-."
 
 
-class CommentForm(Form):
+class CommentForm(FlaskForm):
     """Form for creating a new comment."""
     content = TextAreaField(validators=[Length(0, 500), DataRequired('Please enter a comment')])
     file = FileField(u'Upload File...')
     submit = SubmitField(u'Add Comment')
 
 
-class RequestForm(Form):
+class RequestForm(FlaskForm):
     """Form for creating a new request."""
     item = TextAreaField(u'Item*(required)', validators=[
         DataRequired('Please enter the item')])
@@ -77,9 +77,8 @@ class RequestForm(Form):
             vendor_dropdown.append((str(vendor.id), vendor.name))
         self.request_vendor_dropdown.choices = vendor_dropdown
 
-
-    def validate(self):
-        if not Form.validate(self):
+    def validate(self, extra_validators=None):
+        if not super(RequestForm, self).validate():
             return False
 
         # check if user selected other and filled out the field
@@ -104,14 +103,14 @@ class RequestForm(Form):
         return True
 
 
-class DeleteCommentForm(Form):
+class DeleteCommentForm(FlaskForm):
     """Form for deleting a comment."""
     request_id = HiddenField()
     comment_id = HiddenField()
     submit = SubmitField(u'Delete')
 
 
-class StatusForm(Form):
+class StatusForm(FlaskForm):
     """Form for updating status of a request."""
     status = SelectField(u'Status', validators=[DataRequired()])
     submit = SubmitField(u'Update')

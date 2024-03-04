@@ -4,7 +4,10 @@
     <div class="jumbotron">
         <h1>Procurement App</h1>
         <p class="lead"></p>
-        <p><a class="btn btn-lg btn-success" href="/requests" role="button">Start</a>
-        </p>
+        {% if config['USE_SAML'] %}
+            <p><a class="btn btn-lg btn-success" href="{{ url_for('auth.saml') }}" role="button">Start</a>
+        {% else %}
+            <p><a class="btn btn-lg btn-success" href="/requests" role="button">Start</a></p>
+        {% endif %}
     </div>
 {% endblock %}

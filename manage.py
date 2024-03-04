@@ -1,48 +1,40 @@
-from werkzeug.security import generate_password_hash
 import os
+from uuid import uuid4
+
+import click
+from flask_migrate import Migrate
+
 from app import create_app, db
-from app.models import User, Request
 from app.constants import division, roles
-from flask import url_for
-from flask_script import Manager, Shell
-from flask_migrate import Migrate, MigrateCommand
+from app.models import User, Request
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
-manager = Manager(app)
 migrate = Migrate(app, db)
 
 
 def make_shell_context():
     return dict(app=app, db=db, User=User, Request=Request)
-manager.add_command("shell", Shell(make_context=make_shell_context))
-manager.add_command('db', MigrateCommand)
 
 
-@manager.command
+@app.cli.command()
 def list_routes():
-    import urllib
+    """List all routes in the Flask application."""
+    import urllib.parse
     output = []
     for rule in app.url_map.iter_rules():
-
-        options = {}
-        for arg in rule.arguments:
-            options[arg] = "[{0}]".format(arg)
-
         methods = ','.join(rule.methods)
-        url = url_for(rule.endpoint, **options)
-        line = urllib.parse.unquote("{:50s} {:20s} {}".format(
-                                                        rule.endpoint,
-                                                        methods,
-                                                        url
-                                                        )
-                              )
-        output.append(line)
+        url = urllib.parse.unquote("{:50s} {:20s} {}".format(
+            rule.endpoint,
+            methods,
+            rule
+        ))
+        output.append(url)
 
     for line in sorted(output):
-        print(line)
+        click.echo(line)
 
 
-@manager.command
+@app.cli.command()
 def test():
     """Run the unit tests."""
     import unittest
@@ -50,20 +42,44 @@ def test():
     unittest.TextTestRunner(verbosity=2).run(tests)
 
 
-@manager.command
-def create_admin(first_name, last_name, email, division=division.MRMD):
-    """Allows the user to create an admin account from the command line"""
-    with app.app_context():
-        newuser = User(email=email,
-                       division=division,
-                       password_hash=generate_password_hash("Change4me"),
-                       first_name=first_name,
-                       last_name=last_name,
-                       role=roles.ADMIN)
-        db.session.add(newuser)
-        print("Account successfully created! "
-              "Password is 'Change4me' by default. Please change password after initial login")
+@app.cli.command()
+def assign_admin_role():
+    """Assigns the admin role to a specified user based on their email from the command line."""
+    user_email = input("Enter user email: ").strip()
+    user = User.query.filter_by(email=user_email).first()
+
+    if user is None:
+        print("User not found.")
+
+    else:
+        # Update user role and division
+        user.role = roles.ADMIN
+        user.division = division.ADM
+        db.session.commit()
+        print(f"Successfully assigned admin role to user {user_email}")
 
 
-if __name__ == '__main__':
-    manager.run()
+@app.cli.command()
+def create_test_admin_user():
+    """Allows the user to create  a test admin account from the command line"""
+    first_name = input("Enter user first name: ").strip()
+    last_name = input("Enter user last name: ").strip()
+    email = input("Enter user email: ").strip()
+
+    if not (first_name and last_name and email):
+        print("First name, last name, and email are required.")
+        return
+
+    new_user = User(email=email,
+                    division=division.MRMD,
+                    first_name=first_name,
+                    last_name=last_name,
+                    guid=uuid4().hex,
+                    phone=None,
+                    address=None,
+                    role=roles.ADMIN)
+
+    db.session.add(new_user)
+    db.session.commit()
+
+    print("Account successfully created!")
