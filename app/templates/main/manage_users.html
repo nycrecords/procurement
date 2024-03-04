@@ -12,115 +12,6 @@
             <div class="col-sm-5">
                 <h2>Manage Users</h2>
             </div>
-            <div class="col-sm-offset-4 col-sm-3">
-                <a class="btn btn-primary btn-large pull-right" data-toggle="modal" data-target="#createUser">Create
-                    User</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal -->
-    <div id="createUser" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Create New User</h4>
-                </div>
-                <div class="modal-body">
-
-                    <form novalidate="new_user" class="form-horizontal" id="submitUser" method="POST">
-
-                        {{ form.hidden_tag() }}
-
-                        <div class="form-group row">
-                            {% for message in form.first_name.errors %}
-                                <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
-                            {% endfor %}
-
-                            <label for="quantity" class="col-sm-3 form-control-label">User First Name</label>
-                            <div class="col-sm-5">
-                                {{ form.first_name(id="user_first_name", class="form-control", type="text") }}
-                                <div class="small">First name is required.</div>
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            {% for message in form.last_name.errors %}
-                                <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
-                            {% endfor %}
-
-                            <label for="quantity" class="col-sm-3 form-control-label">User Last Name</label>
-                            <div class="col-sm-5">
-                                {{ form.last_name(id="user_last_name", class="form-control", type="text") }}
-                                <div class="small">Last name is required.</div>
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            {% for message in form.division.errors %}
-                                <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
-                            {% endfor %}
-
-                            <label for="quantity" class="col-sm-3 form-control-label">Division</label>
-                            <div class="col-sm-5">
-                                {{ form.division(id="user_division", class="form-control", type="text") }}
-                                <div class="small">Division is required.</div>
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            {% for message in form.email.errors %}
-                                <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
-                            {% endfor %}
-
-                            <label for="quantity" class="col-sm-3 form-control-label">User Email</label>
-                            <div class="col-sm-5">
-                                {{ form.email(id="user_email", class="form-control", type="text") }}
-                                <div class="small">Email is required.</div>
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            {% for message in form.phone.errors %}
-                                <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
-                            {% endfor %}
-
-                            <label for="quantity" class="col-sm-3 form-control-label">User Phone Number</label>
-                            <div class="col-sm-5">
-                                {{ form.phone(id="user_phone", class="form-control", type="text") }}
-                                <div class="small">Phone number is required.</div>
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            {% for message in form.address.errors %}
-                                <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
-                            {% endfor %}
-
-                            <label for="quantity" class="col-sm-3 form-control-label">User Address</label>
-                            <div class="col-sm-5">
-                                {{ form.address(id="user_address", class="form-control", type="text") }}
-                                <div class="small">Address is required.</div>
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <div class="spacer">
-                                <button type="submit" class="btn btn-primary btn-lg btn-block">Create User</button>
-                            </div>
-                        </div>
-
-                    </form>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-
         </div>
     </div>
 
@@ -155,7 +46,7 @@
                         <td> {{ user.email }} </td>
                         <td><a class="btn btn-primary btn-small" href="/manage_users/users/{{ user.id }}">Edit</a></td>
                         <td>
-                            {% if user.login == True %}
+                            {% if user.is_active == True %}
                                 Enabled
                                 <a class="btn btn-danger btn-small pull-right"
                                    href="/manage_users/users/disable/{{ user.id }}">Disable</a></td>
@@ -174,23 +65,12 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
-    <script type="text/javascript">
-        var formErrors = {% if form.errors %}true{% else %}false{% endif %};
-
-        $(document).ready(function () {
-            if (formErrors) {
-                $('.modal').modal('show');
-            }
-        });
-    </script>
-    <script type="text/javascript"
-            src="{{ url_for('static', filename='js/plugins/bootstrap.min.js') }}"></script>
     <script type="text/javascript"
             src="{{ url_for('static', filename='js/plugins/bootstrap-table.min.js') }}"></script>
     <script type="text/javascript"
             src="{{ url_for('static', filename='js/plugins/bootstrap-table-filter-control.min.js') }}"></script>
     <script type="text/javascript"
             src="{{ url_for('static', filename='js/plugins/bootstrap-table-export.min.js') }}"></script>
-    <script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
+     <script type="text/javascript"
+            src="{{ url_for('static', filename='js/plugins/tableExport') }}"></script>
 {% endblock %}

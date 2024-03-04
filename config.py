@@ -29,6 +29,14 @@ class Config:
     MAX_CONTENT_LENGTH = 15 * 1024 * 1024
     COST_LIMIT = 1000
 
+    # Authentication Settings
+    USE_SAML = os.environ.get('USE_SAML') == "True"
+    SAML_PATH = os.environ.get('SAML_PATH')
+
+    # Session Settings
+    SESSION_TYPE = os.environ.get('SESSION_TYPE', 'filesystem')
+    SESSION_FILE_THRESHOLD = 100
+
     @staticmethod
     def init_app(app):
         pass

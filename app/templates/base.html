@@ -4,15 +4,17 @@
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
     <title>{% block title %}Procurement{% endblock %}</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='/img/favicon.ico') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/bootstrap.min.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/jumbotron-narrow.css') }}"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}"/>
-    <link rel="stylesheet" href="https://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css"/>
 
     {% block custom_css_links %}
     {% endblock custom_css_links %}
 
 </head>
 <body>
+{% set use_saml = config['USE_SAML'] %}
 <nav class="navbar navbar-default navbar-static-top">
     <div class="container-fluid">
         <a class="navbar-brand" href="/">Records Procurement</a>
@@ -34,14 +36,26 @@
                     <a class="nav-link" href="{{ url_for('vendor.display_vendors') }}">Vendor List</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('auth.logout') }}">Sign Out</a>
+                    {% if use_saml %}
+                        <a class="nav-link"
+                           href="{{ url_for('auth.saml') }}{% if not current_user.is_anonymous %}?slo{% endif %}">
+                            <strong>{% if current_user.is_anonymous %}Log In{% else %}Log Out{% endif %}</strong>
+                        </a>
+                    {% else %}
+                        <a class="nav-link" href="{{ url_for('auth.logout') }}">
+                            <strong>Log Out</strong>
+                        </a>
+                    {% endif %}
                 </li>
             {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('auth.login') }}">Sign In</a>
-                </li>
+                {% if use_saml %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.saml') }}">
+                            <strong>Log In</strong>
+                        </a>
+                    </li>
+                {% endif %}
             {% endif %}
-            </li>
         </ul>
     </div>
 </nav>
@@ -77,10 +91,16 @@
     </div>
 </footer>
 
+<!-- jQuery (full, compressed version) -->
+<script src="{{ url_for('static', filename='js/plugins/jquery-2.0.3.min.js') }}"></script>
+<!-- Bootstrap JS -->
+<script src="{{ url_for('static', filename='js/plugins/bootstrap.min.js') }}"></script>
+<!-- Session Timeout -->
+<script src="{{ url_for('static', filename='js/plugins/session-timeout.min.js') }}"></script>
+
 {% block scripts %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" type="text/javascript"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap.min.js') }}"></script>
 {% endblock %}
 
+{% include 'auth/concurrent_session_modal.html' %}
+{% include 'base.js.html' %}
 </html>

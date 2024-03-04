@@ -28,3 +28,7 @@ wtforms-components==0.10.5
 importlib-metadata==7.0.1
 psycopg2==2.9.9
 python-dotenv==1.0.1
+isodate==0.6.1
+flask-session==0.6.0
+lxml==5.1.0
+dnspython==2.5.0

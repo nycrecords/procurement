@@ -6,8 +6,9 @@
 from flask import Flask
 from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField, TextAreaField, SubmitField, BooleanField, DecimalField, IntegerField
-from wtforms.validators import DataRequired, Length, Email
+from wtforms.validators import DataRequired, Length
 from wtforms_alchemy import PhoneNumberField
+
 from app.constants import division, roles
 
 app = Flask(__name__)
@@ -21,7 +22,8 @@ funding = [
     ('Other', 'Other')
 ]
 
-divisions = [(division.MRMD, division.MRMD),
+divisions = [(None, None),
+             (division.MRMD, division.MRMD),
              (division.ARC, division.ARC),
              (division.GRA, division.GRA),
              (division.LIB, division.LIB),
@@ -61,24 +63,10 @@ class RequestForm(FlaskForm):
     submit = SubmitField(u'Submit Request')
 
 
-class UserForm(FlaskForm):
-    """Form for creating a new user."""
-    first_name = StringField('first_name', validators=[DataRequired(), Length(1, 100)])
-    last_name = StringField('last_name', validators=[DataRequired(), Length(1, 100)])
-    division = SelectField('division', validators=[DataRequired()], choices=divisions)
-    email = StringField('Email', validators=[DataRequired(), Length(1, 100), Email()])
-    phone = PhoneNumberField('Phone', region='US', display_format='national', validators=[DataRequired()])
-    address = StringField('Address', validators=[DataRequired()])
-    submit = SubmitField(u'Create User')
-
-
 class EditUserForm(FlaskForm):
     """Form for updating user information."""
-    user_first_name = StringField(u'First Name*(required)', validators=[DataRequired(), Length(1, 100)])
-    user_last_name = StringField(u'Last Name*(required)', validators=[DataRequired(), Length(1, 100)])
-    user_role = SelectField('role', validators=[DataRequired()], choices=roles)
-    user_division = SelectField('division', validators=[DataRequired()], choices=divisions)
-    user_email = StringField(u'Email*(required)', validators=[DataRequired(), Length(1, 100), Email()])
-    user_phone = PhoneNumberField('Phone', region='US', display_format='national', validators=[DataRequired()])
-    user_address = StringField('Address', validators=[DataRequired()])
+    role = SelectField('role', validators=[DataRequired()], choices=roles)
+    division = SelectField('division', validators=[DataRequired()], choices=divisions)
+    phone = PhoneNumberField('Phone', region='US', display_format='national', validators=[DataRequired()])
+    address = StringField('Address', validators=[DataRequired()])
     update = SubmitField(u'Update Information')

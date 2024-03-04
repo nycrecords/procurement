@@ -83,7 +83,6 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
     <script type="text/javascript"
             src="{{ url_for('static', filename='js/plugins/bootstrap.min.js') }}"></script>
     <script type="text/javascript"
@@ -92,12 +91,6 @@
             src="{{ url_for('static', filename='js/plugins/bootstrap-table-filter-control.min.js') }}"></script>
     <script type="text/javascript"
             src="{{ url_for('static', filename='js/plugins/bootstrap-table-export.min.js') }}"></script>
-    <script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
-{#    <script type="text/javascript">#}
-{#        $(document).ready(function ($) {#}
-{#            $(".table-row").click(function () {#}
-{#                window.document.location = $(this).data("href");#}
-{#            });#}
-{#        });#}
-{#    </script>#}
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='js/plugins/tableExport.js') }}"></script>
 {% endblock %}

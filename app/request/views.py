@@ -31,11 +31,12 @@ from app.request.utils import determine_fiscal_id, email_setup
 @login_required
 def index():
     """Return requests page that displays all requests."""
+    duplicate_session = flask_request.args.get('duplicate_session')
     if current_user.role in (roles.ADMIN, roles.PROC, roles.COM):
         requests = Request.query.order_by(Request.date_submitted.desc()).all()
     else:
         requests = Request.query.filter_by(division=current_user.division).order_by(Request.date_submitted.desc()).all()
-    return render_template('request/requests.html', requests=requests)
+    return render_template('request/requests.html', requests=requests, duplicate_session=duplicate_session)
 
 
 @requests.route('/new', methods=['GET', 'POST'])

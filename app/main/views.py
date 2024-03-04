@@ -3,19 +3,30 @@
 
     :synopsis: Handles all core URL endpoints for the procurement application
 """
-from flask import render_template, request, redirect, url_for, jsonify, flash
+from flask import render_template, request, redirect, url_for, jsonify, flash, session
 from flask_login import login_required, current_user
-from werkzeug.security import generate_password_hash
-from app import db
-from app.models import Vendor, User
-from app.main import main
-from app.main.forms import UserForm, EditUserForm
+
+from app import db, login_manager
 from app.constants import roles
+from app.db_utils import update_user_information
+from app.main import main
+from app.main.forms import EditUserForm
+from app.models import Vendor, User
+
+
+@login_manager.user_loader
+def user_loader(guid: str) -> User:
+    user = User.query.filter_by(guid=guid).one_or_none()
+    if user is not None and user.session_id == session.sid:
+        return user
 
 
 @main.route('/')
 def index():
     """Return homepage with a button redirecting to the procurement request history."""
+    if current_user.is_authenticated:
+        duplicate_session = request.args.get('duplicate_session')
+        return redirect(url_for('request.index', duplicate_session=duplicate_session))
     return render_template('main/index.html')
 
 
@@ -23,47 +34,23 @@ def index():
 @login_required
 def profile():
     """Displays user information (redirects to profile page)."""
-    return render_template('main/profile.html',
-                           current_user=current_user)
+    return render_template('main/profile.html', current_user=current_user)
 
 
 @main.route('/profile/edit', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
     """Allows a user to edit their own information"""
-    form = EditUserForm(user_role=current_user.role)
+    user = User.query.get_or_404(current_user.id)
+    form = EditUserForm(role=current_user.role, division=current_user.division)
+
     if request.method == 'POST':
         if form.validate_on_submit():
-            if current_user.email == form.user_email.data or \
-                            len(User.query.filter_by(email=form.user_email.data).all()) == 0:
-                user_first_name = form.user_first_name.data
-                user_last_name = form.user_last_name.data
-                user_role = form.user_role.data
-                user_email = form.user_email.data
-                user_phone = str(form.user_phone.data)
-                user_address = form.user_address.data
-                current_user.first_name = user_first_name
-                current_user.last_name = user_last_name
-                current_user.role = user_role
-                current_user.email = user_email
-                current_user.phone = user_phone
-                current_user.address = user_address
-                db.session.commit()
-                flash('User information successfully updated!')
-                return redirect(url_for('main.profile'))
-            else:
-                flash('User email already exists.')
-        else:
-            print(form.errors)
+            fields = ['phone', 'address']
+            if current_user.role == roles.ADMIN:
+                fields.extend(['role', 'division'])
+            update_user_information(form, fields, user)
     return render_template('main/edit_user.html', user=current_user, form=form)
-
-
-@main.route('/profile/reset', methods=['GET', 'POST'])
-@login_required
-def profile_password_reset():
-    """Allows a user to reset their password from their profile"""
-    token = current_user.generate_reset_token()
-    return redirect(url_for('auth.password_reset', token=token))
 
 
 @main.route('/divisions', methods=['GET'])
@@ -93,78 +80,28 @@ def jsonify_fields():
 def manage_users():
     """Return the admin panel where admins can create users, edit user information, and update login privileges."""
     if not current_user.role == roles.ADMIN:
-        return redirect('requests')
+        return redirect(url_for('main.index'))
 
     users = User.query.filter(User.id != current_user.id).order_by(User.last_name).all()
-    form = UserForm()
-    errors = False
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            new_user = User(email=form.email.data.lower(),
-                            phone=str(form.phone.data),
-                            address=form.address.data,
-                            division=form.division.data,
-                            password_hash=generate_password_hash("Change4me"),
-                            first_name=form.first_name.data,
-                            last_name=form.last_name.data)
-            db.session.add(new_user)
-            db.session.commit()
-            flash('User account successfully created!')
-            return redirect(url_for('main.manage_users'))
-        else:
-            print(form.errors)
-            errors = True
-    return render_template('main/manage_users.html', users=users, form=form, errors=errors)
+    return render_template('main/manage_users.html', users=users)
 
 
 @main.route('/manage_users/users/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit_user(id):
     """Return the page for an admin to update user information."""
-    if not current_user.role == roles.ADMIN:
-        return redirect('requests')
+    if current_user.role != roles.ADMIN:
+        return redirect(url_for('main.edit_profile'))
 
     user = User.query.get_or_404(id)
-    form = EditUserForm(user_role=user.role, user_division=user.division)
+    form = EditUserForm(role=user.role, division=user.division)
+
     if request.method == 'POST':
         if form.validate_on_submit():
-            if user.email == form.user_email.data or len(User.query.filter_by(email=form.user_email.data).all()) == 0:
-                user_first_name = form.user_first_name.data
-                user_last_name = form.user_last_name.data
-                user_role = form.user_role.data
-                user_division = form.user_division.data
-                user_email = form.user_email.data
-                user_phone = str(form.user_phone.data)
-                user_address = form.user_address.data
-                user.first_name = user_first_name
-                user.last_name = user_last_name
-                user.role = user_role
-                user.division = user_division
-                user.email = user_email
-                user.phone = user_phone
-                user.address = user_address
-                db.session.commit()
-                flash('User information successfully updated!')
-                return redirect(url_for('main.manage_users'))
-            else:
-                flash('User email already exists.')
-        else:
-            print(form.errors)
+            fields = ['role', 'division', 'phone', 'address']
+            update_user_information(form, fields, user)
+
     return render_template('main/edit_user.html', user=user, form=form)
-
-
-@main.route('/manage_users/users/reset/<int:id>', methods=['GET', 'POST'])
-@login_required
-def reset_password(id):
-    """Resets the password of the user and then redirects to the edit user page."""
-    if not current_user.role == roles.ADMIN:
-        return redirect('requests')
-
-    user = User.query.get_or_404(id)
-    user.password = 'Change4me'
-    db.session.commit()
-    flash('User password was successfully reset!')
-    return redirect(url_for('main.edit_user', id=id))
 
 
 @main.route('/manage_users/users/disable/<int:id>', methods=['GET', 'POST'])
@@ -175,7 +112,7 @@ def disable(id):
         return redirect('requests')
 
     user = User.query.get_or_404(id)
-    user.login = False
+    user.is_active = False
     db.session.commit()
     flash('User login privileges have been disabled.')
     return redirect(url_for('main.manage_users'))
@@ -189,7 +126,17 @@ def enable(id):
         return redirect('requests')
 
     user = User.query.get_or_404(id)
-    user.login = True
+    user.is_active = True
     db.session.commit()
     flash('User login privileges have been enabled.')
     return redirect(url_for('main.manage_users'))
+
+
+@main.route('/active', methods=['POST'])
+def active():
+    """
+    Extends a user's session.
+    :return:
+    """
+    session.modified = True
+    return 'OK'
