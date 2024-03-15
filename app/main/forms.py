@@ -66,7 +66,7 @@ class UserForm(Form):
     first_name = StringField('first_name', validators=[DataRequired(), Length(1, 200)])
     last_name = StringField('last_name', validators=[DataRequired(), Length(1, 200)])
     division = SelectField('division', validators=[DataRequired()], choices=divisions)
-    email = StringField('Email', validators=[DataRequired(), Length(1, 100), Email()])
+    email = StringField('Email', validators=[DataRequired(), Length(1, 200), Email()])
     phone = PhoneNumberField('Phone', region='US', display_format='national', validators=[DataRequired()])
     address = StringField('Address', validators=[DataRequired()])
     submit = SubmitField(u'Create User')
