@@ -63,7 +63,7 @@ class RequestForm(Form):
 
 class UserForm(Form):
     """Form for creating a new user."""
-    first_name = StringField('first_name', validators=[DataRequired(), Length(1, 200)])
+    first_name = StringField('first_name', validators=[DataRequired(), Length(1, 300)])
     last_name = StringField('last_name', validators=[DataRequired(), Length(1, 200)])
     division = SelectField('division', validators=[DataRequired()], choices=divisions)
     email = StringField('Email', validators=[DataRequired(), Length(1, 200), Email()])
