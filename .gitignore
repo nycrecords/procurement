@@ -12,3 +12,4 @@ Vagrantfile
 /saml/advanced_settings.json
 /saml/settings.json
 /uploads/
+flask_session/
