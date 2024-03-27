@@ -11,6 +11,7 @@
     {% else %}
     <title>Procurement - DORIS</title>
     {% endif %}
+
     <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
 
     <!-- Font Awesome -->
@@ -20,10 +21,13 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/theme.css') }}">
 
     <!-- Custom Theme -->
-    <!--        <link rel="stylesheet" href="{{ url_for('static', filename='css/new_order_form.css') }}">-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+
+    {% block custom_css_links %}{% endblock %}
+
 </head>
 
-<body class="bg-light">
+<body>
 <!-- For keyboard users -->
 <a class="sr-only sr-only-focusable skip-menu" href="#skip-header-target">Skip Header</a>
 <header id="global-header" role="banner">
@@ -121,14 +125,7 @@
                                         <span class="fas fa-language fa-lg" role="img"></span>
                                     </button>
                                 </li>
-                                <li>
-                                    <button class="no-btn-style" type="button" title="Search" data-toggle="collapse"
-                                            data-target="#global-search" aria-controls="global-search"
-                                            aria-expanded="false">
-                                        <span class="sr-only">Search</span>
-                                        <span class="fas fa-search fa-lg" role="img"></span>
-                                    </button>
-                                </li>
+
                             </ul>
 
                         </div>
@@ -153,21 +150,7 @@
             <div id="google_translate_element"></div>
         </div>
     </div>
-    <div class="container-fluid border-top collapse" id="global-search">
-        <form class="narrow py-2" aria-label="Search" role="search">
-            <div class="input-group">
-                <label class="sr-only" for="global-search-bar">Search</label>
-                <input class="form-control form-control-lg" id="global-search-bar" placeholder="Search">
-                <div class="input-group-btn">
-                    <button class="btn btn-primary btn-lg" type="button" title="Search">
-                        <span class="sr-only">Search</span>
-                        <span class="fas fa-arrow-right" role="img"></span>
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
-    <div class="container-fluid collapse d-lg-block px-0 border-lg-top" id="nav-primary">
+    <div class="container-fluid collapse d-lg-block px-0 border-lg-top border-bottom" id="nav-primary">
         <h2 class="sr-only">
             Primary Navigation
         </h2>
@@ -188,7 +171,27 @@
     <!--    </ul>-->
 
 </header>
-{% block content %}{% endblock %}
+{% block flash_message %}
+<div class="container-fluid">
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+    <div class="container-fluid">
+        <div id='flash_message_container'>
+            {% for category, msg in messages %}
+            <div class="alert alert-{{ category }}">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                {{ msg }}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    {% endwith %}
+</div>
+{% endblock %}
+<main id="skip-header-target" role="main">
+    {% block content %}{% endblock %}
+</main>
 
 <footer class="bg-black" id="global-footer" role="contentinfo">
 
@@ -397,15 +400,18 @@
             }, 'google_translate_element');
         }
 
-
-
-
 </script>
-
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 <!--    &lt;!&ndash; NYC template JS (RTL, search and language toggle, back to top)  &ndash;&gt;-->
 <script src="{{ url_for('static', filename='js/plugins/main.js') }}"></script>
+
+<!-- Prism.js -->
+<script src="{{ url_for('static', filename='js/validation.js') }}"></script>
+
+
+{% block scripts %}
+{% endblock %}
 
 </body>
 

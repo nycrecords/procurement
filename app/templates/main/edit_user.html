@@ -1,114 +1,111 @@
 <!-- This template is to initiate a new request. -->
 {% extends "base.html" %} {% block title %}Records Procurement - Edit User Information{% endblock title %}
 {% block custom_css_links %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/edit-user.css') }}">
 {% endblock custom_css_links %}
 {% block content %}
-    <div class="page-header">
+
+
+<article class="container overflow-hidden">
+    <div class="my-5">
+        <div class="medium my-4">
+            <h1>Edit User Information</h1>
+            <div>
+                <table id="requests" class="table table-bordered table-responsive-md text-center">
+                    <form name="edit_user" class="form-horizontal needs-validation" id="updateUser" method="POST"
+                          action=""
+                          novalidate>
+                        {{ form.hidden_tag() }}
+                        <tbody>
+                        <tr>
+                            <th scope="row" colspan="2">User Information</th>
+                        </tr>
+                        <tr>
+                            <th scope="row">User First Name</th>
+                            <td>{{ user.first_name }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">User Last Name</th>
+                            <td>{{user.last_name }}</td>
+                        </tr>
+                        {% if current_user.role == 'Administrator' %}
+                        <tr>
+                            <th scope="row">User Role</th>
+                            <td>{{ form.role(id="role", class="form-control", default=user.role) }}
+                                <div class="small">Edit role if applicable.</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            {% for message in form.division.errors %}
+                            <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
+                            {% endfor %}
+                            <th scope="row">User Division</th>
+                            <td>{% if current_user.role == "Administrator" %}
+                                {{ form.division(id="division", class="form-control", default=user.division) }}
+                                {% else %}
+                                {{ form.division(id="division", class="form-control", default=user.division,
+                                disabled=true )
+                                }}
+                                {% endif %}
+                                <div class="small">Edit division if applicable.</div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <th scope="row">User Role</th>
+                            <td>{{ user.role }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">User Division</th>
+                            <td>{{ user.division }}</td>
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <th scope="row">User Email</th>
+                            <td>{{ user.email }}</td>
+                        </tr>
+                        <tr>
+                            {% for message in form.phone.errors %}
+                            <!--                        <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>-->
+                            <p class="invalid-feedback">
+                                <span class="fas fa-exclamation-triangle"></span>
+                                <span class="invalid-description">Not a valid phone number value</span>
+                            </p>
+                            {% endfor %}
+
+                            <th scope="row">User Phone Number</th>
+                            <td>
+                                {{ form.phone(id="phone", class="form-control", type="text", value=user.phone,
+                                oninput="this.value = phoneFormat(this.value)" ) }}
+                                <div class="small">Edit phone number if applicable.</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            {% for message in form.address.errors %}
+                            <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
+                            {% endfor %}
+                            <th scope="row">User Address</th>
+                            <td>{{ form.address(id="address", class="form-control", type="text", value=user.address) }}
+                                <div class="small">Edit address if applicable.</div>
+                            </td>
+                        </tr>
+                        </tbody>
+                        <div class="form-group">
+                            <div>
+                                <button type="submit" class="btn btn-primary btn-small">Save Changes</button>
+                            </div>
+                        </div>
+                    </form>
+                </table>
+            </div>
+        </div>
         <!-- start of static form -->
-        <h1>Edit User Information</h1>
     </div>
-    <p><i><strong>User Information</strong></i></p>
+</article>
 
-    <br>
-
-    <form name="edit_user" class="form-horizontal" id="updateUser" method="POST" action="">
-        {{ form.hidden_tag() }}
-
-        <div class="form-group row">
-            <label class="col-sm-3 form-control-label">User First Name</label>
-            <div class="col-sm-5">
-                {{ user.first_name }}
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <label class="col-sm-3 form-control-label">User Last Name</label>
-            <div class="col-sm-5">
-                {{ user.last_name }}
-            </div>
-        </div>
-
-        {% if current_user.role == 'Administrator' %}
-            <div class="form-group row">
-                <label class="col-sm-3 form-control-label">User Role</label>
-                <div class="col-sm-5">
-                    {{ form.role(id="role", class="form-control", default=user.role) }}
-                    <div class="small">Edit role if applicable.</div>
-                </div>
-            </div>
-
-            <div class="form-group row">
-                {% for message in form.division.errors %}
-                    <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
-                {% endfor %}
-
-                <label class="col-sm-3 form-control-label">User Division</label>
-                <div class="col-sm-5">
-                    {% if current_user.role == "Administrator" %}
-                        {{ form.division(id="division", class="form-control", default=user.division) }}
-                    {% else %}
-                        {{ form.division(id="division", class="form-control", default=user.division, disabled=true ) }}
-                    {% endif %}
-                    <div class="small">Edit division if applicable.</div>
-                </div>
-            </div>
-        {% else %}
-            <div class="form-group row">
-                <label class="col-sm-3 form-control-label">User Role</label>
-                <div class="col-sm-5">
-                    {{ user.role }}
-                </div>
-            </div>
-
-            <div class="form-group row">
-                <label class="col-sm-3 form-control-label">User Division</label>
-                <div class="col-sm-5">
-                    {{ user.division }}
-                </div>
-            </div>
-        {% endif %}
-
-        <div class="form-group row">
-            <label class="col-sm-3 form-control-label">User Email</label>
-            <div class="col-sm-5">
-                {{ user.email }}
-            </div>
-        </div>
-
-        <div class="form-group row">
-            {% for message in form.phone.errors %}
-                <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
-            {% endfor %}
-
-            <label class="col-sm-3 form-control-label">User Phone Number</label>
-            <div class="col-sm-5">
-                {{ form.phone(id="phone", class="form-control", type="text", value=user.phone) }}
-                <div class="small">Edit phone number if applicable.</div>
-            </div>
-        </div>
-
-        <div class="form-group row">
-            {% for message in form.address.errors %}
-                <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
-            {% endfor %}
-
-            <label class="col-sm-3 form-control-label">User Address</label>
-            <div class="col-sm-5">
-                {{ form.address(id="address", class="form-control", type="text", value=user.address) }}
-                <div class="small">Edit address if applicable.</div>
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <div class="spacer">
-                <button type="submit" class="btn btn-primary btn-lg btn-block">Save Changes</button>
-            </div>
-        </div>
-
-    </form>
-    <!-- end of static form -->
+<!-- end of static form -->
 {% endblock %}
 
 {% block scripts %}
+<script src="./js/validation.js"></script>
 {% endblock %}

@@ -33,19 +33,19 @@
 
                 <thead>
                 <tr>
-                    <th class="col-sm-1" data-field="name" data-sortable="true">Name</th>
-                    <th class="col-sm-1" data-field="email" data-sortable="true">Email</th>
-                    <th class="col-sm-1">User Information</th>
-                    <th class="col-sm-1">Login Privileges</th>
+                    <th data-field="name" data-sortable="true">Name</th>
+                    <th data-field="email" data-sortable="true">Email</th>
+                    <th>User Information</th>
+                    <th>Login Privileges</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for user in users %}
                     <tr class="table-row">
-                        <td> {{ user.first_name }} {{ user.last_name }} </td>
-                        <td> {{ user.email }} </td>
-                        <td><a class="btn btn-primary btn-small" href="/manage_users/users/{{ user.id }}">Edit</a></td>
-                        <td>
+                        <td class="col-sm-1"> {{ user.first_name }} {{ user.last_name }} </td>
+                        <td class="col-sm-1"> {{ user.email }} </td>
+                        <td class="col-sm-1"><a class="btn btn-primary btn-small" href="/manage_users/users/{{ user.id }}">Edit</a></td>
+                        <td class="col-sm-1">
                             {% if user.is_active == True %}
                                 Enabled
                                 <a class="btn btn-danger btn-small pull-right"
@@ -66,11 +66,11 @@
 
 {% block scripts %}
     <script type="text/javascript"
+            src="{{ url_for('static', filename='js/plugins/tableExport.js') }}"></script>
+    <script type="text/javascript"
             src="{{ url_for('static', filename='js/plugins/bootstrap-table.min.js') }}"></script>
     <script type="text/javascript"
             src="{{ url_for('static', filename='js/plugins/bootstrap-table-filter-control.min.js') }}"></script>
     <script type="text/javascript"
             src="{{ url_for('static', filename='js/plugins/bootstrap-table-export.min.js') }}"></script>
-     <script type="text/javascript"
-            src="{{ url_for('static', filename='js/plugins/tableExport.js') }}"></script>
 {% endblock %}
