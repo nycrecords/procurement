@@ -53,13 +53,13 @@ class RequestForm(FlaskForm):
     request_vendor_dropdown = SelectField(u'Vendor Information*')
     request_vendor_name = StringField(u'Vendor Name', validators=[Length(5),
                                                                   Regexp("^[\w, '-.]+$", message=regexp_message),
-                                                                  Optional()])
+                                                                  DataRequired('Please enter the vendor name')])
     request_vendor_address = StringField(u'Vendor Address', validators=[Length(5),
                                                                         Regexp("^[\w, '-.]+$", message=regexp_message),
-                                                                        Optional()])
-    request_vendor_phone = PhoneNumberField(region='US', display_format='national')
+                                                                        DataRequired('Please enter the vendor address')])
+    request_vendor_phone = PhoneNumberField(region='US', display_format='national', validators=[DataRequired('Please enter the vendor phone')])
     request_vendor_fax = PhoneNumberField(region='US', display_format='national')
-    request_vendor_email = StringField(u'Email', validators=[Email(), Optional()])
+    request_vendor_email = StringField(u'Email', validators=[Email(), DataRequired('Please enter the vendor email')])
     request_vendor_taxid = StringField(u'Vendor Tax ID')
     request_vendor_mwbe = BooleanField(u'mwbe')
     submit = SubmitField(u'Submit Request')

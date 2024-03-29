@@ -103,3 +103,8 @@ Records Procurement - New Vendor
 </article>
 
 {% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/plugins/jquery.inputmask.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/request/new_vendor.js') }}"></script>
+{% endblock %}

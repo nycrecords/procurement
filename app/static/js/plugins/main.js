@@ -284,14 +284,3 @@ function phoneFormat(input) {//returns (###) ###-####
     return input;
 }
 
- ////////////////////////////////////////
-// NumberWithDollar formation mask
-////////////////////////////////////////
-function numberWithDollarFormat(input) {
-   return input.toLocaleString("en-US", { style: "currency", currency: "USD" });
-}
-
-function formatCurrency(number) {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-}
-

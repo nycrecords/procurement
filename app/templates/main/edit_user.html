@@ -27,7 +27,8 @@
                             <td>{{user.last_name }}</td>
                         </tr>
                         {% if current_user.role == 'Administrator'%}
-                        {% if current_user.first_name == user.first_name and current_user.last_name == user.last_name %}
+<!--                        TODO: determine if the user should be able to change their own role(admin)-->
+                        {% if current_user.email == user.email %}
                         <tr>
                             <th scope="row">User Role</th>
                             <td>{{ user.role }}</td>
@@ -77,8 +78,7 @@
 <!--                                    <span class="invalid-description">Required Field</span>-->
 <!--                                    <span class="invalid-instruction">Please enter the vendor email</span>-->
 <!--                                </p>-->
-                                {{ form.phone(id="phone", class="form-control", type="text", value=user.phone,
-                                oninput="this.value = phoneFormat(this.value)" ) }}
+                                {{ form.phone(id="phone", class="form-control", type="text", value=user.phone)}}
                                 <div class="small">Edit phone number if applicable.</div>
                             </td>
                         </tr>
@@ -109,5 +109,6 @@
 {% endblock %}
 
 {% block scripts %}
-
+<script src="{{ url_for('static', filename='js/plugins/jquery.inputmask.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/request/edit_user.js') }}"></script>
 {% endblock %}
