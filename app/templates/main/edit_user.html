@@ -12,9 +12,7 @@
             <h1>Edit User Information</h1>
             <div>
                 <table id="requests" class="table table-bordered table-responsive-md text-center">
-                    <form name="edit_user" class="form-horizontal needs-validation" id="updateUser" method="POST"
-                          action=""
-                          novalidate>
+                    <form name="edit_user" class="form-horizontal" id="updateUser" method="POST" action="" novalidate>
                         {{ form.hidden_tag() }}
                         <tbody>
                         <tr>
@@ -28,13 +26,20 @@
                             <th scope="row">User Last Name</th>
                             <td>{{user.last_name }}</td>
                         </tr>
-                        {% if current_user.role == 'Administrator' %}
+                        {% if current_user.role == 'Administrator'%}
+                        {% if current_user.first_name == user.first_name and current_user.last_name == user.last_name %}
+                        <tr>
+                            <th scope="row">User Role</th>
+                            <td>{{ user.role }}</td>
+                        </tr>
+                        {% else %}
                         <tr>
                             <th scope="row">User Role</th>
                             <td>{{ form.role(id="role", class="form-control", default=user.role) }}
                                 <div class="small">Edit role if applicable.</div>
                             </td>
                         </tr>
+                        {% endif %}
                         <tr>
                             {% for message in form.division.errors %}
                             <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
@@ -65,16 +70,13 @@
                             <td>{{ user.email }}</td>
                         </tr>
                         <tr>
-                            {% for message in form.phone.errors %}
-                            <!--                        <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>-->
-                            <p class="invalid-feedback">
-                                <span class="fas fa-exclamation-triangle"></span>
-                                <span class="invalid-description">Not a valid phone number value</span>
-                            </p>
-                            {% endfor %}
-
                             <th scope="row">User Phone Number</th>
                             <td>
+<!--                                <p class="invalid-feedback">-->
+<!--                                    <span class="fas fa-exclamation-triangle"></span>-->
+<!--                                    <span class="invalid-description">Required Field</span>-->
+<!--                                    <span class="invalid-instruction">Please enter the vendor email</span>-->
+<!--                                </p>-->
                                 {{ form.phone(id="phone", class="form-control", type="text", value=user.phone,
                                 oninput="this.value = phoneFormat(this.value)" ) }}
                                 <div class="small">Edit phone number if applicable.</div>
@@ -107,5 +109,5 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="./js/validation.js"></script>
+
 {% endblock %}

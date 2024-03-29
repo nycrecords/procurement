@@ -287,8 +287,11 @@ function phoneFormat(input) {//returns (###) ###-####
  ////////////////////////////////////////
 // NumberWithDollar formation mask
 ////////////////////////////////////////
+function numberWithDollarFormat(input) {
+   return input.toLocaleString("en-US", { style: "currency", currency: "USD" });
+}
 
- function formatNumberWithDollar(input) {
-    return `$${amount.toFixed(2)}`;
+function formatCurrency(number) {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 }
 

@@ -2,12 +2,12 @@
 {% block title %}
 Records Procurement - New Request
 {% endblock title %}
+
 {% block custom_css_links %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/new-request.css') }}">
 {% endblock custom_css_links %}
+
 {% block content %}
-
-
 <article class="container overflow-hidden">
     <div class="my-5">
         <div class="medium">
@@ -19,13 +19,13 @@ Records Procurement - New Request
             var year = currentDate.getFullYear();
             document.write("<b>" + "Date: " + month + "/" + day + "/" + year + "</b>")
 
-
             </script>
         </div>
+
         <div class="medium my-4">
             <h3><i>Purchase Information</i></h3>
-            <p class="text-right text-danger fs-md" aria-hidden="true">* Required fields</p>
-            <form name="newrequest" class="form-horizontal" id="submitRequest" method="POST" action="" novalidate>
+            <p class="text-right text-danger fs-md" aria-hidden="true">* Required Fields</p>
+            <form name="newrequest" class="needs-validation form-horizontal" id="submitRequest" method="POST" action="" novalidate>
                 {{ form.hidden_tag() }}
 
                 {% if current_user.is_authenticated %}
@@ -67,56 +67,61 @@ Records Procurement - New Request
                 {% endif %}
 
                 <div class="form-group">
-                    {% for message in form.item.errors %}
-                    <div class="alert alert-danger" id="missing_item">{{ message }}</div>
-                    {% endfor %}
-
                     <label for="item" class=" form-control-label">Item
                         <span class="fs-md text-danger" aria-hidden="true">*</span>
                     </label>
                     <div>
+                        <p class="invalid-feedback">
+                            <span class="fas fa-exclamation-triangle"></span>
+                            <span class="invalid-description">Required Field</span>
+                            <span class="invalid-instruction">Please enter the item</span>
+                        </p>
                         {{ form.item(id="item", class="form-control", rows="2", maxlength="500", type="text") }}
                         <div class="small">Please insert FULL description</div>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    {% for message in form.quantity.errors %}
-                    <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
-                    {% endfor %}
-
                     <label for="quantity" class="form-control-label">Quantity
                         <span class="fs-md text-danger" aria-hidden="true">*</span></label>
                     <div>
+                        <p class="invalid-feedback">
+                            <span class="fas fa-exclamation-triangle"></span>
+                            <span class="invalid-description">Required Field</span>
+                            <span class="invalid-instruction">Please enter the quantity</span>
+                        </p>
                         {{ form.quantity(id="quantity", class="form-control") }}
                         <div class="small">i.e. Quantity of boxes, cases, singles</div>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    {% for message in form.unit_price.errors %}
-                    <div class="alert alert-danger" id="missing_unit_price">{{ message }}</div>
-                    {% endfor %}
 
                     <label for="unit_price" class="form-control-label ">Price per Item</label>
                     <span class="fs-md text-danger" aria-hidden="true">*</span></label>
                     <div>
                         <div class="input-group">
+                            <p class="invalid-feedback">
+                                <span class="fas fa-exclamation-triangle"></span>
+                                <span class="invalid-description">Required Field</span>
+                                <span class="invalid-instruction">Please enter the price per item</span>
+                            </p>
                             <span class="input-group-addon">$</span>
-                            {{ form.unit_price(id="unit_price", class="form-control") }}
+                            {{ form.unit_price(id="unit_price", class="form-control", type="text")}}
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    {% for message in form.total_cost.errors %}
-                    <div class="alert alert-danger" id="missing_total_cost">{{ message }}</div>
-                    {% endfor %}
-
                     <label for="total_cost" class="form-control-label">Total</label>
                     <span class="fs-md text-danger" aria-hidden="true">*</span></label>
                     <div>
                         <div class="input-group">
+                            <p class="invalid-feedback">
+                                <span class="fas fa-exclamation-triangle"></span>
+                                <span class="invalid-description">Required Field</span>
+                                <span class="invalid-instruction">Please enter the total price</span>
+                            </p>
                             <span class="input-group-addon">$</span>
                             {{ form.total_cost(id="total_cost", class="form-control") }}
                         </div>
@@ -125,13 +130,15 @@ Records Procurement - New Request
                 </div>
 
                 <div class="form-group">
-                    {% for message in form.funding_source.errors %}
-                    <div class="alert alert-danger" id="missing_funding_source">{{ message }}</div>
-                    {% endfor %}
 
                     <label for="funding_source" class="form-control-label">Funding Source</label>
                     <span class="fs-md text-danger" aria-hidden="true">*</span></label>
                     <div>
+                        <p class="invalid-feedback">
+                            <span class="fas fa-exclamation-triangle"></span>
+                            <span class="invalid-description">Required Field</span>
+                            <span class="invalid-instruction">Please select the funding source</span>
+                        </p>
                         {{ form.funding_source(id="funding_source", class="form-control") }}
                     </div>
                 </div>
@@ -159,12 +166,14 @@ Records Procurement - New Request
                 </div>
 
                 <div class="form-group">
-                    {% for message in form.justification.errors %}
-                    <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
-                    {% endfor %}
                     <label for="justification" class="form-control-label">Justification</label>
                     <span class="fs-md text-danger" aria-hidden="true">*</span></label>
                     <div>
+                        <p class="invalid-feedback">
+                            <span class="fas fa-exclamation-triangle"></span>
+                            <span class="invalid-description">Required Field</span>
+                            <span class="invalid-instruction">You must enter a justification for your request</span>
+                        </p>
                         {{ form.justification(id="justification", rows="3", class="form-control", maxlength="500") }}
                     </div>
                 </div>
@@ -182,67 +191,79 @@ Records Procurement - New Request
                 </div>
 
                 <div class="form-group">
-                    {% for message in form.request_vendor_name.errors %}
-                    <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
-                    {% endfor %}
                     <label for="request_vendor_name" class="form-control-label">Vendor Name</label>
                     <span class="fs-md text-danger" aria-hidden="true">*</span></label>
                     <div>
+                        <p class="invalid-feedback">
+                            <span class="fas fa-exclamation-triangle"></span>
+                            <span class="invalid-description">Required Field</span>
+                            <span class="invalid-instruction">Please enter the vendor name</span>
+                        </p>
                         {{ form.request_vendor_name(id="vendor_name", class="form-control", maxlength="100") }}
                     </div>
                 </div>
 
                 <div class="form-group">
-                    {% for message in form.request_vendor_address.errors %}
-                    <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
-                    {% endfor %}
                     <label for="request_vendor_address" class="form-control-label">Vendor Address</label>
                     <span class="fs-md text-danger" aria-hidden="true">*</span></label>
                     <div>
+                        <p class="invalid-feedback">
+                            <span class="fas fa-exclamation-triangle"></span>
+                            <span class="invalid-description">Required Field</span>
+                            <span class="invalid-instruction">Please enter the vendor address</span>
+                        </p>
                         {{ form.request_vendor_address(id="vendor_address", class="form-control", maxlength="100") }}
                     </div>
                 </div>
 
                 <div class="form-group">
-                    {% for message in form.request_vendor_phone.errors %}
-                    <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
-                    {% endfor %}
                     <label for="request_vendor_phone" class="form-control-label">Vendor Phone</label>
                     <span class="fs-md text-danger" aria-hidden="true">*</span></label>
                     <div>
+                        <p class="invalid-feedback">
+                            <span class="fas fa-exclamation-triangle"></span>
+                            <span class="invalid-description">Required Field</span>
+                            <span class="invalid-instruction">Please enter the vendor phone</span>
+                        </p>
                         {{ form.request_vendor_phone(id="vendor_phone", class="form-control", type="tel") }}
                     </div>
                 </div>
 
                 <div class="form-group">
-                    {% for message in form.request_vendor_fax.errors %}
-                    <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
-                    {% endfor %}
                     <label for="request_vendor_fax" class="form-control-label">Vendor Fax</label>
                     <span class="fs-md text-danger" aria-hidden="true">*</span></label>
                     <div>
+                        <p class="invalid-feedback">
+                            <span class="fas fa-exclamation-triangle"></span>
+                            <span class="invalid-description">Required Field</span>
+                            <span class="invalid-instruction">Please enter the vendor fax</span>
+                        </p>
                         {{ form.request_vendor_fax(id="vendor_fax", class="form-control", type="tel") }}
                     </div>
                 </div>
 
                 <div class="form-group">
-                    {% for message in form.request_vendor_email.errors %}
-                    <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
-                    {% endfor %}
                     <label for="request_vendor_email" class="form-control-label">Vendor Email</label>
                     <span class="fs-md text-danger" aria-hidden="true">*</span></label>
                     <div>
+                        <p class="invalid-feedback">
+                            <span class="fas fa-exclamation-triangle"></span>
+                            <span class="invalid-description">Required Field</span>
+                            <span class="invalid-instruction">Please enter the vendor email</span>
+                        </p>
                         {{ form.request_vendor_email(id="vendor_email", class="form-control", maxlength="100") }}
                     </div>
                 </div>
 
                 <div class="form-group">
-                    {% for message in form.request_vendor_taxid.errors %}
-                    <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
-                    {% endfor %}
                     <label for="request_vendor_taxid" class="form-control-label">Vendor/Tax ID</label>
                     <span class="fs-md text-danger" aria-hidden="true">*</span></label>
                     <div>
+                        <p class="invalid-feedback">
+                            <span class="fas fa-exclamation-triangle"></span>
+                            <span class="invalid-description">Required Field</span>
+                            <span class="invalid-instruction">Please enter the vendor ID or tax IDne</span>
+                        </p>
                         {{ form.request_vendor_taxid(id="vendor_taxid", class="form-control", maxlength="100") }}
                     </div>
                 </div>
@@ -338,7 +359,6 @@ Records Procurement - New Request
                 });
             });
         });
-
 
 </script>
 
