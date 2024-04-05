@@ -1,17 +1,16 @@
 <!-- This template is to initiate a new request. -->
 {% extends "base.html" %} {% block title %}Records Procurement - Edit User Information{% endblock title %}
 {% block custom_css_links %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/edit-user.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/edit_user.css') }}">
 {% endblock custom_css_links %}
 {% block content %}
-
 
 <article class="container overflow-hidden">
     <div class="my-5">
         <div class="medium my-4">
             <h1>Edit User Information</h1>
             <div>
-                <table id="requests" class="table table-bordered table-responsive-md text-center">
+                <table id="requests" class="table table-bordered table-responsive-md text-center table-striped">
                     <form name="edit_user" class="form-horizontal" id="updateUser" method="POST" action="" novalidate>
                         {{ form.hidden_tag() }}
                         <tbody>

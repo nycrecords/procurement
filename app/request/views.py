@@ -3,6 +3,7 @@
 
    :synopsis: Provides routes for managing a specific request
 """
+from decimal import Decimal
 import datetime
 import os
 from flask import (
@@ -71,8 +72,8 @@ def new_request():
             date_submitted=date_submitted,
             item=form.item.data,
             quantity=form.quantity.data,
-            unit_price=form.unit_price.data,
-            total_cost=form.total_cost.data,
+            unit_price=Decimal(form.unit_price.data.strip('$')),
+            total_cost=Decimal(form.total_cost.data.strip('$')),
             funding_source=form.funding_source.data,
             funding_source_description=None,
             grant_name=None,
@@ -88,20 +89,15 @@ def new_request():
         elif new_request.funding_source == "Other":
             new_request.funding_source_description = form.funding_source_description.data
 
-        request_vendor_name = str(form.request_vendor_name.data)
-        request_vendor_phone = str(form.request_vendor_phone.data)
-        request_vendor_fax = str(form.request_vendor_fax.data)
-        request_vendor_mwbe = form.request_vendor_mwbe.data
-
         vendor_form = flask_request.form["request_vendor_dropdown"]
         if vendor_form == "default":
-            new_vendor = Vendor(name=request_vendor_name,
+            new_vendor = Vendor(name=form.request_vendor_name.data,
                                 address=form.request_vendor_address.data,
-                                phone=request_vendor_phone,
-                                fax=request_vendor_fax,
+                                phone=form.request_vendor_phone.data,
+                                fax=form.request_vendor_fax.data,
                                 email=form.request_vendor_email.data,
                                 tax_id=form.request_vendor_taxid.data,
-                                mwbe=request_vendor_mwbe)
+                                mwbe=form.request_vendor_mwbe.data)
             db.session.add(new_vendor)
             db.session.commit()
             new_request.set_vendor_id(new_vendor.id)
@@ -243,8 +239,8 @@ def edit_request(request_id):
     elif flask_request.method == 'POST' and form.validate_on_submit():
         request.item = form.item.data
         request.quantity = form.quantity.data
-        request.unit_price = form.unit_price.data
-        request.total_cost = form.total_cost.data
+        request.unit_price = Decimal(form.unit_price.data.strip('$'))
+        request.total_cost = Decimal(form.total_cost.data.strip('$'))
         request.funding_source = form.funding_source.data
         request.justification = form.justification.data
 

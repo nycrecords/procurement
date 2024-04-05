@@ -39,9 +39,9 @@ class RequestForm(FlaskForm):
         DataRequired('Please enter the item')])
     quantity = IntegerField(u'Quantity*', validators=[
         DataRequired('Please enter the quantity (only numbers are allowed)')])
-    unit_price = DecimalField(u'Price per item*', validators=[
+    unit_price = StringField(u'Price per item*', validators=[
         DataRequired('Please enter the price per item (only numbers are allowed)')])
-    total_cost = DecimalField(u'Total price*', validators=[
+    total_cost = StringField(u'Total price*', validators=[
         DataRequired('Please enter the total price (only numbers are allowed)')])
     funding_source = SelectField(u'Funding*', choices=funding, validators=[
         DataRequired('Please select the funding source')])
@@ -53,13 +53,13 @@ class RequestForm(FlaskForm):
     request_vendor_dropdown = SelectField(u'Vendor Information*')
     request_vendor_name = StringField(u'Vendor Name', validators=[Length(5),
                                                                   Regexp("^[\w, '-.]+$", message=regexp_message),
-                                                                  DataRequired('Please enter the vendor name')])
+                                                                  Optional()])
     request_vendor_address = StringField(u'Vendor Address', validators=[Length(5),
                                                                         Regexp("^[\w, '-.]+$", message=regexp_message),
-                                                                        DataRequired('Please enter the vendor address')])
-    request_vendor_phone = PhoneNumberField(region='US', display_format='national', validators=[DataRequired('Please enter the vendor phone')])
-    request_vendor_fax = PhoneNumberField(region='US', display_format='national')
-    request_vendor_email = StringField(u'Email', validators=[Email(), DataRequired('Please enter the vendor email')])
+                                                                        Optional()])
+    request_vendor_phone = StringField(u'Vendor Phone')
+    request_vendor_fax = StringField(u'Vendor Fax')
+    request_vendor_email = StringField(u'Email', validators=[Email(), Optional()])
     request_vendor_taxid = StringField(u'Vendor Tax ID')
     request_vendor_mwbe = BooleanField(u'mwbe')
     submit = SubmitField(u'Submit Request')
@@ -94,9 +94,7 @@ class RequestForm(FlaskForm):
         if self.request_vendor_dropdown.data == "default":
             # check if user filled out the vendor fields
             if not (self.request_vendor_name.data and self.request_vendor_address.data and
-                    self.request_vendor_address.data and self.request_vendor_phone.data and
-                    self.request_vendor_fax.data and self.request_vendor_email.data and
-                    self.request_vendor_taxid.data):
+                    self.request_vendor_phone.data and self.request_vendor_email.data):
                 self.request_vendor_dropdown.errors.append("You must fill out all fields for Vendor Information")
                 return False
 

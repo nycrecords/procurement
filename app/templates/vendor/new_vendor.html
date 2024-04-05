@@ -4,16 +4,16 @@ Records Procurement - New Vendor
 {% endblock title %}
 
 {% block custom_css_links %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/new-vendor.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/new_vendor.css') }}">
 {% endblock custom_css_links %}
 
 {% block content %}
 <article class="container overflow-hidden">
     <div class="my-5">
         <div class="medium">
-            <h1>New Vendor</h1>
-        </div>
-        <div class="medium my-4">
+            <div class="form-group">
+                <h1>New Vendor</h1>
+            </div>
             <h3><i>Vendor Information</i></h3>
             <p class="text-right text-danger fs-md" aria-hidden="true">* Required Fields</p>
             <form name="edit_vendor" class="needs-validation form-horizontal" id="editVendor" method="POST" action=""

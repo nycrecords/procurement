@@ -10,14 +10,13 @@ Records Procurement - View Request
 <article class="container overflow-hidden">
     <div class="my-5">
         <div class="medium my-4">
-            <div>
+            <div class="form-group">
                 <h1>{{ current_user.first_name}} {{ current_user.last_name }}</h1>
                 <a class="btn btn-primary btn-small" href="{{ url_for('main.edit_profile') }}">Edit
                     Information</a>
             </div>
-            <br>
             <div>
-                <table id="requests" class="table table-bordered table-responsive-md text-center">
+                <table id="requests" class="table table-bordered table-responsive-md text-center table-striped">
                     <colgroup>
                         <col class="col-xs-4">
                         <col class="col-xs-8">
@@ -64,5 +63,5 @@ Records Procurement - View Request
 {% endblock %}
 
 {% block scripts %}
-<script src="./js/responsive-table.js"></script>
+<script src="{{ url_for('static', filename='js/responsive-table.js')}}"></script>
 {% endblock %}
