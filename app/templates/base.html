@@ -77,10 +77,14 @@
 <!-- Prism.js -->
 <script src="{{ url_for('static', filename='js/validation.js') }}"></script>
 
+<!-- Session Timeout -->
+<script src="{{ url_for('static', filename='js/plugins/session-timeout.min.js') }}"></script>
+
 
 {% block scripts %}
 {% endblock %}
 
 </body>
-
+{% include 'auth/concurrent_session_modal.html' %}
+{% include 'base.js.html' %}
 </html>

@@ -12,11 +12,11 @@ Records Procurement - Edit Request
         <div class="medium">
             <h1>Edit Request</h1>
             <script type="text/javascript">
-            var currentDate = new Date();
-            var day = currentDate.getDate();
-            var month = currentDate.getMonth() + 1;
-            var year = currentDate.getFullYear();
-            document.write("<b>" + "Date: " + month + "/" + day + "/" + year + "</b>")
+                var currentDate = new Date();
+                var day = currentDate.getDate();
+                var month = currentDate.getMonth() + 1;
+                var year = currentDate.getFullYear();
+                document.write("<b>" + "Date: " + month + "/" + day + "/" + year + "</b>")
 
 
             </script>
@@ -24,7 +24,7 @@ Records Procurement - Edit Request
         <div class="medium my-4">
             <h3><i>Purchase Information</i></h3>
             <p class="text-right text-danger fs-md" aria-hidden="true">* Required Fields</p>
-            <form name="new_request" class="needs-validation form-horizontal" id="submitRequest" method="POST"
+            <form name="request_form_edit" class="needs-validation form-horizontal" id="request_form_edit" method="POST"
                   action="">
                 {{ form.hidden_tag() }}
 
@@ -139,10 +139,10 @@ Records Procurement - Edit Request
                 </div>
 
                 <div class="form-group">
-                   <label for="funding_source" class="form-control-label">
-                       Funding Source
-                       <span class="fs-md text-danger" aria-hidden="true">*</span>
-                   </label>
+                    <label for="funding_source" class="form-control-label">
+                        Funding Source
+                        <span class="fs-md text-danger" aria-hidden="true">*</span>
+                    </label>
                     <div>
                         <p class="invalid-feedback">
                             <span class="fas fa-exclamation-triangle"></span>

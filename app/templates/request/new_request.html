@@ -24,7 +24,8 @@ Records Procurement - New Request
             </div>
             <h3><i>Purchase Information</i></h3>
             <p class="text-right text-danger fs-md" aria-hidden="true">* Required Fields</p>
-            <form name="newrequest" class="needs-validation form-horizontal" id="submitRequest" method="POST" action=""
+            <form name="request_form_new" class="needs-validation form-horizontal" id="request_form_new" method="POST"
+                  action=""
                   novalidate>
                 {{ form.hidden_tag() }}
 
@@ -134,6 +135,9 @@ Records Procurement - New Request
                 </div>
 
                 <div class="form-group">
+                    {% for message in form.funding_source.errors %}
+                    <div class="alert alert-danger" id="missing_funding_source">{{ message }}</div>
+                    {% endfor %}
                     <label for="funding_source" class="form-control-label">
                         Funding Source
                         <span class="fs-md text-danger" aria-hidden="true">*</span>
@@ -153,10 +157,10 @@ Records Procurement - New Request
                         Specify
                         <span class="fs-md text-danger" aria-hidden="true">*</span>
                     </label>
-                     <div class="col-sm-12">
-                    {{ form.funding_source_description(id="funding_source_description", class="form-control",
-                    text="text", maxlength="100") }}
-                         </div>
+                    <div class="col-sm-12">
+                        {{ form.funding_source_description(id="funding_source_description", class="form-control",
+                        text="text", maxlength="100") }}
+                    </div>
                 </div>
                 <div id="grant_name" class="form-group required" style="display:None;">
                     <label for="grant_name" class="col-sm-offset-1 col-sm-3 form-control-label">

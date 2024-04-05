@@ -14,7 +14,8 @@ from flask import (
 from flask_login import login_required, current_user
 from app import db
 from app.models import Vendor, User
-from app.vendor.forms import NewVendorForm, EditVendorForm
+# from app.vendor.forms import NewVendorForm, EditVendorForm
+from app.vendor.forms import VendorForm
 from app.vendor import vendor as vendor
 from app.errors import flash_errors
 from app.constants import roles
@@ -35,7 +36,7 @@ def display_vendors():
 @login_required
 def new_vendor():
     """Return page to create a new vendor."""
-    form = NewVendorForm()
+    form = VendorForm()
     if request.method == "POST" and form.validate_on_submit():
         vendor_name = str(form.vendor_name.data)
         vendor_address = form.vendor_address.data
@@ -76,7 +77,7 @@ def view_vendor(vendor_id):
 def edit_vendor(vendor_id):
     """Return page to edit vendor information."""
     vendor = Vendor.query.filter_by(id=vendor_id).first()
-    form = EditVendorForm()
+    form = VendorForm()
     if request.method == "POST" and form.validate_on_submit():
         vendor.name = str(form.vendor_name.data)
         vendor.address = form.vendor_address.data
