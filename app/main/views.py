@@ -72,6 +72,8 @@ def jsonify_fields():
     if request.args['vendor'] == "default":
         return jsonify("")
     v = Vendor.query.filter_by(id=int(request.args['vendor'])).first()
+    if not v:
+        return jsonify("Vendor not found"), 404
     return jsonify(v.name, v.address, v.phone, v.fax, v.email, v.tax_id, v.mwbe)
 
 

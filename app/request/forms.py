@@ -8,6 +8,7 @@ from wtforms import StringField, SelectField, TextAreaField, BooleanField, Hidde
     IntegerField
 from flask_wtf.file import FileField
 from wtforms.validators import DataRequired, Length, Email, Regexp, Optional
+from app.models import Vendor
 from wtforms_alchemy import PhoneNumberField
 from app.constants import status
 import re
@@ -68,7 +69,6 @@ class RequestForm(FlaskForm):
         """Fill the vendor dropdown with values from the database upon initialization"""
         super(RequestForm, self).__init__(*args, **kwargs)
 
-        from app.models import Vendor
         vendors = Vendor.query.filter_by(enabled=True).order_by(Vendor.name).all()
         vendor_dropdown = [
             ('default', 'Select Vendor or Enter New Vendor Below')
@@ -97,7 +97,6 @@ class RequestForm(FlaskForm):
                     self.request_vendor_phone.data and self.request_vendor_email.data):
                 self.request_vendor_dropdown.errors.append("You must fill out all fields for Vendor Information")
                 return False
-
         return True
 
 

@@ -86,6 +86,9 @@ $(document).ready(function () {
                 vendor_email.attr("disabled", dis);
                 vendor_taxid.attr("disabled", dis);
                 vendor_mwbe.attr("disabled", dis);
+            },
+            error: function(error) {
+                alert(error.responseJSON);
             }
         });
     });
