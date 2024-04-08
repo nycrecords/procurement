@@ -114,7 +114,7 @@ def disable(id):
     user = User.query.get_or_404(id)
     user.is_active = False
     db.session.commit()
-    flash('User login privileges have been disabled.')
+    flash('User login privileges have been disabled.', category="success")
     return redirect(url_for('main.manage_users'))
 
 
@@ -128,7 +128,7 @@ def enable(id):
     user = User.query.get_or_404(id)
     user.is_active = True
     db.session.commit()
-    flash('User login privileges have been enabled.')
+    flash('User login privileges have been enabled.', category="success")
     return redirect(url_for('main.manage_users'))
 
 

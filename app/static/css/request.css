@@ -43,6 +43,10 @@ button.close {
     opacity: .2;
 }
 
+button.close:hover {
+    opacity: inherit;
+}
+
 .modal-header {
     display: inline;
 }

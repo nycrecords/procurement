@@ -73,7 +73,7 @@ def saml():
     else:
         flash(
             "Oops! Something went wrong. Please try to perform your action again later.",
-            category="warning",
+            category="warning"
         )
         return redirect(url_for("main.index"))
 
@@ -101,7 +101,7 @@ def local_login():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data, is_active=True).one_or_none()
         if user is None:
-            flash('Invalid Email Address.', 'error')
+            flash('Invalid Email Address.', category='danger')
         else:
             if user.division:
                 login_user(user)

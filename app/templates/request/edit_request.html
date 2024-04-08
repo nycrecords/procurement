@@ -139,6 +139,9 @@ Records Procurement - Edit Request
                 </div>
 
                 <div class="form-group">
+                    {% for message in form.funding_source.errors %}
+                    <div class="alert alert-danger" id="missing_funding_source">{{ message }}</div>
+                    {% endfor %}
                     <label for="funding_source" class="form-control-label">
                         Funding Source
                         <span class="fs-md text-danger" aria-hidden="true">*</span>
@@ -153,27 +156,34 @@ Records Procurement - Edit Request
                     </div>
                 </div>
 
-                <div id="funding_source_description" class="form-group row" style="display: None;">
-                    <label for="funding_source_description" class="col-sm-offset-1 col-sm-3 form-control-label">
-                        If Other, specify:</label>
-                    <div>
+                <div id="funding_source_description" class="form-group" style="display: None;">
+                    <label for="funding_source_description" class="col-sm-offset-1 col-sm-5 form-control-label">
+                        If Other, specify
+                        <span class="fs-md text-danger" aria-hidden="true">*</span>
+                    </label>
+
+                    <div class="col-sm-12">
                         {{ form.funding_source_description(id="funding_source_description", class="form-control",
                         text="text", maxlength="100", value=request.funding_source_description or '') }}
                     </div>
                 </div>
 
-                <div id="grant_name" class="form-group row required" style="display: None;">
-                    <label for="grant_name" class="col-sm-offset-1 form-control-label">
-                        Grant Name:</label>
+                <div id="grant_name" class="form-group required" style="display: None;">
+                    <label for="grant_name" class="col-sm-offset-1 col-sm-3 form-control-label">
+                        Grant Name
+                        <span class="fs-md text-danger" aria-hidden="true">*</span>
+                    </label>
                     <div class="col-sm-5">
                         {{ form.grant_name(id="grant_name", class="form-control", text="text", maxlength="100",
                         value=request.grant_name or '') }}
                     </div>
                 </div>
 
-                <div id="project_name" class="form-group row required" style="display: None;">
-                    <label for="project_name" class="col-sm-offset-1 form-control-label">
-                        Project Name:</label>
+                <div id="project_name" class="form-group required" style="display: None;">
+                    <label for="project_name" class="col-sm-offset-1 col-sm-3 form-control-label">
+                        Project Name
+                        <span class="fs-md text-danger" aria-hidden="true">*</span>
+                    </label>
                     <div class="col-sm-5">
                         {{ form.project_name(id="project_name", class="form-control", text="text", maxlength="100",
                         value=request.project_name or '') }}

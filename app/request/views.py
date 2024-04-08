@@ -114,7 +114,7 @@ def new_request():
                    user=current_user,
                    request=new_request)
 
-        flash("Request was successfully created!")
+        flash("Request was successfully created!", category="success")
         return redirect(url_for('request.display_request', request_id=new_request.id))
 
     else:
@@ -277,7 +277,7 @@ def edit_request(request_id):
         else:
             request.set_vendor_id(int(vendor_form))
         db.session.commit()
-        flash("Request was successfully updated!")
+        flash("Request was successfully updated!", category="success")
 
         return redirect(url_for('request.display_request', request_id=request_id))
 
@@ -295,7 +295,7 @@ def edit_request(request_id):
 def allowed_file(filename):
     """Determines if filename is one of the allowed file types"""
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in mimetypes.ALLOWED_EXTENSIONS
+        filename.rsplit('.', 1)[1].lower() in mimetypes.ALLOWED_EXTENSIONS
 
 
 @requests.route('/add/<request_id>', methods=['GET', 'POST'])

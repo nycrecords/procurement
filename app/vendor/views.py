@@ -55,7 +55,7 @@ def new_vendor():
                             )
         db.session.add(new_vendor)
         db.session.commit()
-        flash("Vendor was successfully added!")
+        flash("Vendor was successfully added!", "success")
         return redirect(url_for('vendor.display_vendors'))
 
     else:
@@ -87,7 +87,7 @@ def edit_vendor(vendor_id):
         vendor.tax_id = form.vendor_tax_id.data
         vendor.mwbe = form.vendor_mwbe.data
         db.session.commit()
-        flash("Vendor information was successfully updated!")
+        flash("Vendor information was successfully updated!", category="success")
         return redirect(url_for('vendor.display_vendors'))
 
     else:
