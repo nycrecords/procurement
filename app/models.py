@@ -10,7 +10,7 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm.attributes import set_attribute
 
 from app import db
-from app.constants import division, roles, auth_event_type
+from app.constants import division, roles, auth_event_type, status
 
 
 class User(UserMixin, db.Model):
@@ -38,7 +38,7 @@ class User(UserMixin, db.Model):
     role = db.Column(db.String(100), default=roles.REG)
 
     def __init__(self, **kwargs):
-        db.Model.__init__(self,  **kwargs)
+        db.Model.__init__(self, **kwargs)
 
     def get_id(self):
         return str(self.guid)
@@ -213,3 +213,46 @@ class AuthEvent(db.Model):
         self.timestamp = timestamp or datetime.now(timezone('US/Eastern'))
 
 
+class StatusEvents(db.Model):
+    """
+    Define the Status Events class with the following columns and relationships:
+    id - an integer that is the primary key of an Events
+    previous_value = a string containing the previous value of the event
+    new_value = a string containing the new value of the event
+    request_id = a foreign key that links to the request_id of the request of the event
+    user_id = a foreign key that links to the user_id of the person who updated the request
+    timestamp - a datetime that keeps track of what time an event was performed
+    """
+
+    __tablename__ = 'status_events'
+    id = db.Column(db.Integer, primary_key=True)
+    previous_value = db.Column(db.Enum(status.NDA,
+                                       status.NCA,
+                                       status.APR,
+                                       status.DEN,
+                                       status.RES,
+                                       status.HOLD, name="status"))
+    new_value = db.Column(db.Enum(status.NDA,
+                                       status.NCA,
+                                       status.APR,
+                                       status.DEN,
+                                       status.RES,
+                                       status.HOLD, name="status"))
+    request_id = db.Column(db.String(11), db.ForeignKey('requests.id'))
+    user_id = db.Column(db.String(32), db.ForeignKey('users.id'))
+    timestamp = db.Column(db.DateTime, default=datetime)
+
+    def __init__(self,
+                 previous_value=None,
+                 new_value=None,
+                 request_id=None,
+                 user_id=None,
+                 timestamp=None):
+        self.previous_value = previous_value
+        self.new_value = new_value
+        self.request_id = request_id
+        self.user_id = user_id
+        self.timestamp = timestamp or datetime.now(timezone('US/Eastern'))
+
+    def __repr__(self):
+        return '<Status History {}>'.format(self.id)

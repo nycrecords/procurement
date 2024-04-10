@@ -385,26 +385,31 @@ def download(comment_id):
 
 @requests.route('/status/<request_id>', methods=['GET', 'POST'])
 def update_status(request_id):
-    """Updates the status of the current request"""
-    status_form = StatusForm()
-    request = Request.query.filter_by(id=request_id).first()
-    old_status = request.status
-    request.status = status_form.status.data
-    db.session.commit()
+    if flask_request.method == 'POST':
+        """Updates the status of the current request"""
+        status_form = StatusForm()
+        request = Request.query.filter_by(id=request_id).first()
+        old_status = request.status
+        request.status = status_form.status.data
+        db.session.commit()
 
-    requester = db.session.query(User).filter(User.id == request.creator_id).first()
+        requester = db.session.query(User).filter(User.id == request.creator_id).first()
 
-    # Email Notifications
-    if old_status != request.status:
-        receivers, header = email_setup(requester, request)
+        # Email Notifications
+        if old_status != request.status:
+            receivers, header = email_setup(requester, request)
 
-        send_email(receivers, header,
-                   'request/status_update',
-                   user=current_user,
-                   request=request,
-                   old_status=old_status)
+            send_email(receivers, header,
+                       'request/status_update',
+                       user=current_user,
+                       request=request,
+                       old_status=old_status)
 
-    return redirect(url_for('request.display_request', request_id=request_id))
+        return redirect(url_for('request.display_request', request_id=request_id))
+    elif flask_request.method == 'GET':
+        # TODO
+        return
+
 
 
 @requests.errorhandler(404)

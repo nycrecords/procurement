@@ -1,10 +1,18 @@
-table th {
+table th, label, span{
     color: #181A7B !important;
+}
+
+label, span {
+    font-weight: bold;
 }
 
 input {
     margin-top: 10px;
     margin-bottom: 10px;
+}
+
+select#status {
+    margin-top: 10px;
 }
 
 .comment-box {

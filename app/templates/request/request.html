@@ -95,6 +95,7 @@ Records Procurement - View Request
                                        data-toggle="modal" data-target="#update_status">Update</a>
                                     {% endif %}
                                 </td>
+
                             </tr>
                             </tbody>
                         </table>
@@ -207,7 +208,7 @@ Records Procurement - View Request
 </article>
 
 
-<!-- Modal -->
+<!-- Modal for update-->
 {% if allowed_to_update %}
 <div id="update_status" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -225,33 +226,49 @@ Records Procurement - View Request
                     {{ status_form.hidden_tag() }}
 
                     <div class="form-group row">
-                        <label for="quantity" class="col-sm-3 form-control-label">New Status</label>
-                        <div class="col-sm-8">
+                        <label for="quantity" class="col-sm-5 form-control-label">New Status</label>
+                        <div class="col-sm-9">
                             {{ status_form.status }}
                         </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <div class="col-sm-5">
+                        <div class="col-sm-3">
                             {{ status_form.submit(class="btn btn-primary btn-small") }}
                         </div>
                     </div>
-
                 </form>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <span>Resolved</span>
+                        <p><small>Updated by: Naomi Pacheco on 04/10/2024 at 13:09:03  </small></p>
+                    </div>
+                </div>
+                <br>
 
+                <div class="row">
+                    <div class="col-sm-12">
+                        <span>Approved - Pending</span>
+                        <p><small>Updated by: Amit Sharma on 04/10/2024 at 13:09:03 </small></p>
+                    </div>
+                </div>
+                <br>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <span>Needs Division Approval</span>
+                        <p><small>Updated by: Gary Zhou on 04/09/2024 at 13:09:03 </small></p>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
-
     </div>
 </div>
 {% endif %}
 {% endblock %}
 
 {% block scripts %}
-<script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-editable.js') }}"></script>
+<script src="{{ url_for('static', filename='js/responsive-table.js')}}"></script>
 {% endblock %}
 
 
