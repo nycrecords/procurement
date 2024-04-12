@@ -32,7 +32,7 @@ class User(UserMixin, db.Model):
                                  division.EXEC,
                                  division.TECH,
                                  division.ADM, name="division"))
-    last_sign_in_at = db.Column(db.DateTime, nullable=False)
+    last_sign_in_at = db.Column(db.DateTime, nullable=True)
     session_id = db.Column(db.String(254), nullable=True, default=None)
     is_active = db.Column(db.BOOLEAN, default=True)
     role = db.Column(db.String(100), default=roles.REG)
@@ -55,7 +55,7 @@ class Request(db.Model):
     """The procurement request class"""
     __tablename__ = 'requests'
     id = db.Column(db.String(11), primary_key=True)
-    creator_id = db.Column(db.String(32), db.ForeignKey('users.id'))
+    creator_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     division = db.Column(db.String(100))
     date_submitted = db.Column(db.DateTime)
     date_closed = db.Column(db.DateTime)
@@ -167,7 +167,7 @@ class Comment(db.Model):
     __tablename__ = 'comments'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     request_id = db.Column(db.String(11), db.ForeignKey('requests.id'))
-    user_id = db.Column(db.String(32), db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     timestamp = db.Column(db.DateTime)
     content = db.Column(db.String())
     filepath = db.Column(db.String())
@@ -239,20 +239,30 @@ class StatusEvents(db.Model):
                                        status.RES,
                                        status.HOLD, name="status"))
     request_id = db.Column(db.String(11), db.ForeignKey('requests.id'))
-    user_id = db.Column(db.String(32), db.ForeignKey('users.id'))
+    user_guid = db.Column(db.String(64), db.ForeignKey('users.guid'))
     timestamp = db.Column(db.DateTime, default=datetime)
+    user = db.relationship("User", backref="status_events")
 
     def __init__(self,
                  previous_value=None,
                  new_value=None,
                  request_id=None,
-                 user_id=None,
+                 user_guid=None,
                  timestamp=None):
         self.previous_value = previous_value
         self.new_value = new_value
         self.request_id = request_id
-        self.user_id = user_id
+        self.user_guid = user_guid
         self.timestamp = timestamp or datetime.now(timezone('US/Eastern'))
 
+    @property
+    def status_history(self):
+        return {
+            'id': self.id,
+            'user': self.user_guid,
+            'previous_status': self.previous_value,
+            'new_status': self.new_value,
+            'timestamp': self.timestamp.strftime('%m/%d/%Y %I:%M:%S %p')
+        }
     def __repr__(self):
         return '<Status History {}>'.format(self.id)
