@@ -48,6 +48,7 @@
     {% endwith %}
 </div>
 {% endblock %}
+
 <main id="skip-header-target" role="main">
     {% block content %}{% endblock %}
 </main>
@@ -74,17 +75,17 @@
 <!--    &lt;!&ndash; NYC template JS (RTL, search and language toggle, back to top)  &ndash;&gt;-->
 <script src="{{ url_for('static', filename='js/plugins/main.js') }}"></script>
 
-<!-- Prism.js -->
+<!-- validation.js -->
 <script src="{{ url_for('static', filename='js/validation.js') }}"></script>
 
 <!-- Session Timeout -->
 <script src="{{ url_for('static', filename='js/plugins/session-timeout.min.js') }}"></script>
 
-
 {% block scripts %}
 {% endblock %}
 
-</body>
+
 {% include 'auth/concurrent_session_modal.html' %}
 {% include 'base.js.html' %}
+</body>
 </html>

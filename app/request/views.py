@@ -37,8 +37,12 @@ def index():
     duplicate_session = flask_request.args.get('duplicate_session')
     if current_user.role in (roles.ADMIN, roles.PROC, roles.COM):
         requests = Request.query.order_by(Request.date_submitted.desc()).all()
-    else:
+
+    elif current_user.role == roles.DIV:
         requests = Request.query.filter_by(division=current_user.division).order_by(Request.date_submitted.desc()).all()
+
+    else:
+        requests = Request.query.filter_by(creator_id=current_user.id).order_by(Request.date_submitted.desc()).all()
     return render_template('request/requests.html', requests=requests, duplicate_session=duplicate_session)
 
 
