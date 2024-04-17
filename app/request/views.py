@@ -401,7 +401,7 @@ def update_status(request_id):
                 previous_value=old_status,
                 new_value=request.status,
                 user_guid=current_user.guid,
-                timestamp=datetime.datetime.now()
+                timestamp=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             )
             db.session.add(new_status)
             db.session.commit()
