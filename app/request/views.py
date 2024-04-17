@@ -14,7 +14,8 @@ from flask import (
     url_for,
     send_from_directory,
     current_app,
-    flash
+    flash,
+    jsonify
 )
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
@@ -22,10 +23,11 @@ from app import db
 from app.email_notification import send_email
 from app.errors import flash_errors
 from app.request.forms import RequestForm, CommentForm, DeleteCommentForm, StatusForm
-from app.models import Request, User, Vendor, Comment
+from app.models import Request, User, Vendor, Comment, StatusEvents
 from app.request import request as requests
 from app.constants import roles, status, mimetypes
 from app.request.utils import determine_fiscal_id, email_setup
+from sqlalchemy import desc
 
 
 @requests.route('/', methods=['GET', 'POST'])
@@ -390,8 +392,24 @@ def update_status(request_id):
         status_form = StatusForm()
         request = Request.query.filter_by(id=request_id).first()
         old_status = request.status
-        request.status = status_form.status.data
-        db.session.commit()
+        new_status = status_form.status.data
+        if old_status != new_status:
+            request.status = status_form.status.data
+
+            new_status = StatusEvents(
+                request_id=request_id,
+                previous_value=old_status,
+                new_value=request.status,
+                user_guid=current_user.guid,
+                timestamp=datetime.datetime.now()
+            )
+            db.session.add(new_status)
+            db.session.commit()
+            flash("Status was successfully updated!", category="success")
+
+
+        else:
+            flash('No changes updated', category='danger')
 
         requester = db.session.query(User).filter(User.id == request.creator_id).first()
 
@@ -406,10 +424,14 @@ def update_status(request_id):
                        old_status=old_status)
 
         return redirect(url_for('request.display_request', request_id=request_id))
-    elif flask_request.method == 'GET':
-        # TODO
-        return
 
+    elif flask_request.method == 'GET':
+        events = StatusEvents.query.filter(StatusEvents.request_id == request_id).order_by(
+            desc(StatusEvents.timestamp)).all()
+
+        return jsonify(
+            history_rows=render_template('request/history_row.html', events=events)
+        ), 200
 
 
 @requests.errorhandler(404)

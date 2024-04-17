@@ -262,7 +262,7 @@ class StatusEvents(db.Model):
             'user': self.user_guid,
             'previous_status': self.previous_value,
             'new_status': self.new_value,
-            'timestamp': self.timestamp.strftime('%m/%d/%Y %I:%M:%S %p')
+            'timestamp': self.timestamp.strftime('%m/%d/%Y %H:%M:%S')
         }
     def __repr__(self):
         return '<Status History {}>'.format(self.id)

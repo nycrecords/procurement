@@ -11,7 +11,7 @@ Records Procurement - View Request
     <div class="my-5">
         <div class="wide">
             <div class="form-group">
-                <h1>{{ request.id }}</h1>
+                <h1 id="request-id">{{ request.id }}</h1>
                 {% if current_user.role == "Administrator" %}
                 <a class="btn btn-primary btn-small"
                    href="{{ url_for('request.edit_request', request_id=request.id) }}">Edit
@@ -235,28 +235,7 @@ Records Procurement - View Request
                         </div>
                     </div>
                 </form>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <span>Resolved</span>
-                        <p><small>Updated by: Naomi Pacheco on 04/10/2024 at 13:09:03  </small></p>
-                    </div>
-                </div>
-                <br>
-
-                <div class="row">
-                    <div class="col-sm-12">
-                        <span>Approved - Pending</span>
-                        <p><small>Updated by: Amit Sharma on 04/10/2024 at 13:09:03 </small></p>
-                    </div>
-                </div>
-                <br>
-
-                <div class="row">
-                    <div class="col-sm-12">
-                        <span>Needs Division Approval</span>
-                        <p><small>Updated by: Gary Zhou on 04/09/2024 at 13:09:03 </small></p>
-                    </div>
-                </div>
+                <div id="status-history"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -269,6 +248,7 @@ Records Procurement - View Request
 
 {% block scripts %}
 <script src="{{ url_for('static', filename='js/responsive-table.js')}}"></script>
+<script src="{{ url_for('static', filename='js/request/request.js')}}"></script>
 {% endblock %}
 
 
