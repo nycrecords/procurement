@@ -106,7 +106,7 @@ def disable(id):
     vendor = Vendor.query.get_or_404(id)
     vendor.enabled = False
     db.session.commit()
-    flash('Vendor has been disabled.')
+    flash('Vendor has been disabled.', category="success")
     return redirect(url_for('vendor.display_vendors'))
 
 
@@ -120,5 +120,5 @@ def enable(id):
     vendor = Vendor.query.get_or_404(id)
     vendor.enabled = True
     db.session.commit()
-    flash('Vendor has been enabled.')
+    flash('Vendor has been enabled.', category="success")
     return redirect(url_for('vendor.display_vendors'))
