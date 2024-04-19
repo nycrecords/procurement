@@ -1,104 +1,112 @@
 {% extends "base.html" %}
 {% block title %}
-Records Procurement - Edit Vendor
+    Records Procurement - Edit Vendor
 {% endblock title %}
 {% block custom_css_links %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/edit_vendor.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/edit_vendor.css') }}">
 {% endblock custom_css_links %}
 
 {% block content %}
-<article class="container overflow-hidden">
-    <div class="my-5">
-        <div class="medium">
-            <div class="form-group">
-                <h1>Edit Vendor
-                    {% if vendor.enabled == True %}
-                    <a class="btn btn-danger btn-small"
-                       href="{{ url_for('vendor.disable', id=vendor.id) }}">Disable</a></td>
-                    {% else %}
-                    <a class="btn btn-primary btn-small"
-                       href="{{ url_for('vendor.enable', id=vendor.id) }}">Enable</a></td>
-                    {% endif %}
-                </h1>
-            </div>
-            <h3><i>Vendor Information</i></h3>
-            <form name="vendor_form_edit" class="form-horizontal" id="vendor_form_edit" method="POST" action="">
-                {{ form.hidden_tag() }}
+    <article class="container overflow-hidden">
+        <div class="my-5">
+            <div class="medium">
                 <div class="form-group">
-                    <label for="request_vendor" class="sr-only form-control-label">Vendor Information:</label>
-                </div>
-
-                <div class="form-group">
-                    <label for="request_vendor_name" class="form-control-label">Vendor Name</label>
-                    <div>
-                        {{ form.vendor_name(id="vendor_name", class="form-control", maxlength="100", value=vendor.name)
-                        }}
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="request_vendor_address" class="form-control-label">Vendor Address</label>
-                    <div>
-                        {{ form.vendor_address(id="vendor_address", class="form-control", maxlength="100",
-                        value=vendor.address) }}
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    {% for message in form.vendor_phone.errors %}
-                    <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
-                    {% endfor %}
-                    <label for="request_vendor_phone" class="form-control-label">Vendor Phone</label>
-                    <div>
-                        {{ form.vendor_phone(id="vendor_phone", class="form-control", type="tel", value=vendor.phone) }}
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    {% for message in form.vendor_fax.errors %}
-                    <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
-                    {% endfor %}
-                    <label for="request_vendor_fax" class="form-control-label">Vendor Fax</label>
-                    <div>
-                        {{ form.vendor_fax(id="vendor_fax", class="form-control", type="tel", value=vendor.fax) }}
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="request_vendor_email" class="form-control-label">Vendor Email</label>
-                    <div>
-                        {{ form.vendor_email(id="vendor_email", class="form-control", maxlength="100",
-                        value=vendor.email) }}
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="request_vendor_taxid" class="form-control-label">Vendor/Tax ID</label>
-                    <div>
-                        {{ form.vendor_tax_id(id="vendor_tax_id", class="form-control", maxlength="100",
-                        value=vendor.tax_id) }}
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="request_request_vendor_mwbe" class="form-control-label">M/WBE</label>
-                    <div class="col-sm-5">
-                        {% if vendor.mwbe == True %}
-                        {{ form.vendor_mwbe(id="vendor_mwbe", class="radio-inline", checked="checked") }}
+                    <h1>Edit Vendor
+                        {% if vendor.enabled == True %}
+                            <a class="btn btn-danger btn-small"
+                               href="{{ url_for('vendor.disable', id=vendor.id) }}">Disable</a></td>
                         {% else %}
-                        {{ form.vendor_mwbe(id="vendor_mwbe", class="radio-inline") }}
+                            <a class="btn btn-primary btn-small"
+                               href="{{ url_for('vendor.enable', id=vendor.id) }}">Enable</a></td>
                         {% endif %}
-                    </div>
+                    </h1>
                 </div>
+                <h3><i>Vendor Information</i></h3>
+                <p class="text-right text-danger fs-md" aria-hidden="true">* Required Fields</p>
+                <form name="vendor_form_edit" class="form-horizontal" id="vendor_form_edit" method="POST" action="">
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        <label for="request_vendor" class="sr-only form-control-label">Vendor Information:</label>
+                    </div>
 
-                <div class="form-group">
-                    <div class="spacer">
-                        <button type="submit" class="btn btn-primary btn-lg btn-block">Save Changes</button>
+                    <div class="form-group">
+                        <label for="request_vendor_name" class="form-control-label">Vendor Name
+                            <span class="fs-md text-danger" aria-hidden="true">*</span>
+                        </label>
+                        <div>
+                            {{ form.vendor_name(id="vendor_name", class="form-control", maxlength="100", value=vendor.name) }}
+                        </div>
                     </div>
-                </div>
-            </form>
+
+                    <div class="form-group">
+                        <label for="request_vendor_address" class="form-control-label">Vendor Address
+                            <span class="fs-md text-danger" aria-hidden="true">*</span>
+                        </label>
+                        <div>
+                            {{ form.vendor_address(id="vendor_address", class="form-control", maxlength="100",
+                        value=vendor.address) }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        {% for message in form.vendor_phone.errors %}
+                            <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
+                        {% endfor %}
+                        <label for="request_vendor_phone" class="form-control-label">Vendor Phone
+                            <span class="fs-md text-danger" aria-hidden="true">*</span>
+                        </label>
+                        <div>
+                            {{ form.vendor_phone(id="vendor_phone", class="form-control", type="tel", value=vendor.phone) }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        {% for message in form.vendor_fax.errors %}
+                            <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
+                        {% endfor %}
+                        <label for="request_vendor_fax" class="form-control-label">Vendor Fax</label>
+                        <div>
+                            {{ form.vendor_fax(id="vendor_fax", class="form-control", type="tel", value=vendor.fax) }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="request_vendor_email" class="form-control-label">Vendor Email
+                            <span class="fs-md text-danger" aria-hidden="true">*</span>
+                        </label>
+                        <div>
+                            {{ form.vendor_email(id="vendor_email", class="form-control", maxlength="100",
+                        value=vendor.email) }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="request_vendor_taxid" class="form-control-label">Vendor/Tax ID</label>
+                        <div>
+                            {{ form.vendor_tax_id(id="vendor_tax_id", class="form-control", maxlength="100",
+                        value=vendor.tax_id) }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="request_request_vendor_mwbe" class="form-control-label">M/WBE</label>
+                        <div class="col-sm-5">
+                            {% if vendor.mwbe == True %}
+                                {{ form.vendor_mwbe(id="vendor_mwbe", class="radio-inline", checked="checked") }}
+                            {% else %}
+                                {{ form.vendor_mwbe(id="vendor_mwbe", class="radio-inline") }}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="spacer">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block">Save Changes</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
-</article>
+    </article>
 {% endblock %}
 
