@@ -14,11 +14,11 @@ from flask import (
 from flask_login import login_required, current_user
 from app import db
 from app.models import Vendor, User
-# from app.vendor.forms import NewVendorForm, EditVendorForm
 from app.vendor.forms import VendorForm
 from app.vendor import vendor as vendor
 from app.errors import flash_errors
 from app.constants import roles
+from sqlalchemy import desc
 
 
 @vendor.route('/', methods=['GET'])
@@ -26,7 +26,7 @@ from app.constants import roles
 def display_vendors():
     """Return page that displays all vendors."""
     if current_user.role == roles.ADMIN:
-        vendors = Vendor.query.order_by(Vendor.name).all()
+        vendors = Vendor.query.order_by(desc(Vendor.enabled), Vendor.name).all()
     else:
         vendors = Vendor.query.filter_by(enabled=True).order_by(Vendor.name).all()
     return render_template('vendor/vendors.html', vendors=vendors)
@@ -36,7 +36,9 @@ def display_vendors():
 @login_required
 def new_vendor():
     """Return page to create a new vendor."""
+
     form = VendorForm()
+
     if request.method == "POST" and form.validate_on_submit():
         vendor_name = str(form.vendor_name.data)
         vendor_address = form.vendor_address.data
@@ -45,18 +47,25 @@ def new_vendor():
         vendor_email = form.vendor_email.data
         vendor_tax_id = form.vendor_tax_id.data
         vendor_mwbe = form.vendor_mwbe.data
-        new_vendor = Vendor(name=vendor_name,
-                            address=vendor_address,
-                            phone=vendor_phone,
-                            fax=vendor_fax,
-                            email=vendor_email,
-                            tax_id=vendor_tax_id,
-                            mwbe=vendor_mwbe
-                            )
-        db.session.add(new_vendor)
-        db.session.commit()
-        flash("Vendor was successfully added!", "success")
-        return redirect(url_for('vendor.display_vendors'))
+
+        vendors = Vendor.query.filter(Vendor.name.ilike(vendor_name)).one_or_none()
+        if vendors:
+            flash('Vendor already exists. Please enter another vendor name.', category="danger")
+            return render_template('vendor/new_vendor.html', form=form)
+
+        else:
+            new_vendor = Vendor(name=vendor_name,
+                                address=vendor_address,
+                                phone=vendor_phone,
+                                fax=vendor_fax,
+                                email=vendor_email,
+                                tax_id=vendor_tax_id,
+                                mwbe=vendor_mwbe
+                                )
+            db.session.add(new_vendor)
+            db.session.commit()
+            flash("Vendor was successfully added!", "success")
+            return redirect(url_for('vendor.display_vendors'))
 
     else:
         flash_errors(form)

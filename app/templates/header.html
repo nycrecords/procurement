@@ -82,9 +82,9 @@
 
                             <ul class="extensible-list horizontal">
                                 {% if current_user.is_authenticated %}
-                                <li class="nav-item">
-                                    <a class="btn btn-primary" href="{{ url_for('auth.logout') }}">Sign Out</a>
-                                </li>
+                                    <li class="nav-item">
+                                        <a class="btn btn-primary" href="{{ url_for('auth.logout') }}">Sign Out</a>
+                                    </li>
                                 {% endif %}
 
                                 <li>
@@ -125,46 +125,46 @@
             Primary Navigation
         </h2>
         {% if current_user.is_authenticated %}
-        <div class="wide">
-            <nav class="nav nav-pills" role="navigation">
-                <div class="nav-item dropdown">
-                    <a class="nav-link" href="{{ url_for('main.profile') }}" id="nav-item-01">
-                        {{ current_user.first_name }} {{ current_user.last_name }}
-                    </a>
-                </div>
+            <div class="wide">
+                <nav class="nav nav-pills" role="navigation">
+                    <div class="nav-item dropdown">
+                        <a class="nav-link" href="{{ url_for('main.profile') }}" id="nav-item-01">
+                            {{ current_user.first_name }} {{ current_user.last_name }}
+                        </a>
+                    </div>
 
-                {% if current_user.role == "Administrator" %}
-                <div class="nav-item dropdown">
-                    <a class="nav-link" href="{{ url_for('main.manage_users') }}" id="nav-item-02">
-                        Manage Users
-                    </a>
-                </div>
-                {% endif %}
+                    {% if current_user.role == "Administrator" or current_user.role == "Procurement Head" %}
+                        <div class="nav-item dropdown">
+                            <a class="nav-link" href="{{ url_for('main.manage_users') }}" id="nav-item-02">
+                                Manage Users
+                            </a>
+                        </div>
+                    {% endif %}
 
-                <div class="nav-item dropdown">
+                    <div class="nav-item dropdown">
 
-                    <a class="nav-link" href="{{ url_for('request.index') }}" id="nav-item-03">
-                        Request History
-                    </a>
+                        <a class="nav-link" href="{{ url_for('request.index') }}" id="nav-item-03">
+                            Request History
+                        </a>
 
-                </div>
-                <!-- .nav-item -->
+                    </div>
+                    <!-- .nav-item -->
 
-                <div class="nav-item dropdown">
+                    <div class="nav-item dropdown">
 
-                    <a class="nav-link" href="{{ url_for('vendor.display_vendors') }}" id="nav-item-04">
-                        Vendor List
-                    </a>
+                        <a class="nav-link" href="{{ url_for('vendor.display_vendors') }}" id="nav-item-04">
+                            Vendor List
+                        </a>
 
-                </div>
-                <!-- .nav-item -->
+                    </div>
+                    <!-- .nav-item -->
 
-            </nav>
+                </nav>
 
-        </div>
-        <!-- .wide -->
+            </div>
+            <!-- .wide -->
 
         {% endif %}
-        
+
     </div>
 </header>

@@ -112,6 +112,6 @@ def update_user_information(form, fields, user):
             return flash('User information successfully updated!', 'success')
         except Exception as e:
             db.session.rollback()
-            return flash('An error occurred while updating the user.', 'error')
+            return flash('An error occurred while updating the user.', 'warning')
     else:
         return flash('No user changes made.', 'info')

@@ -97,16 +97,26 @@ def new_request():
 
         vendor_form = flask_request.form["request_vendor_dropdown"]
         if vendor_form == "default":
-            new_vendor = Vendor(name=form.request_vendor_name.data,
-                                address=form.request_vendor_address.data,
-                                phone=form.request_vendor_phone.data,
-                                fax=form.request_vendor_fax.data,
-                                email=form.request_vendor_email.data,
-                                tax_id=form.request_vendor_taxid.data,
-                                mwbe=form.request_vendor_mwbe.data)
-            db.session.add(new_vendor)
-            db.session.commit()
-            new_request.set_vendor_id(new_vendor.id)
+            vendor_name = str(form.request_vendor_name.data)
+            existing_vendors = Vendor.query.filter(Vendor.name.ilike(vendor_name)).one_or_none()
+
+            if existing_vendors:
+                flash(
+                    'Vendor already exists. Please select the existing vendor from dropdown or enter a new vendor name.',
+                    category='danger')
+                return render_template('request/new_request.html', form=form, user=current_user, vendors=vendors)
+
+            else:
+                new_vendor = Vendor(name=form.request_vendor_name.data,
+                                    address=form.request_vendor_address.data,
+                                    phone=form.request_vendor_phone.data,
+                                    fax=form.request_vendor_fax.data,
+                                    email=form.request_vendor_email.data,
+                                    tax_id=form.request_vendor_taxid.data,
+                                    mwbe=form.request_vendor_mwbe.data)
+                db.session.add(new_vendor)
+                db.session.commit()
+                new_request.set_vendor_id(new_vendor.id)
         else:
             new_request.set_vendor_id(int(vendor_form))
         db.session.add(new_request)

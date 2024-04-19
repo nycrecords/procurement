@@ -7,9 +7,9 @@
     <!-- Corrects IE Compatibility Mode -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     {% if title %}
-    <title>{{ title }} • Procurement</title>
+        <title>{{ title }} • Procurement</title>
     {% else %}
-    <title>Procurement - DORIS</title>
+        <title>Procurement - DORIS</title>
     {% endif %}
 
     <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
@@ -28,25 +28,25 @@
 </head>
 
 <body>
-{% include 'header.html'%}
+{% include 'header.html' %}
 
 {% block flash_message %}
-<div class="container-fluid">
-    {% with messages = get_flashed_messages(with_categories=True) %}
-    {% if messages %}
     <div class="container-fluid">
-        <div id='flash_message_container'>
-            {% for category, msg in messages %}
-            <div class="alert alert-{{ category }}">
-                <button type="button" class="close" data-dismiss="alert">×</button>
-                {{ msg }}
-            </div>
-            {% endfor %}
-        </div>
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                <div class="container-fluid pt-3">
+                    <div id='flash_message_container'>
+                        {% for category, msg in messages %}
+                            <div class="alert alert-{{ category }}">
+                                <button type="button" class="close" data-dismiss="alert">×</button>
+                                {{ msg }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endwith %}
     </div>
-    {% endif %}
-    {% endwith %}
-</div>
 {% endblock %}
 
 <main id="skip-header-target" role="main">

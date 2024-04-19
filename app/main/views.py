@@ -12,6 +12,7 @@ from app.db_utils import update_user_information
 from app.main import main
 from app.main.forms import EditUserForm
 from app.models import Vendor, User
+from sqlalchemy import desc
 
 
 @login_manager.user_loader
@@ -47,7 +48,7 @@ def edit_profile():
     if request.method == 'POST':
         if form.validate_on_submit():
             fields = ['phone', 'address']
-            if current_user.role == roles.ADMIN:
+            if current_user.role == roles.ADMIN or current_user.role == roles.PROC:
                 fields.extend(['role', 'division'])
             update_user_information(form, fields, user)
     return render_template('main/edit_user.html', user=current_user, form=form)
@@ -81,10 +82,10 @@ def jsonify_fields():
 @login_required
 def manage_users():
     """Return the admin panel where admins can create users, edit user information, and update login privileges."""
-    if not current_user.role == roles.ADMIN:
+    if not (current_user.role == roles.ADMIN or current_user.role == roles.PROC):
         return redirect(url_for('main.index'))
 
-    users = User.query.filter(User.id != current_user.id).order_by(User.last_name).all()
+    users = User.query.filter(User.id != current_user.id).order_by(desc(User.is_active), User.last_name).all()
     return render_template('main/manage_users.html', users=users)
 
 
@@ -92,7 +93,7 @@ def manage_users():
 @login_required
 def edit_user(id):
     """Return the page for an admin to update user information."""
-    if current_user.role != roles.ADMIN:
+    if current_user.role != roles.ADMIN and current_user.role != roles.PROC:
         return redirect(url_for('main.edit_profile'))
 
     user = User.query.get_or_404(id)
@@ -110,7 +111,7 @@ def edit_user(id):
 @login_required
 def disable(id):
     """Disables the user's login privileges and redirects to admin panel page."""
-    if not current_user.role == roles.ADMIN:
+    if not (current_user.role == roles.ADMIN or current_user.role == roles.PROC):
         return redirect('requests')
 
     user = User.query.get_or_404(id)
@@ -124,7 +125,7 @@ def disable(id):
 @login_required
 def enable(id):
     """Enables the user's login privileges and redirects to admin panel page."""
-    if not current_user.role == roles.ADMIN:
+    if not (current_user.role == roles.ADMIN or current_user.role == roles.PROC):
         return redirect('requests')
 
     user = User.query.get_or_404(id)
