@@ -228,13 +228,17 @@ class StatusEvents(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     previous_value = db.Column(db.Enum(status.NDA,
                                        status.NCA,
+                                       status.NPA,
                                        status.APR,
+                                       status.OIP,
                                        status.DEN,
                                        status.RES,
                                        status.HOLD, name="status"))
     new_value = db.Column(db.Enum(status.NDA,
                                   status.NCA,
+                                  status.NPA,
                                   status.APR,
+                                  status.OIP,
                                   status.DEN,
                                   status.RES,
                                   status.HOLD, name="status"))

@@ -166,7 +166,9 @@ def display_request(request_id):
     elif current_user.role == roles.ADMIN:
         choices = [(status.NDA, status.NDA),
                    (status.NCA, status.NCA),
+                   (status.NPA, status.NPA),
                    (status.APR, status.APR),
+                   (status.OIP, status.OIP),
                    (status.DEN, status.DEN),
                    (status.RES, status.RES),
                    (status.HOLD, status.HOLD)]
@@ -174,21 +176,21 @@ def display_request(request_id):
     elif current_user.role == roles.DIV:
         approved = status.NCA
         if request.total_cost <= current_app.config['COST_LIMIT']:
-            approved = status.APR
+            approved = status.NPA
 
-        choices = [(status.NDA, status.NDA),
-                   (status.HOLD, status.HOLD),
-                   (approved, "Approved"),
-                   (status.DEN, status.DEN)]
+        choices = [
+            (approved, "Approved"),
+            (status.HOLD, status.HOLD),
+            (status.DEN, status.DEN)]
 
         if request.status != status.NDA:
             allowed_to_update = True
 
     elif current_user.role == roles.COM:
-        choices = [(status.NCA, status.NCA),
-                   (status.APR, "Approved"),
-                   (status.HOLD, status.HOLD),
-                   (status.DEN, status.DEN)]
+        choices = [
+            (status.APR, "Approved"),
+            (status.HOLD, status.HOLD),
+            (status.DEN, status.DEN)]
 
         if request.status != status.NDA and request.status != status.NCA:
             allowed_to_update = True
@@ -196,7 +198,9 @@ def display_request(request_id):
     elif current_user.role == roles.PROC:
         choices = [(status.NDA, status.NDA),
                    (status.NCA, status.NCA),
+                   (status.NPA, status.NPA),
                    (status.APR, status.APR),
+                   (status.OIP, status.OIP),
                    (status.DEN, status.DEN),
                    (status.RES, status.RES),
                    (status.HOLD, status.HOLD)]
