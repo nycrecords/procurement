@@ -38,7 +38,6 @@ roles = [(roles.REG, roles.REG),
          (roles.ADMIN, roles.ADMIN)]
 
 
-
 class EditUserForm(FlaskForm):
     """Form for updating user information."""
     role = SelectField('role', validators=[DataRequired()], choices=roles)

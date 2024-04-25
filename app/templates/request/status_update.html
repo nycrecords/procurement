@@ -1,6 +1,6 @@
 <p>
     {% if user.role != "Regular User" %}
-    {{ user.role }}:
+        {{ user.role }}:
     {% endif %}
     {{ user.first_name }} {{ user.last_name }}
     has moved Request {{ request.id }} from {{ old_status }} to {{ request.status }}</p>

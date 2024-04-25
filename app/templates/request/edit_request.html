@@ -1,334 +1,335 @@
 {% extends "base.html" %}
 {% block title %}
-Records Procurement - Edit Request
+    Records Procurement - Edit Request
 {% endblock title %}
 {% block custom_css_links %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/edit_request.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/edit_request.css') }}">
 {% endblock custom_css_links %}
 
 {% block content %}
-<article class="container overflow-hidden">
-    <div class="my-5">
-        <div class="medium">
-            <h1>Edit Request</h1>
-            <script type="text/javascript">
-                var currentDate = new Date();
-                var day = currentDate.getDate();
-                var month = currentDate.getMonth() + 1;
-                var year = currentDate.getFullYear();
-                document.write("<b>" + "Date: " + month + "/" + day + "/" + year + "</b>")
+    <article class="container overflow-hidden">
+        <div class="my-5">
+            <div class="medium">
+                <h1>Edit Request</h1>
+                <script type="text/javascript">
+                    var currentDate = new Date();
+                    var day = currentDate.getDate();
+                    var month = currentDate.getMonth() + 1;
+                    var year = currentDate.getFullYear();
+                    document.write("<b>" + "Date: " + month + "/" + day + "/" + year + "</b>")
 
 
-            </script>
-        </div>
-        <div class="medium my-4">
-            <h3><i>Purchase Information</i></h3>
-            <p class="text-right text-danger fs-md" aria-hidden="true">* Required Fields</p>
-            <form name="request_form_edit" class="needs-validation form-horizontal" id="request_form_edit" method="POST"
-                  action="">
-                {{ form.hidden_tag() }}
+                </script>
+            </div>
+            <div class="medium my-4">
+                <h3><i>Purchase Information</i></h3>
+                <p class="text-right text-danger fs-md" aria-hidden="true">* Required Fields</p>
+                <form name="request_form_edit" class="needs-validation form-horizontal" id="request_form_edit"
+                      method="POST"
+                      action="">
+                    {{ form.hidden_tag() }}
 
-                {% if current_user.is_authenticated %}
-                <div class="form-group">
-                    <label for="item" class="form-control-label">
-                        Requester Name
-                    </label>
-                    <div>
-                        {{ user.name }}
-                    </div>
-                </div>
+                    {% if current_user.is_authenticated %}
+                        <div class="form-group">
+                            <label for="item" class="form-control-label">
+                                Requester Name
+                            </label>
+                            <div>
+                                {{ user.name }}
+                            </div>
+                        </div>
 
-                <div class="form-group">
-                    <label for="item" class="form-control-label">
-                        Division
-                    </label>
-                    <div>
-                        {{ user.division }}
-                    </div>
-                </div>
-                {% else %}
-                <div class="form-group">
-                    {% for message in form.request_name.errors %}
-                    <div class="alert alert-danger" id="missing_name">{{ message }}</div>
-                    {% endfor %}
+                        <div class="form-group">
+                            <label for="item" class="form-control-label">
+                                Division
+                            </label>
+                            <div>
+                                {{ user.division }}
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="form-group">
+                            {% for message in form.request_name.errors %}
+                                <div class="alert alert-danger" id="missing_name">{{ message }}</div>
+                            {% endfor %}
 
-                    <label for="request_name" class="form-control-label">Name</label>
-                    <div>
-                        {{ form.request_name(id="request_name", class="form-control", type="text") }}
-                    </div>
-                </div>
+                            <label for="request_name" class="form-control-label">Name</label>
+                            <div>
+                                {{ form.request_name(id="request_name", class="form-control", type="text") }}
+                            </div>
+                        </div>
 
-                <div class="form-group">
-                    {% for message in form.division.errors %}
-                    <div class="alert alert-danger" id="missing_division">{{ message }}</div>
-                    {% endfor %}
+                        <div class="form-group">
+                            {% for message in form.division.errors %}
+                                <div class="alert alert-danger" id="missing_division">{{ message }}</div>
+                            {% endfor %}
 
-                    <label for="division" class="col-sm-3 form-control-label">Division</label>
-                    <div class="col-sm-5">
-                        {{ form.division(id="division", class="form-control") }}
-                    </div>
-                </div>
-                {% endif %}
+                            <label for="division" class="col-sm-3 form-control-label">Division</label>
+                            <div class="col-sm-5">
+                                {{ form.division(id="division", class="form-control") }}
+                            </div>
+                        </div>
+                    {% endif %}
 
 
-                <div class="form-group">
-                    <label for="item" class="form-control-label">
-                        Item
-                        <span class="fs-md text-danger" aria-hidden="true">*</span>
-                    </label>
-                    <div>
-                        <p class="invalid-feedback">
-                            <span class="fas fa-exclamation-triangle"></span>
-                            <span class="invalid-description">Required Field</span>
-                            <span class="invalid-instruction">Please enter the item</span>
-                        </p>
-                        {{ form.item(id="item", class="form-control", rows="2", maxlength="500", type="text") }}
-                        <div class="small">Please insert FULL description</div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="quantity" class="form-control-label">
-                        Quantity
-                        <span class="fs-md text-danger" aria-hidden="true">*</span>
-                    </label>
-                    <div>
-                        <p class="invalid-feedback">
-                            <span class="fas fa-exclamation-triangle"></span>
-                            <span class="invalid-description">Required Field</span>
-                            <span class="invalid-instruction">Please enter the quantity</span>
-                        </p>
-                        {{ form.quantity(id="quantity", class="form-control", type="text") }}
-                        <div class="small">i.e. Quantity of boxes, cases, singles</div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="unit_price" class="form-control-label">
-                        Price per Item
-                        <span class="fs-md text-danger" aria-hidden="true">*</span>
-                    </label>
-                    <div>
-                        <div class="input-group">
+                    <div class="form-group">
+                        <label for="item" class="form-control-label">
+                            Item
+                            <span class="fs-md text-danger" aria-hidden="true">*</span>
+                        </label>
+                        <div>
                             <p class="invalid-feedback">
                                 <span class="fas fa-exclamation-triangle"></span>
                                 <span class="invalid-description">Required Field</span>
-                                <span class="invalid-instruction">Please enter the price per item</span>
+                                <span class="invalid-instruction">Please enter the item</span>
                             </p>
-                            {{ form.unit_price(id="unit_price", class="form-control", type="text") }}
+                            {{ form.item(id="item", class="form-control", rows="2", maxlength="500", type="text") }}
+                            <div class="small">Please insert FULL description</div>
                         </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="total_cost" class="form-control-label">
-                        Total
-                        <span class="fs-md text-danger" aria-hidden="true">*</span>
-                    </label>
-                    <div>
-                        <div class="input-group">
+                    <div class="form-group">
+                        <label for="quantity" class="form-control-label">
+                            Quantity
+                            <span class="fs-md text-danger" aria-hidden="true">*</span>
+                        </label>
+                        <div>
                             <p class="invalid-feedback">
                                 <span class="fas fa-exclamation-triangle"></span>
                                 <span class="invalid-description">Required Field</span>
-                                <span class="invalid-instruction">Please enter the total price</span>
+                                <span class="invalid-instruction">Please enter the quantity</span>
                             </p>
-                            {{ form.total_cost(id="total_cost", class="form-control", type="text") }}
+                            {{ form.quantity(id="quantity", class="form-control", type="text") }}
+                            <div class="small">i.e. Quantity of boxes, cases, singles</div>
                         </div>
-                        <div class="small">Please include all additional costs, i.e. S&H</div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    {% for message in form.funding_source.errors %}
-                    <div class="alert alert-danger" id="missing_funding_source">{{ message }}</div>
-                    {% endfor %}
-                    <label for="funding_source" class="form-control-label">
-                        Funding Source
-                        <span class="fs-md text-danger" aria-hidden="true">*</span>
-                    </label>
-                    <div>
-                        <p class="invalid-feedback">
-                            <span class="fas fa-exclamation-triangle"></span>
-                            <span class="invalid-description">Required Field</span>
-                            <span class="invalid-instruction">Please select the funding source</span>
-                        </p>
-                        {{ form.funding_source(id="funding_source", class="form-control") }}
+                    <div class="form-group">
+                        <label for="unit_price" class="form-control-label">
+                            Price per Item
+                            <span class="fs-md text-danger" aria-hidden="true">*</span>
+                        </label>
+                        <div>
+                            <div class="input-group">
+                                <p class="invalid-feedback">
+                                    <span class="fas fa-exclamation-triangle"></span>
+                                    <span class="invalid-description">Required Field</span>
+                                    <span class="invalid-instruction">Please enter the price per item</span>
+                                </p>
+                                {{ form.unit_price(id="unit_price", class="form-control", type="text") }}
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <div id="funding_source_description" class="form-group" style="display: None;">
-                    <label for="funding_source_description" class="col-sm-offset-1 col-sm-5 form-control-label">
-                        If Other, specify
-                        <span class="fs-md text-danger" aria-hidden="true">*</span>
-                    </label>
+                    <div class="form-group">
+                        <label for="total_cost" class="form-control-label">
+                            Total
+                            <span class="fs-md text-danger" aria-hidden="true">*</span>
+                        </label>
+                        <div>
+                            <div class="input-group">
+                                <p class="invalid-feedback">
+                                    <span class="fas fa-exclamation-triangle"></span>
+                                    <span class="invalid-description">Required Field</span>
+                                    <span class="invalid-instruction">Please enter the total price</span>
+                                </p>
+                                {{ form.total_cost(id="total_cost", class="form-control", type="text") }}
+                            </div>
+                            <div class="small">Please include all additional costs, i.e. S&H</div>
+                        </div>
+                    </div>
 
-                    <div class="col-sm-12">
-                        {{ form.funding_source_description(id="funding_source_description", class="form-control",
+                    <div class="form-group">
+                        {% for message in form.funding_source.errors %}
+                            <div class="alert alert-danger" id="missing_funding_source">{{ message }}</div>
+                        {% endfor %}
+                        <label for="funding_source" class="form-control-label">
+                            Funding Source
+                            <span class="fs-md text-danger" aria-hidden="true">*</span>
+                        </label>
+                        <div>
+                            <p class="invalid-feedback">
+                                <span class="fas fa-exclamation-triangle"></span>
+                                <span class="invalid-description">Required Field</span>
+                                <span class="invalid-instruction">Please select the funding source</span>
+                            </p>
+                            {{ form.funding_source(id="funding_source", class="form-control") }}
+                        </div>
+                    </div>
+
+                    <div id="funding_source_description" class="form-group" style="display: None;">
+                        <label for="funding_source_description" class="col-sm-offset-1 col-sm-5 form-control-label">
+                            If Other, specify
+                            <span class="fs-md text-danger" aria-hidden="true">*</span>
+                        </label>
+
+                        <div class="col-sm-12">
+                            {{ form.funding_source_description(id="funding_source_description", class="form-control",
                         text="text", maxlength="100", value=request.funding_source_description or '') }}
+                        </div>
                     </div>
-                </div>
 
-                <div id="grant_name" class="form-group required" style="display: None;">
-                    <label for="grant_name" class="col-sm-offset-1 col-sm-3 form-control-label">
-                        Grant Name
-                        <span class="fs-md text-danger" aria-hidden="true">*</span>
-                    </label>
-                    <div class="col-sm-5">
-                        {{ form.grant_name(id="grant_name", class="form-control", text="text", maxlength="100",
+                    <div id="grant_name" class="form-group required" style="display: None;">
+                        <label for="grant_name" class="col-sm-offset-1 col-sm-3 form-control-label">
+                            Grant Name
+                            <span class="fs-md text-danger" aria-hidden="true">*</span>
+                        </label>
+                        <div class="col-sm-5">
+                            {{ form.grant_name(id="grant_name", class="form-control", text="text", maxlength="100",
                         value=request.grant_name or '') }}
+                        </div>
                     </div>
-                </div>
 
-                <div id="project_name" class="form-group required" style="display: None;">
-                    <label for="project_name" class="col-sm-offset-1 col-sm-3 form-control-label">
-                        Project Name
-                        <span class="fs-md text-danger" aria-hidden="true">*</span>
-                    </label>
-                    <div class="col-sm-5">
-                        {{ form.project_name(id="project_name", class="form-control", text="text", maxlength="100",
+                    <div id="project_name" class="form-group required" style="display: None;">
+                        <label for="project_name" class="col-sm-offset-1 col-sm-3 form-control-label">
+                            Project Name
+                            <span class="fs-md text-danger" aria-hidden="true">*</span>
+                        </label>
+                        <div class="col-sm-5">
+                            {{ form.project_name(id="project_name", class="form-control", text="text", maxlength="100",
                         value=request.project_name or '') }}
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="justification" class="form-control-label">
-                        Justification
-                    </label>
-                    <div>
-                        <p class="invalid-feedback">
-                            <span class="fas fa-exclamation-triangle"></span>
-                            <span class="invalid-description">Required Field</span>
-                            <span class="invalid-instruction">You must enter a justification for your request</span>
-                        </p>
-                        {{ form.justification(id="justification", rows="3", class="form-control", maxlength="500") }}
+                    <div class="form-group">
+                        <label for="justification" class="form-control-label">
+                            Justification
+                        </label>
+                        <div>
+                            <p class="invalid-feedback">
+                                <span class="fas fa-exclamation-triangle"></span>
+                                <span class="invalid-description">Required Field</span>
+                                <span class="invalid-instruction">You must enter a justification for your request</span>
+                            </p>
+                            {{ form.justification(id="justification", rows="3", class="form-control", maxlength="500") }}
+                        </div>
                     </div>
-                </div>
 
-                <h3><i>Vendor Information</i></h3>
+                    <h3><i>Vendor Information</i></h3>
 
-                <div class="form-group">
-                    {% for message in form.request_vendor_name.errors %}
-                    <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
-                    {% endfor %}
+                    <div class="form-group">
+                        {% for message in form.request_vendor_name.errors %}
+                            <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
+                        {% endfor %}
 
-                    <label for="request_vendor" class="sr-only form-control-label">Vendor Information:</label>
-                    <div>
-                        {{ form.request_vendor_dropdown(id="vendor_information", class="form-control") }}
+                        <label for="request_vendor" class="sr-only form-control-label">Vendor Information:</label>
+                        <div>
+                            {{ form.request_vendor_dropdown(id="vendor_information", class="form-control") }}
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="request_vendor_name" class="form-control-label">
-                        Vendor Name
-                        <span class="fs-md text-danger" aria-hidden="true">*</span>
-                    </label>
-                    <div>
-                        <p class="invalid-feedback">
-                            <span class="fas fa-exclamation-triangle"></span>
-                            <span class="invalid-description">Required Field</span>
-                            <span class="invalid-instruction">Please enter the vendor name</span>
-                        </p>
-                        {{ form.request_vendor_name(id="vendor_name", class="form-control", maxlength="100") }}
+                    <div class="form-group">
+                        <label for="request_vendor_name" class="form-control-label">
+                            Vendor Name
+                            <span class="fs-md text-danger" aria-hidden="true">*</span>
+                        </label>
+                        <div>
+                            <p class="invalid-feedback">
+                                <span class="fas fa-exclamation-triangle"></span>
+                                <span class="invalid-description">Required Field</span>
+                                <span class="invalid-instruction">Please enter the vendor name</span>
+                            </p>
+                            {{ form.request_vendor_name(id="vendor_name", class="form-control", maxlength="100") }}
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="request_vendor_address" class="form-control-label">
-                        Vendor Address
-                        <span class="fs-md text-danger" aria-hidden="true">*</span>
-                    </label>
-                    <div>
-                        <p class="invalid-feedback">
-                            <span class="fas fa-exclamation-triangle"></span>
-                            <span class="invalid-description">Required Field</span>
-                            <span class="invalid-instruction">Please enter the vendor address</span>
-                        </p>
-                        {{ form.request_vendor_address(id="vendor_address", class="form-control", maxlength="100") }}
+                    <div class="form-group">
+                        <label for="request_vendor_address" class="form-control-label">
+                            Vendor Address
+                            <span class="fs-md text-danger" aria-hidden="true">*</span>
+                        </label>
+                        <div>
+                            <p class="invalid-feedback">
+                                <span class="fas fa-exclamation-triangle"></span>
+                                <span class="invalid-description">Required Field</span>
+                                <span class="invalid-instruction">Please enter the vendor address</span>
+                            </p>
+                            {{ form.request_vendor_address(id="vendor_address", class="form-control", maxlength="100") }}
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="request_vendor_phone" class="form-control-label">
-                        Vendor Phone
-                        <span class="fs-md text-danger" aria-hidden="true">*</span>
-                    </label>
-                    <div>
-                        <p class="invalid-feedback">
-                            <span class="fas fa-exclamation-triangle"></span>
-                            <span class="invalid-description">Required Field</span>
-                            <span class="invalid-instruction">Please enter the vendor phone</span>
-                        </p>
-                        {{ form.request_vendor_phone(id="vendor_phone", class="form-control", type="tel") }}
+                    <div class="form-group">
+                        <label for="request_vendor_phone" class="form-control-label">
+                            Vendor Phone
+                            <span class="fs-md text-danger" aria-hidden="true">*</span>
+                        </label>
+                        <div>
+                            <p class="invalid-feedback">
+                                <span class="fas fa-exclamation-triangle"></span>
+                                <span class="invalid-description">Required Field</span>
+                                <span class="invalid-instruction">Please enter the vendor phone</span>
+                            </p>
+                            {{ form.request_vendor_phone(id="vendor_phone", class="form-control", type="tel") }}
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    {% for message in form.request_vendor_fax.errors %}
-                    <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
-                    {% endfor %}
-                    <label for="request_vendor_fax" class="form-control-label">
-                        Vendor Fax
-                    </label>
-                    <div>
-                        <p class="invalid-feedback">
-                            <span class="fas fa-exclamation-triangle"></span>
-                            <span class="invalid-description">Required Field</span>
-                            <span class="invalid-instruction">Please enter the vendor fax</span>
-                        </p>
-                        {{ form.request_vendor_fax(id="vendor_fax", class="form-control", type="tel") }}
+                    <div class="form-group">
+                        {% for message in form.request_vendor_fax.errors %}
+                            <div class="alert alert-danger" id="missing_justification">{{ message }}</div>
+                        {% endfor %}
+                        <label for="request_vendor_fax" class="form-control-label">
+                            Vendor Fax
+                        </label>
+                        <div>
+                            <p class="invalid-feedback">
+                                <span class="fas fa-exclamation-triangle"></span>
+                                <span class="invalid-description">Required Field</span>
+                                <span class="invalid-instruction">Please enter the vendor fax</span>
+                            </p>
+                            {{ form.request_vendor_fax(id="vendor_fax", class="form-control", type="tel") }}
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="request_vendor_email" class="form-control-label">
-                        Vendor Email
-                        <span class="fs-md text-danger" aria-hidden="true">*</span>
-                    </label>
-                    <div>
-                        <p class="invalid-feedback">
-                            <span class="fas fa-exclamation-triangle"></span>
-                            <span class="invalid-description">Required Field</span>
-                            <span class="invalid-instruction">Please enter the vendor email</span>
-                        </p>
-                        {{ form.request_vendor_email(id="vendor_email", class="form-control", maxlength="100") }}
+                    <div class="form-group">
+                        <label for="request_vendor_email" class="form-control-label">
+                            Vendor Email
+                            <span class="fs-md text-danger" aria-hidden="true">*</span>
+                        </label>
+                        <div>
+                            <p class="invalid-feedback">
+                                <span class="fas fa-exclamation-triangle"></span>
+                                <span class="invalid-description">Required Field</span>
+                                <span class="invalid-instruction">Please enter the vendor email</span>
+                            </p>
+                            {{ form.request_vendor_email(id="vendor_email", class="form-control", maxlength="100") }}
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="request_vendor_taxid" class="form-control-label">
-                        Vendor/Tax ID
-                    </label>
-                    <div>
-                        <p class="invalid-feedback">
-                            <span class="fas fa-exclamation-triangle"></span>
-                            <span class="invalid-description">Required Field</span>
-                            <span class="invalid-instruction">Please enter the vendor ID or tax ID</span>
-                        </p>
-                        {{ form.request_vendor_taxid(id="vendor_taxid", class="form-control", maxlength="100") }}
+                    <div class="form-group">
+                        <label for="request_vendor_taxid" class="form-control-label">
+                            Vendor/Tax ID
+                        </label>
+                        <div>
+                            <p class="invalid-feedback">
+                                <span class="fas fa-exclamation-triangle"></span>
+                                <span class="invalid-description">Required Field</span>
+                                <span class="invalid-instruction">Please enter the vendor ID or tax ID</span>
+                            </p>
+                            {{ form.request_vendor_taxid(id="vendor_taxid", class="form-control", maxlength="100") }}
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="request_request_vendor_mwbe" class="form-control-label">
-                        M/WBE
-                    </label>
-                    <div>
-                        {{ form.request_vendor_mwbe(id="request_vendor_mwbe", class="radio-inline") }}
+                    <div class="form-group">
+                        <label for="request_request_vendor_mwbe" class="form-control-label">
+                            M/WBE
+                        </label>
+                        <div>
+                            {{ form.request_vendor_mwbe(id="request_vendor_mwbe", class="radio-inline") }}
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <div class="spacer">
-                        <button type="submit" class="btn btn-primary btn-lg btn-block">Submit Request</button>
+                    <div class="form-group">
+                        <div class="spacer">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block">Submit Request</button>
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
-    </div>
-</article>
+    </article>
 {% endblock %}
 
 {% block scripts %}
-<script src="{{ url_for('static', filename='js/plugins/jquery.inputmask.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/request/edit_request.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/plugins/jquery.inputmask.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/request/edit_request.js') }}"></script>
 {% endblock %}

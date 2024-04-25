@@ -1,108 +1,109 @@
 <!-- This template is to initiate a new request. -->
 {% extends "base.html" %} {% block title %}Records Procurement - Edit User Information{% endblock title %}
 {% block custom_css_links %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/edit_user.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/edit_user.css') }}">
 {% endblock custom_css_links %}
 {% block content %}
 
-<article class="container overflow-hidden">
-    <div class="my-5">
-        <div class="medium my-4">
-            <h1>Edit User Information</h1>
-            <div>
-                <table id="requests" class="table table-bordered table-responsive-md text-center table-striped">
-                    <form name="edit_user" class="form-horizontal" id="updateUser" method="POST" action="" novalidate>
-                        {{ form.hidden_tag() }}
-                        <tbody>
-                        <tr>
-                            <th scope="row" colspan="2">User Information</th>
-                        </tr>
-                        <tr>
-                            <th scope="row">User First Name</th>
-                            <td>{{ user.first_name }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">User Last Name</th>
-                            <td>{{user.last_name }}</td>
-                        </tr>
-                        {% if current_user.role == 'Administrator' or current_user.role == 'Procurement Head' %}
-<!--                        TODO: determine if the user should be able to change their own role(admin)-->
-                        {% if current_user.email == user.email %}
-                        <tr>
-                            <th scope="row">User Role</th>
-                            <td>{{ user.role }}</td>
-                        </tr>
-                        {% else %}
-                        <tr>
-                            <th scope="row">User Role</th>
-                            <td>{{ form.role(id="role", class="form-control", default=user.role) }}
-                                <div class="small">Edit role if applicable.</div>
-                            </td>
-                        </tr>
-                        {% endif %}
-                        <tr>
-                            {% for message in form.division.errors %}
-                            <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
-                            {% endfor %}
-                            <th scope="row">User Division</th>
-                            <td>{% if current_user.role == "Administrator" or current_user.role == 'Procurement Head' %}
-                                {{ form.division(id="division", class="form-control", default=user.division) }}
+    <article class="container overflow-hidden">
+        <div class="my-5">
+            <div class="medium my-4">
+                <h1>Edit User Information</h1>
+                <div>
+                    <table id="requests" class="table table-bordered table-responsive-md text-center table-striped">
+                        <form name="edit_user" class="form-horizontal" id="updateUser" method="POST" action=""
+                              novalidate>
+                            {{ form.hidden_tag() }}
+                            <tbody>
+                            <tr>
+                                <th scope="row" colspan="2">User Information</th>
+                            </tr>
+                            <tr>
+                                <th scope="row">User First Name</th>
+                                <td>{{ user.first_name }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">User Last Name</th>
+                                <td>{{ user.last_name }}</td>
+                            </tr>
+                            {% if current_user.role == 'Administrator' or current_user.role == 'Procurement Head' %}
+                                <!--                        TODO: determine if the user should be able to change their own role(admin)-->
+                                {% if current_user.email == user.email %}
+                                    <tr>
+                                        <th scope="row">User Role</th>
+                                        <td>{{ user.role }}</td>
+                                    </tr>
                                 {% else %}
-                                {{ form.division(id="division", class="form-control", default=user.division,
-                                disabled=true )
-                                }}
+                                    <tr>
+                                        <th scope="row">User Role</th>
+                                        <td>{{ form.role(id="role", class="form-control", default=user.role) }}
+                                            <div class="small">Edit role if applicable.</div>
+                                        </td>
+                                    </tr>
                                 {% endif %}
-                                <div class="small">Edit division if applicable.</div>
-                            </td>
-                        </tr>
-                        {% else %}
-                        <tr>
-                            <th scope="row">User Role</th>
-                            <td>{{ user.role }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">User Division</th>
-                            <td>{{ user.division }}</td>
-                        </tr>
-                        {% endif %}
-                        <tr>
-                            <th scope="row">User Email</th>
-                            <td>{{ user.email }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">User Phone Number</th>
-                            <td>
-                                {{ form.phone(id="phone", class="form-control", type="text", value=user.phone)}}
-                                <div class="small">Edit phone number if applicable.</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            {% for message in form.address.errors %}
-                            <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
-                            {% endfor %}
-                            <th scope="row">User Address</th>
-                            <td>{{ form.address(id="address", class="form-control", type="text", value=user.address) }}
-                                <div class="small">Edit address if applicable.</div>
-                            </td>
-                        </tr>
-                        </tbody>
-                        <div class="form-group">
-                            <div>
-                                <button type="submit" class="btn btn-primary btn-small">Save Changes</button>
+                                <tr>
+                                    {% for message in form.division.errors %}
+                                        <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
+                                    {% endfor %}
+                                    <th scope="row">User Division</th>
+                                    <td>
+                                        {% if current_user.role == "Administrator" or current_user.role == 'Procurement Head' %}
+                                            {{ form.division(id="division", class="form-control", default=user.division) }}
+                                        {% else %}
+                                            {{ form.division(id="division", class="form-control", default=user.division,
+                                disabled=true ) }}
+                                        {% endif %}
+                                        <div class="small">Edit division if applicable.</div>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <th scope="row">User Role</th>
+                                    <td>{{ user.role }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">User Division</th>
+                                    <td>{{ user.division }}</td>
+                                </tr>
+                            {% endif %}
+                            <tr>
+                                <th scope="row">User Email</th>
+                                <td>{{ user.email }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">User Phone Number</th>
+                                <td>
+                                    {{ form.phone(id="phone", class="form-control", type="text", value=user.phone) }}
+                                    <div class="small">Edit phone number if applicable.</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                {% for message in form.address.errors %}
+                                    <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
+                                {% endfor %}
+                                <th scope="row">User Address</th>
+                                <td>{{ form.address(id="address", class="form-control", type="text", value=user.address) }}
+                                    <div class="small">Edit address if applicable.</div>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <div class="form-group">
+                                <div>
+                                    <button type="submit" class="btn btn-primary btn-small">Save Changes</button>
+                                </div>
                             </div>
-                        </div>
-                    </form>
-                </table>
+                        </form>
+                    </table>
+                </div>
             </div>
+            <!-- start of static form -->
         </div>
-        <!-- start of static form -->
-    </div>
-</article>
+    </article>
 
-<!-- end of static form -->
+    <!-- end of static form -->
 {% endblock %}
 
 {% block scripts %}
-<script src="{{ url_for('static', filename='js/plugins/jquery.inputmask.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/request/edit_user.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/plugins/jquery.inputmask.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/request/edit_user.js') }}"></script>
 {% endblock %}

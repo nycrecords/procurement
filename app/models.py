@@ -233,11 +233,11 @@ class StatusEvents(db.Model):
                                        status.RES,
                                        status.HOLD, name="status"))
     new_value = db.Column(db.Enum(status.NDA,
-                                       status.NCA,
-                                       status.APR,
-                                       status.DEN,
-                                       status.RES,
-                                       status.HOLD, name="status"))
+                                  status.NCA,
+                                  status.APR,
+                                  status.DEN,
+                                  status.RES,
+                                  status.HOLD, name="status"))
     request_id = db.Column(db.String(11), db.ForeignKey('requests.id'))
     user_guid = db.Column(db.String(64), db.ForeignKey('users.guid'))
     timestamp = db.Column(db.DateTime, default=datetime)
@@ -264,5 +264,6 @@ class StatusEvents(db.Model):
             'new_status': self.new_value,
             'timestamp': self.timestamp.strftime('%m/%d/%Y %I:%M:%S %p')
         }
+
     def __repr__(self):
         return '<Status History {}>'.format(self.id)

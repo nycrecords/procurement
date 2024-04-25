@@ -1,111 +1,110 @@
 {% extends "base.html" %}
 {% block title %}
-Records Procurement - New Vendor
+    Records Procurement - New Vendor
 {% endblock title %}
 
 {% block custom_css_links %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/new_vendor.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/new_vendor.css') }}">
 {% endblock custom_css_links %}
 
 {% block content %}
-<article class="container overflow-hidden">
-    <div class="my-5">
-        <div class="medium">
-            <div class="form-group">
-                <h1>New Vendor</h1>
+    <article class="container overflow-hidden">
+        <div class="my-5">
+            <div class="medium">
+                <div class="form-group">
+                    <h1>New Vendor</h1>
+                </div>
+                <h3><i>Vendor Information</i></h3>
+                <p class="text-right text-danger fs-md" aria-hidden="true">* Required Fields</p>
+                <form name="vendor_form_new" class="needs-validation form-horizontal" id="vendor_form_new" method="POST"
+                      action=""
+                      novalidate>
+                    {{ form.hidden_tag() }}
+
+                    <div class="form-group">
+                        <label for="request_vendor_name" class="form-control-label">Vendor Name</label>
+                        <span class="fs-md text-danger" aria-hidden="true">*</span></label>
+                        <p class="invalid-feedback">
+                            <span class="fas fa-exclamation-triangle"></span>
+                            <span class="invalid-description">Required Field</span>
+                            <span class="invalid-instruction">Please enter the vendor name</span>
+                        </p>
+                        {{ form.vendor_name(id="vendor_name", class="form-control", maxlength="100") }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="request_vendor_address" class="form-control-label">Vendor Address</label>
+                        <span class="fs-md text-danger" aria-hidden="true">*</span></label>
+                        <div>
+                            <p class="invalid-feedback">
+                                <span class="fas fa-exclamation-triangle"></span>
+                                <span class="invalid-description">Required Field</span>
+                                <span class="invalid-instruction">Please enter the vendor address</span>
+                            </p>
+                            {{ form.vendor_address(id="vendor_address", class="form-control", maxlength="100") }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="request_vendor_phone" class="form-control-label">Vendor Phone</label>
+                        <span class="fs-md text-danger" aria-hidden="true">*</span></label>
+                        <div>
+                            <p class="invalid-feedback">
+                                <span class="fas fa-exclamation-triangle"></span>
+                                <span class="invalid-description">Required Field</span>
+                                <span class="invalid-instruction">Please enter the vendor phone</span>
+                            </p>
+                            {{ form.vendor_phone(id="vendor_phone", class="form-control", type="tel") }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="request_vendor_fax" class="form-control-label">Vendor Fax</label>
+                        <div>
+                            {{ form.vendor_fax(id="vendor_fax", class="form-control", type="tel") }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="request_vendor_email" class="form-control-label">Vendor Email</label>
+                        <span class="fs-md text-danger" aria-hidden="true">*</span></label>
+                        <div>
+                            <p class="invalid-feedback">
+                                <span class="fas fa-exclamation-triangle"></span>
+                                <span class="invalid-description">Required Field</span>
+                                <span class="invalid-instruction">Please enter the vendor email</span>
+                            </p>
+                            {{ form.vendor_email(id="vendor_email", class="form-control", maxlength="100") }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="request_vendor_taxid" class="form-control-label">Vendor/Tax ID</label>
+                        <div>
+
+                            {{ form.vendor_tax_id(id="vendor_tax_id", class="form-control", maxlength="100") }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="request_vendor_mwbe" class="form-control-label">M/WBE</label>
+                        <div>
+                            {{ form.vendor_mwbe(id="vendor_mwbe", class="radio-inline") }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="spacer">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block">Submit Request</button>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <h3><i>Vendor Information</i></h3>
-            <p class="text-right text-danger fs-md" aria-hidden="true">* Required Fields</p>
-            <form name="vendor_form_new" class="needs-validation form-horizontal" id="vendor_form_new" method="POST"
-                  action=""
-                  novalidate>
-                {{ form.hidden_tag() }}
-
-                <div class="form-group">
-                    <label for="request_vendor_name" class="form-control-label">Vendor Name</label>
-                    <span class="fs-md text-danger" aria-hidden="true">*</span></label>
-                    <p class="invalid-feedback">
-                        <span class="fas fa-exclamation-triangle"></span>
-                        <span class="invalid-description">Required Field</span>
-                        <span class="invalid-instruction">Please enter the vendor name</span>
-                    </p>
-                    {{ form.vendor_name(id="vendor_name", class="form-control", maxlength="100") }}
-                </div>
-
-                <div class="form-group">
-                    <label for="request_vendor_address" class="form-control-label">Vendor Address</label>
-                    <span class="fs-md text-danger" aria-hidden="true">*</span></label>
-                    <div>
-                        <p class="invalid-feedback">
-                            <span class="fas fa-exclamation-triangle"></span>
-                            <span class="invalid-description">Required Field</span>
-                            <span class="invalid-instruction">Please enter the vendor address</span>
-                        </p>
-                        {{ form.vendor_address(id="vendor_address", class="form-control", maxlength="100")
-                        }}
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="request_vendor_phone" class="form-control-label">Vendor Phone</label>
-                    <span class="fs-md text-danger" aria-hidden="true">*</span></label>
-                    <div>
-                        <p class="invalid-feedback">
-                            <span class="fas fa-exclamation-triangle"></span>
-                            <span class="invalid-description">Required Field</span>
-                            <span class="invalid-instruction">Please enter the vendor phone</span>
-                        </p>
-                        {{ form.vendor_phone(id="vendor_phone", class="form-control", type="tel") }}
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="request_vendor_fax" class="form-control-label">Vendor Fax</label>
-                    <div>
-                        {{ form.vendor_fax(id="vendor_fax", class="form-control", type="tel") }}
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="request_vendor_email" class="form-control-label">Vendor Email</label>
-                    <span class="fs-md text-danger" aria-hidden="true">*</span></label>
-                    <div>
-                        <p class="invalid-feedback">
-                            <span class="fas fa-exclamation-triangle"></span>
-                            <span class="invalid-description">Required Field</span>
-                            <span class="invalid-instruction">Please enter the vendor email</span>
-                        </p>
-                        {{ form.vendor_email(id="vendor_email", class="form-control", maxlength="100") }}
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="request_vendor_taxid" class="form-control-label">Vendor/Tax ID</label>
-                    <div>
-
-                        {{ form.vendor_tax_id(id="vendor_tax_id", class="form-control", maxlength="100") }}
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="request_vendor_mwbe" class="form-control-label">M/WBE</label>
-                    <div>
-                        {{ form.vendor_mwbe(id="vendor_mwbe", class="radio-inline") }}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="spacer">
-                        <button type="submit" class="btn btn-primary btn-lg btn-block">Submit Request</button>
-                    </div>
-                </div>
-            </form>
         </div>
-    </div>
-</article>
+    </article>
 
 {% endblock %}
 
 {% block scripts %}
-<script src="{{ url_for('static', filename='js/plugins/jquery.inputmask.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/request/new_vendor.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/plugins/jquery.inputmask.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/request/new_vendor.js') }}"></script>
 {% endblock %}

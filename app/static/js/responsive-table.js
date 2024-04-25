@@ -26,7 +26,7 @@ $(document).ready(function () {
                             currentslot = currentslot + 1;
                         }
                     } else {
-                        headers[i][currentslot] = headers[i][currentslot] + "<br>" +thisth;
+                        headers[i][currentslot] = headers[i][currentslot] + "<br>" + thisth;
                         currentslot = currentslot + 1;
                     }
                 });
@@ -35,18 +35,22 @@ $(document).ready(function () {
 
         //get styles and add header information back in
 
-        $(this).find("tbody tr").each(function(){
-            $(this).find("> *").each(function(k){
-            var tdtextcolor = $(this).closest("table").find("th").css("color");
-            var tdbgcolor = $(this).closest("table").find("th").css("background-color");
-            var tdfontweight = $(this).closest("table").find("th").css("font-weight");
-            var empty = headers[i][k];
-            if ((k==0 && empty=="") || (k==0 && empty == "<br>")){
-            } else {
-            $(this).before($("<td>").html(headers[i][k]).addClass("psuedo-cell").attr("aria-hidden","true").css({"color":tdtextcolor,"background-color":tdbgcolor,"font-weight":tdfontweight}));
-            }
+        $(this).find("tbody tr").each(function () {
+            $(this).find("> *").each(function (k) {
+                var tdtextcolor = $(this).closest("table").find("th").css("color");
+                var tdbgcolor = $(this).closest("table").find("th").css("background-color");
+                var tdfontweight = $(this).closest("table").find("th").css("font-weight");
+                var empty = headers[i][k];
+                if ((k == 0 && empty == "") || (k == 0 && empty == "<br>")) {
+                } else {
+                    $(this).before($("<td>").html(headers[i][k]).addClass("psuedo-cell").attr("aria-hidden", "true").css({
+                        "color": tdtextcolor,
+                        "background-color": tdbgcolor,
+                        "font-weight": tdfontweight
+                    }));
+                }
+            });
         });
-    });
     });
 
     //// add roles so when display: properties change for mobile screen readers still see the table as table
