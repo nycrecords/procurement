@@ -51,20 +51,18 @@
                                                href="/manage_users/users/disable/{{ user.id }}">
                                                 Disable
                                             </a>
-                                            </td>
                                         {% else %}
                                             Disabled
                                             <a class="btn btn-primary btn-small pull-right"
                                                href="/manage_users/users/enable/{{ user.id }}">
                                                 Enable
                                             </a>
-                                            </td>
                                         {% endif %}
+                                    </td>
                                 </tr>
                             {% endfor %}
                             </tbody>
                         </table>
-                        <div class="spacer"></div>
                     </div>
                 </div>
             </div>
