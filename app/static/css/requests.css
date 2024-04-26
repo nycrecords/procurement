@@ -1,8 +1,8 @@
 table th {
-  color: #181A7B !important;
+    color: #181A7B !important;
 }
 
-.pagination>li {
+.pagination > li {
     display: inline;
 }
 
@@ -13,14 +13,9 @@ table th {
     border-radius: 4px;
 }
 
-
-.pagination>li:first-child>a, .pagination>li:first-child>span {
-    margin-left: 0;
-}
-.pagination>li>a, .pagination>li>span {
+.pagination > li > a, .pagination > li > span {
     position: relative;
     float: left;
-    /* padding: 6px 12px; */
     line-height: 1.42857143;
     text-decoration: none;
     color: #337ab7;
@@ -29,7 +24,7 @@ table th {
     margin-left: -1px;
 }
 
-.pagination>.active>a, .pagination>.active>span, .pagination>.active>a:hover, .pagination>.active>span:hover, .pagination>.active>a:focus, .pagination>.active>span:focus {
+.pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus {
     z-index: 3;
     color: #fff;
     background-color: #3B6CF6;
@@ -39,32 +34,7 @@ table th {
 
 .fixed-table-pagination .pagination a {
     padding: 6px 12px;
-    line-height: 1.428571429;
-}
-
-
-.btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active, .open>.dropdown-toggle.btn-default {
-    color: #333;
-    background-color: #e6e6e6;
-    border-color: #adadad;
-}
-
-.btn-default {
-    color: #333;
-    background-color: #fff;
-    border-color: #ccc;
-}
-
-
-a.btn.btn-primary.btn-large.pull-right{
-    border-radius: 0;
-}
-.btn-group>.btn-group:not(:first-child):not(:last-child)>.btn {
-    border-radius: 0;
-}
-
-.btn-group>.btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
-    border-radius: 0;
+    line-height: 1.43;
 }
 
 .table-nonfluid {
@@ -75,19 +45,15 @@ a.btn.btn-primary.btn-large.pull-right{
 }
 
 .dropdown-item.active {
-background-color: transparent;
+    background-color: transparent;
 }
 
 tr#request-row.table-row td:not(:nth-last-child(-n+2)), tr#vendor-row.table-row td {
     overflow-wrap: break-word;
     word-wrap: break-word;
-
     -ms-word-break: break-all;
-    /* This is the dangerous one in WebKit, as it breaks things wherever */
     word-break: break-all;
     word-break: break-word;
-
-    /* Adds a hyphen where the word breaks, if supported (No Blink) */
     -ms-hyphens: auto;
     -moz-hyphens: auto;
     -webkit-hyphens: auto;
@@ -97,26 +63,12 @@ tr#request-row.table-row td:not(:nth-last-child(-n+2)), tr#vendor-row.table-row 
 tbody#request-table tr td, tbody#vendor-table tr td {
     overflow-wrap: break-word;
     word-wrap: break-word;
-
     -ms-word-break: break-all;
-    /* This is the dangerous one in WebKit, as it breaks things wherever */
     word-break: break-all;
-    /* Instead use this non-standard one: */
     word-break: break-word;
-
-    /* Adds a hyphen where the word breaks, if supported (No Blink) */
     -ms-hyphens: auto;
     -moz-hyphens: auto;
     -webkit-hyphens: auto;
     hyphens: auto;
 }
 
-
-.fixed-table-container td .th-inner, .fixed-table-container thead th .th-inner {
-    padding: 8px;
-    line-height: 24px;
-    vertical-align: top;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}

@@ -5,7 +5,7 @@ $(document).ready(function () {
 
     //InputMask for formatting currency
     Inputmask.extendAliases({
-    dollar: {
+        dollar: {
             prefix: "$ ",
             groupSeparator: ".",
             alias: "numeric",
@@ -17,8 +17,8 @@ $(document).ready(function () {
             rightAlign: false
         }
     });
-     $('#unit_price').inputmask({alias: "dollar"});
-     $('#total_cost').inputmask({alias: "dollar"});
+    $('#unit_price').inputmask({alias: "dollar"});
+    $('#total_cost').inputmask({alias: "dollar"});
 
 
     // Handle funding source selection change
@@ -37,6 +37,7 @@ $(document).ready(function () {
             $('#project_name').hide();
         }
     }
+
     // Initial call on page load
     handleFundingSourceChange();
 
@@ -87,7 +88,7 @@ $(document).ready(function () {
                 vendor_taxid.attr("disabled", dis);
                 vendor_mwbe.attr("disabled", dis);
             },
-            error: function(error) {
+            error: function (error) {
                 alert(error.responseJSON);
             }
         });

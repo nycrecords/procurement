@@ -5,8 +5,8 @@
 """
 from flask import Flask
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, TextAreaField, SubmitField, BooleanField, DecimalField, IntegerField
-from wtforms.validators import DataRequired, Length
+from wtforms import StringField, SelectField, SubmitField
+from wtforms.validators import DataRequired
 from wtforms_alchemy import PhoneNumberField
 
 from app.constants import division, roles
