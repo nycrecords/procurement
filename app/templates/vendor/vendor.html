@@ -12,7 +12,7 @@
             <div class="medium my-4">
                 <div class="form-group">
                     <h1 id="vendor-title">{{ vendor.name }}</h1>
-                    {% if current_user.role == "Administrator" %}
+                    {% if current_user.role == "Administrator" or current_user.role == "Procurement Head" %}
                         <a class="btn btn-primary btn-small"
                            href="{{ url_for('vendor.edit_vendor', vendor_id=vendor.id) }}">Edit Vendor</a>
                     {% endif %}
