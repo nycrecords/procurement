@@ -3,9 +3,10 @@
 
    :synopsis: Provides routes for managing a specific request
 """
-from decimal import Decimal
 import datetime
 import os
+from decimal import Decimal
+
 from flask import (
     render_template,
     request as flask_request,
@@ -18,16 +19,17 @@ from flask import (
     jsonify
 )
 from flask_login import login_required, current_user
+from sqlalchemy import desc
 from werkzeug.utils import secure_filename
+
 from app import db
+from app.constants import roles, status, mimetypes
 from app.email_notification import send_email
 from app.errors import flash_errors
-from app.request.forms import RequestForm, CommentForm, DeleteCommentForm, StatusForm
 from app.models import Request, User, Vendor, Comment, StatusEvents
 from app.request import request as requests
-from app.constants import roles, status, mimetypes
+from app.request.forms import RequestForm, CommentForm, DeleteCommentForm, StatusForm
 from app.request.utils import determine_fiscal_id, email_setup
-from sqlalchemy import desc
 
 
 @requests.route('/', methods=['GET', 'POST'])
@@ -418,7 +420,7 @@ def update_status(request_id):
                 request_id=request_id,
                 previous_value=old_status,
                 new_value=request.status,
-                user_guid=current_user.guid,
+                user_id=current_user.id,
                 timestamp=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             )
             db.session.add(new_status)

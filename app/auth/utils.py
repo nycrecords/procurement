@@ -1,7 +1,8 @@
 from datetime import datetime
 
 from flask import current_app, session, redirect, url_for, request, render_template, flash
-from flask_login import login_user, current_user
+from flask_login import login_user
+from sqlalchemy import func
 
 from app import db
 from app.constants import auth_event_type, roles
@@ -126,8 +127,7 @@ def saml_acs(saml_sp, onelogin_request):
                 update_object(
                     {'session_id': session.sid, 'last_sign_in_at': datetime.utcnow()},
                     User,
-                    current_user.guid,
-                    by_guid=True
+                    user.id,
                 )
                 create_auth_event(user.guid, auth_event_type.USER_LOGIN, {'success': True})
             else:
@@ -194,8 +194,8 @@ def _process_user_data(user_data: dict):
     username, domain = user_attributes['email'].split('@')
 
     if domain == 'records.nyc.gov':
-        user = User.query.filter_by(guid=user_attributes['guid']).first() or User.query.filter_by(
-            email=user_attributes['email']).first()
+        user = User.query.filter_by(guid=user_attributes['guid']).first() or User.query.filter(
+            func.lower(User.email) == user_attributes['email']).first()
         if user:
             _update_user_data(user, user_attributes)
         else:

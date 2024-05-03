@@ -8,14 +8,21 @@
             $.sessionTimeout({
                 title: "Session Timeout",
                 message: "Your session is about to expire.",
-                countdownMessage: 'You will be automatically logged out in {timer}.',
-                countdownSmart: true,
-                countdownBar: true,
+                logoutButton: 'Logout',
+                keepAliveButton: 'Stay Connected',
                 keepAliveUrl: '{{ url_for('main.active') }}',
+                keepAlive:true,
+                keepAliveInterval: 5000,
+                ajaxType: 'POST',
+                ajaxData: '',
+                redirUrl: '{{ redirUrl }}',
+                logoutUrl: '{{ logoutUrl }}',
                 warnAfter: 25 * 60 * 1000,
                 redirAfter: 30 * 60 * 1000,
-                logoutUrl: '{{ logoutUrl }}',
-                redirUrl: '{{ redirUrl }}',
+                ignoreUserActivity: true,
+                countdownSmart: true,
+                countdownMessage: 'You will be automatically logged out in {timer}.',
+                countdownBar: true,
             });
             {% if duplicate_session %}
                 $("#concurrent-session-modal").modal("show");

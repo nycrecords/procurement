@@ -5,9 +5,8 @@ Revises: e27682eaa1b2
 Create Date: 2024-04-25 12:21:07.901039
 
 """
-from alembic import op
 import sqlalchemy as sa
-
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = '7cb1b3b52662'
@@ -22,11 +21,11 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('previous_value', sa.Enum('Needs Division Approval', 'Needs Commissioner Approval', 'Needs Procurement Head Approval', 'Approved - Pending', 'Order in Progress', 'Denied', 'Resolved', 'Hold', name='status'), nullable=True),
     sa.Column('new_value', sa.Enum('Needs Division Approval', 'Needs Commissioner Approval', 'Needs Procurement Head Approval', 'Approved - Pending', 'Order in Progress', 'Denied', 'Resolved', 'Hold', name='status'), nullable=True),
-    sa.Column('request_id', sa.String(length=11), nullable=True),
-    sa.Column('user_guid', sa.String(length=64), nullable=True),
+    sa.Column('request_id', sa.String(length=11), nullable=False),
+    sa.Column('user_id', sa.Integer, nullable=False),
     sa.Column('timestamp', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['request_id'], ['requests.id'], ),
-    sa.ForeignKeyConstraint(['user_guid'], ['users.guid'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     with op.batch_alter_table('users', schema=None) as batch_op:

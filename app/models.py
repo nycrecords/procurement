@@ -243,7 +243,7 @@ class StatusEvents(db.Model):
                                   status.RES,
                                   status.HOLD, name="status"))
     request_id = db.Column(db.String(11), db.ForeignKey('requests.id'))
-    user_guid = db.Column(db.String(64), db.ForeignKey('users.guid'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     timestamp = db.Column(db.DateTime, default=datetime)
     user = db.relationship("User", backref="status_events")
 
@@ -251,19 +251,19 @@ class StatusEvents(db.Model):
                  previous_value=None,
                  new_value=None,
                  request_id=None,
-                 user_guid=None,
+                 user_id=None,
                  timestamp=None):
         self.previous_value = previous_value
         self.new_value = new_value
         self.request_id = request_id
-        self.user_guid = user_guid
+        self.user_id = user_id
         self.timestamp = timestamp or datetime.now(timezone('US/Eastern'))
 
     @property
     def status_history(self):
         return {
             'id': self.id,
-            'user': self.user_guid,
+            'user': self.user_id,
             'previous_status': self.previous_value,
             'new_status': self.new_value,
             'timestamp': self.timestamp.strftime('%m/%d/%Y %I:%M:%S %p')

@@ -117,8 +117,7 @@ def local_login():
                     'last_sign_in_at': datetime.utcnow()
                 },
                     User,
-                    current_user.guid,
-                    by_guid=True
+                    user.id
                 )
                 create_auth_event(user.guid, auth_event_type.USER_LOGIN, {'success': True})
                 return redirect(return_url) if return_url else redirect(url_for('main.index'))
