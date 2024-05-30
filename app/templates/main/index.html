@@ -9,13 +9,15 @@
                     <div class="container align-self-center my-3">
                         <div class="narrow text-white text-center">
                             <h1 class="card-title display-4 font-weight-bold mb-3">Procurement</h1>
-                            <a href="/requests" class="btn btn-lg btn-info">Start</a>
+                            {% if config['USE_SAML'] %}
+                                <a href="{{ url_for('auth.saml') }}" class="btn btn-lg btn-info">Start</a>
+                            {% else %}
+                                <a href="/requests" class="btn btn-lg btn-info">Start</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-
-
     </main>
 {% endblock %}

@@ -25,7 +25,7 @@ from sqlalchemy import desc
 @login_required
 def display_vendors():
     """Return page that displays all vendors."""
-    if current_user.role == roles.ADMIN:
+    if current_user.role in [roles.ADMIN, roles.PROC]:
         vendors = Vendor.query.order_by(desc(Vendor.enabled), Vendor.name).all()
     else:
         vendors = Vendor.query.filter_by(enabled=True).order_by(Vendor.name).all()
@@ -43,7 +43,7 @@ def new_vendor():
         vendor_name = str(form.vendor_name.data)
         vendor_address = form.vendor_address.data
         vendor_phone = str(form.vendor_phone.data)
-        vendor_fax = str(form.vendor_fax.data)
+        vendor_fax = str(form.vendor_fax.data) if form.vendor_fax.data is not None else None
         vendor_email = form.vendor_email.data
         vendor_tax_id = form.vendor_tax_id.data
         vendor_mwbe = form.vendor_mwbe.data
@@ -91,7 +91,7 @@ def edit_vendor(vendor_id):
         vendor.name = str(form.vendor_name.data)
         vendor.address = form.vendor_address.data
         vendor.phone = str(form.vendor_phone.data)
-        vendor.fax = str(form.vendor_fax.data)
+        vendor.fax = str(form.vendor_fax.data) if form.vendor_fax.data is not None else None
         vendor.email = form.vendor_email.data
         vendor.tax_id = form.vendor_tax_id.data
         vendor.mwbe = form.vendor_mwbe.data
@@ -109,7 +109,7 @@ def edit_vendor(vendor_id):
 @login_required
 def disable(id):
     """Disables the vendor and redirects to vendors page."""
-    if not current_user.role == roles.ADMIN:
+    if current_user.role not in [roles.ADMIN, roles.PROC]:
         return redirect('requests')
 
     vendor = Vendor.query.get_or_404(id)
@@ -123,7 +123,7 @@ def disable(id):
 @login_required
 def enable(id):
     """Enables the vendor and redirects to vendors page."""
-    if not current_user.role == roles.ADMIN:
+    if current_user.role not in [roles.ADMIN, roles.PROC]:
         return redirect('requests')
 
     vendor = Vendor.query.get_or_404(id)

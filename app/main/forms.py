@@ -42,6 +42,6 @@ class EditUserForm(FlaskForm):
     """Form for updating user information."""
     role = SelectField('role', validators=[DataRequired()], choices=roles)
     division = SelectField('division', validators=[DataRequired()], choices=divisions)
-    phone = PhoneNumberField('Phone', region='US', display_format='national', validators=[DataRequired()])
+    phone = PhoneNumberField('Phone', region='US', display_format='national')
     address = StringField('Address', validators=[DataRequired()])
     update = SubmitField(u'Update Information')

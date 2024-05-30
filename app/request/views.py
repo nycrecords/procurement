@@ -20,6 +20,7 @@ from flask import (
 )
 from flask_login import login_required, current_user
 from sqlalchemy import desc
+from urllib.parse import urljoin
 from werkzeug.utils import secure_filename
 
 from app import db
@@ -61,11 +62,15 @@ def new_request():
 
         request_id = determine_fiscal_id(date_submitted)
 
+        # Strip dollar sign and replace comma from input mask and convert value into Decimal
+        unit_price = Decimal(form.unit_price.data.strip('$').replace(',', ''))
+        total_cost = Decimal(form.total_cost.data.strip('$').replace(',', ''))
+
         # determine what possible routes a request can take based on the request and the current user role
         current_status = status.NDA
         if current_user.role == roles.DIV:
             current_status = status.NCA
-            if form.total_cost.data <= current_app.config['COST_LIMIT']:
+            if total_cost <= Decimal(current_app.config['COST_LIMIT']):
                 current_status = status.APR
 
         elif current_user.role == roles.COM:
@@ -80,8 +85,8 @@ def new_request():
             date_submitted=date_submitted,
             item=form.item.data,
             quantity=form.quantity.data,
-            unit_price=Decimal(form.unit_price.data.strip('$')),
-            total_cost=Decimal(form.total_cost.data.strip('$')),
+            unit_price=unit_price,
+            total_cost=total_cost,
             funding_source=form.funding_source.data,
             funding_source_description=None,
             grant_name=None,
@@ -130,7 +135,9 @@ def new_request():
         send_email(receivers, header,
                    'request/new_request_notification',
                    user=current_user,
-                   request=new_request)
+                   request=new_request,
+                   url=urljoin(flask_request.host_url,
+                               url_for('request.display_request', request_id=new_request.id, _external=True, _scheme='https')))
 
         flash("Request was successfully created!", category="success")
         return redirect(url_for('request.display_request', request_id=new_request.id))
@@ -427,7 +434,6 @@ def update_status(request_id):
             db.session.commit()
             flash("Status was successfully updated!", category="success")
 
-
         else:
             flash('No changes updated', category='danger')
 
@@ -441,7 +447,12 @@ def update_status(request_id):
                        'request/status_update',
                        user=current_user,
                        request=request,
-                       old_status=old_status)
+                       old_status=old_status,
+                       url=urljoin(flask_request.host_url,
+                                   url_for('request.display_request',
+                                           request_id=request.id,
+                                           _external=True,
+                                           _scheme='https')))
 
         return redirect(url_for('request.display_request', request_id=request_id))
 

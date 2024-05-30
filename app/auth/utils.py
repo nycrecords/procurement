@@ -184,7 +184,7 @@ def _process_user_data(user_data: dict):
     """
     user_attributes = {
         'guid': user_data.get('GUID'),
-        'email': user_data.get('mail'),
+        'email': user_data.get('mail').lower(),
         'first_name': user_data.get('givenName'),
         'middle_initial': user_data.get('middle_name'),
         'last_name': user_data.get('sn'),

@@ -66,7 +66,7 @@
                         {% endfor %}
                         <label for="request_vendor_fax" class="form-control-label">Vendor Fax</label>
                         <div>
-                            {{ form.vendor_fax(id="vendor_fax", class="form-control", type="tel", value=vendor.fax) }}
+                            {{ form.vendor_fax(id="vendor_fax", class="form-control", type="tel", value=vendor.fax if vendor.fax) }}
                         </div>
                     </div>
 
