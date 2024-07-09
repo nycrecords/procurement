@@ -11,30 +11,40 @@ DORIS Procurements is a Python web application built using the Flask framework f
 
 ## Setup Instructions
 Clone the git repository and make it your current directory:
+```bash
+git clone git@gitlab.com:nycrecords/doris_procurements.git
+cd doris_procurements
+```
 
-    git clone git@gitlab.com:nycrecords/doris_procurements.git
-    cd doris_procurements
-
+Make sure you have `postgresql` and `libpq` installed.
 Create a virtual environment and install the requirements:
-
-    virtualenv procurements
-    source procurements/bin/activate
-    pip install -r requirements.txt
+```bash
+python3 -m venv procurements
+source procurements/bin/activate
+pip install -r requirements.txt
+```
 
 Initialize the database by entering the following in the psql line:
-
-    psql
-        username=# create database procurement;
-        username=# \q
+```bash
+psql postgres
+username=# create database procurement;
+username=# \q
+```
 
 Upgrade the database by entering the following in the command line:
-
-    python manage.py db upgrade
+```bash
+flask db upgrade
+```
 
 Locally run the intranet by entering the following in the command line:
+```bash
+python manage.py runserver
+```
 
-    python manage.py runserver
-
+## Troubleshooting
+### Psycopg2 can't find the dynamic library of `libpq`
+For development, the alternative package `psycopg2-binary` can be used to `psycopg2`.
+For production, `psycopg2` should be compiled from source.
 
 ### Contribution guidelines ###
 
