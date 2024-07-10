@@ -1,4 +1,6 @@
 #!/bin/sh
 
-flask db upgrade
-exec gunicorn -b :5000 --access-logfile - --error-logfile - manage:app
+# Exit on any error in the pipeline
+set -e
+
+exec "$@"

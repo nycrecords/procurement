@@ -12,8 +12,9 @@ COPY app app
 COPY migrations migrations
 COPY manage.py manage.py
 COPY config.py config.py
-COPY boot.sh boot.sh
-RUN chmod a+x boot.sh
+COPY entrypoint.sh entrypoint.sh
+RUN chmod +x entrypoint.sh
 
 EXPOSE 5000
 ENTRYPOINT ["entrypoint.sh"]
+CMD ["gunicorn", "-c" "python:gunicorn", "manage:app"]
