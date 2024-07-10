@@ -16,4 +16,4 @@ COPY boot.sh boot.sh
 RUN chmod a+x boot.sh
 
 EXPOSE 5000
-ENTRYPOINT ["./boot.sh"]
+ENTRYPOINT ["entrypoint.sh"]
