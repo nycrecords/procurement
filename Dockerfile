@@ -16,5 +16,7 @@ COPY entrypoint.sh entrypoint.sh
 RUN chmod +x entrypoint.sh
 
 EXPOSE 5000
-ENTRYPOINT ["entrypoint.sh"]
-CMD ["gunicorn", "-c" "python:gunicorn", "manage:app"]
+ENTRYPOINT ["./entrypoint.sh"]
+
+# TODO: Investigate why it gives errors with the "-c" switch
+CMD ["gunicorn", "-b", ":5000", "manage:app"]
