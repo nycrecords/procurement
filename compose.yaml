@@ -11,16 +11,32 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
     env_file: ".env"
 
-  web:
-    build: .
+  production:
+    build:
+      context: .
+      target: production
     ports:
       - "8080:5000"
     environment:
-    - DATABASE_URL=${DATABASE_URL}
-    - FLASK_APP=${FLASK_APP}
+      - DATABASE_URL=${DATABASE_URL}
+      - FLASK_APP=${FLASK_APP}
     env_file: ".env"
     depends_on:
       - db
+
+  development:
+    build:
+      context: .
+      target: development
+    ports:
+      - "8080:5000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - FLASK_APP=${FLASK_APP}
+    env_file: ".env"
+    depends_on:
+      - db
+    
 
 volumes:
   db:
