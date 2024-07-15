@@ -29,10 +29,11 @@ services:
       context: .
       target: development
     ports:
-      - "8080:5000"
+      - "5000:5000"
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - FLASK_APP=${FLASK_APP}
+      - FLASK_DEBUG=1
     env_file: ".env"
     depends_on:
       - db
