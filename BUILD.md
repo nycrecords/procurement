@@ -21,11 +21,16 @@ source procurements/bin/activate
 pip install -r requirements.txt
 ```
 
-Now do `flask run` and the server should be running port 5000.
+Now do `flask run` and the server will be running port 5000.
 
 # Docker build
-To run with docker, run
+## Development build
 ```bash
-docker-compose up
+docker-compose up development
 ```
-And the server will be open on port 8080.
+The server will be open on port 5000.
+## Production build
+```bash
+docker-compose up production
+```
+The server will be open on port 8080.
