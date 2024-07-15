@@ -14,13 +14,13 @@ COPY migrations migrations
 COPY manage.py manage.py
 COPY config.py config.py
 COPY entrypoint.sh entrypoint.sh
+COPY gunicorn-conf.py gunicorn-conf.py
 RUN chmod +x entrypoint.sh
 
 EXPOSE 5000
 ENTRYPOINT ["./entrypoint.sh"]
 
-# TODO: Investigate why it gives errors with the "-c" switch
-CMD ["gunicorn", "-b", ":5000", "manage:app"]
+CMD ["gunicorn", "-c", "python:gunicorn-conf", "manage:app"]
 
 # ================================= DEVELOPMENT ================================
 FROM python:3-slim-bookworm AS development
