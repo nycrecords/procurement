@@ -18,7 +18,7 @@ Create a virtual environment and install the requirements:
 ```bash
 python3 -m venv procurements
 source procurements/bin/activate
-pip install -r requirements.txt
+pip install -r requirements/dev.txt
 ```
 
 Now do `flask run` and the server will be running port 5000.
