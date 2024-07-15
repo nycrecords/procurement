@@ -10,8 +10,8 @@ the application to connect to the database.
 # Local Build
 Clone the git repository and make it your current directory:
 ```bash
-git clone git@gitlab.com:nycrecords/doris_procurements.git
-cd doris_procurements
+git clone git@github.com:nycrecords/procurement.git
+cd procurement
 ```
 
 Create a virtual environment and install the requirements:
