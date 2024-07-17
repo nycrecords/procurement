@@ -10,6 +10,24 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
 
+  redis:
+    image: redis:7-bookworm
+    volumes:
+    - redis:/data
+    ports:
+    - "6379:6379"
+
+  worker:
+    build:
+      context: .
+      target: development
+    command: celery -A "app" worker -l DEBUG
+    environment:
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+    depends_on:
+    - db
+    - redis
+
   production:
     build:
       context: .
@@ -20,6 +38,7 @@ services:
       - DATABASE_URL=${DATABASE_URL}
       - FLASK_APP=${FLASK_APP}
     depends_on:
+      - redis
       - db
 
   development:
@@ -34,9 +53,12 @@ services:
       - FLASK_DEBUG=1
     env_file: ".env"
     depends_on:
+      - redis
       - db
     
 
 volumes:
   db:
+    driver: local
+  redis:
     driver: local

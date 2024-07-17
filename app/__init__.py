@@ -10,13 +10,14 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import current_user, LoginManager
 from flask_session import Session
 from flask_mail import Mail
+from celery import Celery
 from config import config
 
 mail = Mail()
 db = SQLAlchemy()
 login_manager = LoginManager()
 sess = Session()
-
+celery_app = Celery()
 
 def create_app(config_name):
     app = Flask(__name__)
@@ -28,6 +29,7 @@ def create_app(config_name):
     sess.init_app(app)
     login_manager.init_app(app)
     login_manager.login_view = 'auth.login'
+    celery_app.config_from_object(config[config_name], namespace='CELERY')
 
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)

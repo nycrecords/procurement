@@ -14,6 +14,11 @@ class Config:
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    # Celery settings
+    CELERY_RESULT_BACKEND = SQLALCHEMY_DATABASE_URI # Use the same database, no need for another
+    CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL')
+    CELERY_IMPORTS = [] # Add tasks here
+
     # Mail Settings
     MAIL_SERVER = os.environ.get("MAIL_SERVER") or "localhost"
     MAIL_PORT = os.environ.get("MAIL_PORT") or 2525

@@ -25,6 +25,7 @@ FROM python:3-slim-bookworm AS development
 
 COPY requirements/dev.txt ./requirements/
 RUN pip install -r requirements/dev.txt
+RUN pip install celery celery[redis]
 COPY app ./app/
 COPY migrations ./migrations/
 COPY manage.py config.py ./
