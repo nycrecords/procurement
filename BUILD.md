@@ -34,3 +34,11 @@ The server will be open on port 5000.
 docker-compose up production
 ```
 The server will be open on port 8080.
+
+# Notes
+When changing env vars, the image must be rebuilt.
+```bash
+docker-compose build development
+```
+You can force a build from scratch with the `--no-cache` flag.
+This is useful for changes in code or dependencies.
