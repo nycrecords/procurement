@@ -8,6 +8,7 @@ from flask_login import current_user
 from app.models import Request, User, Comment
 from app.constants import roles, status
 from app.email_notification import send_email
+from sqlalchemy.sql.expression import true
 import datetime
 
 
@@ -35,8 +36,9 @@ def determine_fiscal_id(date_submitted):
 def email_setup(requester, request):
     """Returns receivers and header based on the status of a request"""
     receivers = [requester.email]
-    admin_query = db.session.query(User).filter(User.role == roles.ADMIN). \
-        filter(User.id != requester.id).all()
+    admin_query = User.query.filter(User.role == roles.ADMIN,
+                                    User.id != requester.id,
+                                    User.is_active == true()).all()
     for query in admin_query:
         receivers.append(query.email)
     header = ""
@@ -56,34 +58,38 @@ def email_setup(requester, request):
         header = "Request {} has been Denied".format(request.id)
 
     elif request.status == status.NDA:
-        div_query = db.session.query(User).filter(User.role == roles.DIV). \
-            filter(User.id != requester.id). \
-            filter(User.division == requester.division).all()
+        div_query = User.query.filter(User.role == roles.DIV,
+                                      User.id != requester.id,
+                                      User.division == requester.division,
+                                      User.is_active == true()).all()
         for query in div_query:
             receivers.append(query.email)
 
         header = "Request {} has been Routed for Approval".format(request.id)
 
     elif request.status == status.NCA:
-        comm_query = db.session.query(User).filter(User.role == roles.COM). \
-            filter(User.id != requester.id). \
-            filter(User.division == requester.division).all()
+        comm_query = User.query.filter(User.role == roles.COM,
+                                       User.id != requester.id,
+                                       User.division == requester.division,
+                                       User.is_active == true()).all()
         for query in comm_query:
             receivers.append(query.email)
 
         header = "Request {} needs High Level Approval".format(request.id)
 
     elif request.status == status.APR:
-        proc_query = db.session.query(User).filter(User.role == roles.PROC). \
-            filter(User.id != requester.id).all()
+        proc_query = User.query.filter(User.role == roles.PROC,
+                                       User.id != requester.id,
+                                       User.is_active == true()).all()
         for query in proc_query:
             receivers.append(query.email)
 
         header = "Request {} has been Approved".format(request.id)
 
     elif request.status == status.HOLD:
-        proc_query = db.session.query(User).filter(User.role == roles.PROC). \
-            filter(User.id != requester.id).all()
+        proc_query = User.query.filter(User.role == roles.PROC,
+                                       User.id != requester.id,
+                                       User.is_active == true()).all()
         for query in proc_query:
             receivers.append(query.email)
 

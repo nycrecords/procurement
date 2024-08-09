@@ -1,0 +1,142 @@
+<!-- For keyboard users -->
+<a class="sr-only sr-only-focusable skip-menu" href="#skip-header-target">Skip Header</a>
+<header id="global-header" role="banner">
+    <div class="bg-dark text-white" id="nyc-top-header">
+        <div class="container-fluid wide">
+            <div class="row py-1 align-items-center justify-content-between">
+                <div class="col-auto">
+                    <p class="d-none d-md-flex fs-md">
+                        <a class="text-reset" href="https://www1.nyc.gov/">
+                            <strong>nyc.gov</strong>
+                        </a>
+                        <span class="mx-1" aria-hidden="true">|</span>Department of Records
+                        <span class="mx-1" aria-hidden="true">|</span>
+                        Procurement
+                    </p>
+                </div>
+                <div class="col-auto">
+                    <ul class="extensible-list horizontal fs-md">
+                        <li>
+                            <a class="text-reset" href="http://www1.nyc.gov/">
+                                <strong>311</strong>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="text-reset" href="http://www1.nyc.gov/home/search/index.page">
+                                <strong>Search all NYC.gov</strong>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www1.nyc.gov/" title="Go to nyc.gov">
+                                <img class="d-block"
+                                     src="{{ url_for('static', filename='img/nyc-bubble-logo.svg') }}"
+                                     width="45"
+                                     alt="NYC Logo">
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="wrap-header">
+        <div class="container-fluid wide">
+            <div class="row align-items-center">
+                <div class="col-lg py-2">
+                    <div class="d-flex justify-content-center justify-content-lg-start">
+                        <a class="align-self-center" href="{{ url_for('main.index') }}" title="Home">
+                            <img src="{{ url_for('static' , filename='img/records-logo.svg') }}"
+                                 alt="DORIS">
+                        </a>
+                    </div>
+                    <!-- .d-flex -->
+                </div>
+                <!-- .col -->
+
+                <div class="col-lg-auto border-top border-lg-0">
+                    <div class="row no-gutters justify-content-between py-2">
+                        <!-- Menu Toggle -->
+                        <div class="col-auto d-flex d-lg-none">
+                            <button class="no-btn-style" type="button" data-toggle="collapse"
+                                    data-target="#nav-primary" aria-controls="nav-primary" aria-expanded="false"
+                                    aria-label="Toggle navigation">
+                                <span class="fas fa-bars fa-lg" role="img"></span>
+                            </button>
+                        </div>
+                        <!-- .col -->
+
+                        <div class="col-auto">
+                            <ul class="extensible-list horizontal">
+                                {% if current_user.is_authenticated %}
+                                    <li class="nav-item">
+                                        <a class="btn btn-primary" href="{{ url_for('auth.logout') }}">Sign Out</a>
+                                    </li>
+                                {% endif %}
+
+                                <li>
+                                    <button class="no-btn-style" type="button" title="Language"
+                                            data-toggle="collapse" data-target="#global-language"
+                                            aria-controls="global-language" aria-expanded="false">
+                                        <span class="sr-only">Language</span>
+                                        <span class="fas fa-language fa-lg" role="img"></span>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- .col -->
+                    </div>
+                    <!-- .row -->
+                </div>
+                <!-- .col -->
+            </div>
+            <!-- .row -->
+        </div>
+        <!-- .container-fluid -->
+    </div>
+    <!-- .wrap-header -->
+
+    <div class="container-fluid border-top collapse" id="global-language">
+        <div class="narrow py-2">
+            <div id="google_translate_element"></div>
+        </div>
+    </div>
+    <div class="container-fluid collapse d-lg-block px-0 border-lg-top border-bottom" id="nav-primary">
+        <h2 class="sr-only">
+            Primary Navigation
+        </h2>
+        {% if current_user.is_authenticated %}
+            <div class="wide">
+                <nav class="nav nav-pills" role="navigation">
+                    <div class="nav-item dropdown">
+                        <a class="nav-link" href="{{ url_for('main.profile') }}" id="nav-item-01">
+                            {{ current_user.first_name }} {{ current_user.last_name }}
+                        </a>
+                    </div>
+                    {% if current_user.role == "Administrator" or current_user.role == "Procurement Head" %}
+                        <div class="nav-item dropdown">
+                            <a class="nav-link" href="{{ url_for('main.manage_users') }}" id="nav-item-02">
+                                Manage Users
+                            </a>
+                        </div>
+                    {% endif %}
+                    <div class="nav-item dropdown">
+                        <a class="nav-link" href="{{ url_for('request.index') }}" id="nav-item-03">
+                            Request History
+                        </a>
+                    </div>
+                    <!-- .nav-item -->
+
+                    <div class="nav-item dropdown">
+                        <a class="nav-link" href="{{ url_for('vendor.display_vendors') }}" id="nav-item-04">
+                            Vendor List
+                        </a>
+                    </div>
+                    <!-- .nav-item -->
+                </nav>
+            </div>
+            <!-- .wide -->
+        {% endif %}
+    </div>
+</header>
