@@ -4,10 +4,10 @@
     :synopsis: Defines the functions for request directory
 """
 from app import db
+from flask import current_app
 from flask_login import current_user
 from app.models import Request, User, Comment
 from app.constants import roles, status
-from app.email_notification import send_email
 from sqlalchemy.sql.expression import true
 import datetime
 
@@ -15,9 +15,9 @@ import datetime
 def determine_fiscal_id(date_submitted):
     """Returns the appropriate id based on the fiscal year"""
     if date_submitted.month < 7:
-        id_first = "FY" + str(date_submitted.year - 1) + "-"
-    else:
         id_first = "FY" + str(date_submitted.year) + "-"
+    else:
+        id_first = "FY" + str(date_submitted.year + 1) + "-"
 
     last_request = Request.query.filter(Request.id.like(id_first + "%")).order_by(Request.id.desc()).first()
     if last_request:
@@ -35,12 +35,7 @@ def determine_fiscal_id(date_submitted):
 
 def email_setup(requester, request):
     """Returns receivers and header based on the status of a request"""
-    receivers = [requester.email]
-    admin_query = User.query.filter(User.role == roles.ADMIN,
-                                    User.id != requester.id,
-                                    User.is_active == true()).all()
-    for query in admin_query:
-        receivers.append(query.email)
+    receivers = [requester.email, current_app.config['PROCUREMENT_DL']]
     header = ""
 
     if request.status == status.DEN:
@@ -70,7 +65,6 @@ def email_setup(requester, request):
     elif request.status == status.NCA:
         comm_query = User.query.filter(User.role == roles.COM,
                                        User.id != requester.id,
-                                       User.division == requester.division,
                                        User.is_active == true()).all()
         for query in comm_query:
             receivers.append(query.email)
@@ -78,21 +72,9 @@ def email_setup(requester, request):
         header = "Request {} needs High Level Approval".format(request.id)
 
     elif request.status == status.APR:
-        proc_query = User.query.filter(User.role == roles.PROC,
-                                       User.id != requester.id,
-                                       User.is_active == true()).all()
-        for query in proc_query:
-            receivers.append(query.email)
-
         header = "Request {} has been Approved".format(request.id)
 
     elif request.status == status.HOLD:
-        proc_query = User.query.filter(User.role == roles.PROC,
-                                       User.id != requester.id,
-                                       User.is_active == true()).all()
-        for query in proc_query:
-            receivers.append(query.email)
-
         header = "Request {} has been put on Hold".format(request.id)
 
     elif request.status == status.RES:

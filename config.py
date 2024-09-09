@@ -21,13 +21,14 @@ class Config:
     MAIL_USERNAME = os.environ.get("MAIL_USERNAME") or None
     MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD") or None
     MAIL_SENDER = os.environ.get("MAIL_SENDER") or "donotreply@records.nyc.gov"
+    PROCUREMENT_DL = os.environ.get('PROCUREMENT_DL')
     FLASKY_MAIL_SUBJECT_PREFIX = '[Procurement]'
     FLASKY_MAIL_SENDER = 'Procurement Admin <donotreply@records.nyc.gov>'
 
     FLASKY_ADMIN = os.environ.get('PROCUREMENT_ADMIN')
     UPLOAD_FOLDER = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'uploads')
     MAX_CONTENT_LENGTH = 15 * 1024 * 1024
-    COST_LIMIT = 1000
+    COST_LIMIT = os.environ.get('COST_LIMIT', 500)
 
     # Authentication Settings
     USE_SAML = os.environ.get('USE_SAML') == "True"

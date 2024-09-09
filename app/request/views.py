@@ -20,6 +20,7 @@ from flask import (
 )
 from flask_login import login_required, current_user
 from sqlalchemy import desc
+from sqlalchemy.sql.expression import true
 from urllib.parse import urljoin
 from werkzeug.utils import secure_filename
 
@@ -184,7 +185,7 @@ def display_request(request_id):
 
     elif current_user.role == roles.DIV:
         approved = status.NCA
-        if request.total_cost <= current_app.config['COST_LIMIT']:
+        if request.total_cost <= Decimal(current_app.config['COST_LIMIT']):
             approved = status.NPA
 
         choices = [
@@ -360,22 +361,17 @@ def add_comment(request_id):
         db.session.commit()
 
         # Email notification for comment
-        receivers = []
+        receivers = [current_app.config['PROCUREMENT_DL']]
 
         request, requestor = db.session.query(Request, User).filter(Request.id == request_id). \
             filter(User.id == Request.creator_id).first()
         receivers.append(requestor.email)
 
-        div_query = db.session.query(User).filter(User.role == roles.DIV). \
-            filter(User.email != requestor.email). \
-            filter(User.division == requestor.division).all()
+        div_query = db.session.query(User).filter(User.role == roles.DIV,
+                                                  User.email != requestor.email,
+                                                  User.division == requestor.division,
+                                                  User.is_active == true()).all()
         for query in div_query:
-            receivers.append(query.email)
-
-        proc_query = db.session.query(User).filter(User.role == roles.PROC). \
-            filter(User.email != requestor.email). \
-            filter(User.division == requestor.division).all()
-        for query in proc_query:
             receivers.append(query.email)
 
         send_email(receivers, "New Comment Added to Request {}".format(request_id),
