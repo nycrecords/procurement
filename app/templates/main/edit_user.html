@@ -1,131 +1,109 @@
 <!-- This template is to initiate a new request. -->
 {% extends "base.html" %} {% block title %}Records Procurement - Edit User Information{% endblock title %}
 {% block custom_css_links %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/edit_user.css') }}">
 {% endblock custom_css_links %}
 {% block content %}
-    <div class="page-header">
-        <!-- start of static form -->
-        <h1>Edit User Information</h1>
-    </div>
-    <p><i><strong>User Information</strong></i></p>
 
-    <br>
-
-    <form name="edit_user" class="form-horizontal" id="updateUser" method="POST" action="">
-        {{ form.hidden_tag() }}
-
-        <div class="form-group row">
-            {% for message in form.user_first_name.errors %}
-                <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
-            {% endfor %}
-
-            <label for="quantity" class="col-sm-3 form-control-label">User First Name</label>
-            <div class="col-sm-5">
-                {{ form.user_first_name(id="user_first_name", class="form-control", type="text", value=user.first_name) }}
-                <div class="small">Edit first name if applicable.</div>
+    <article class="container overflow-hidden">
+        <div class="my-5">
+            <div class="medium my-4">
+                <h1>Edit User Information</h1>
+                <div>
+                    <table id="requests" class="table table-bordered table-responsive-md text-center table-striped">
+                        <form name="edit_user" class="form-horizontal" id="updateUser" method="POST" action=""
+                              novalidate>
+                            {{ form.hidden_tag() }}
+                            <tbody>
+                            <tr>
+                                <th scope="row" colspan="2">User Information</th>
+                            </tr>
+                            <tr>
+                                <th scope="row">User First Name</th>
+                                <td>{{ user.first_name }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">User Last Name</th>
+                                <td>{{ user.last_name }}</td>
+                            </tr>
+                            {% if current_user.role == 'Administrator' or current_user.role == 'Procurement Head' %}
+                                <!--                        TODO: determine if the user should be able to change their own role(admin)-->
+                                {% if current_user.email == user.email %}
+                                    <tr>
+                                        <th scope="row">User Role</th>
+                                        <td>{{ user.role }}</td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <th scope="row">User Role</th>
+                                        <td>{{ form.role(id="role", class="form-control", default=user.role) }}
+                                            <div class="small">Edit role if applicable.</div>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                                <tr>
+                                    {% for message in form.division.errors %}
+                                        <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
+                                    {% endfor %}
+                                    <th scope="row">User Division</th>
+                                    <td>
+                                        {% if current_user.role == "Administrator" or current_user.role == 'Procurement Head' %}
+                                            {{ form.division(id="division", class="form-control", default=user.division) }}
+                                        {% else %}
+                                            {{ form.division(id="division", class="form-control", default=user.division,
+                                disabled=true ) }}
+                                        {% endif %}
+                                        <div class="small">Edit division if applicable.</div>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <th scope="row">User Role</th>
+                                    <td>{{ user.role }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">User Division</th>
+                                    <td>{{ user.division }}</td>
+                                </tr>
+                            {% endif %}
+                            <tr>
+                                <th scope="row">User Email</th>
+                                <td>{{ user.email }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">User Phone Number</th>
+                                <td>
+                                    {{ form.phone(id="phone", class="form-control", type="text", value=user.phone) }}
+                                    <div class="small">Edit phone number if applicable.</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                {% for message in form.address.errors %}
+                                    <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
+                                {% endfor %}
+                                <th scope="row">User Address</th>
+                                <td>{{ form.address(id="address", class="form-control", type="text", value=user.address) }}
+                                    <div class="small">Edit address if applicable.</div>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <div class="form-group">
+                                <div>
+                                    <button type="submit" class="btn btn-primary btn-small">Save Changes</button>
+                                </div>
+                            </div>
+                        </form>
+                    </table>
+                </div>
             </div>
+            <!-- start of static form -->
         </div>
+    </article>
 
-        <div class="form-group row">
-            {% for message in form.user_last_name.errors %}
-                <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
-            {% endfor %}
-
-            <label for="quantity" class="col-sm-3 form-control-label">User Last Name</label>
-            <div class="col-sm-5">
-                {{ form.user_last_name(id="user_last_name", class="form-control", type="text", value=user.last_name) }}
-                <div class="small">Edit last name if applicable.</div>
-            </div>
-        </div>
-
-        {% if current_user.id != user.id %}
-        <div class="form-group row">
-            {% for message in form.user_last_name.errors %}
-                <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
-            {% endfor %}
-
-            <label for="quantity" class="col-sm-3 form-control-label">User Role</label>
-            <div class="col-sm-5">
-                {{ form.user_role(id="user_role", class="form-control", default=user.role) }}
-                <div class="small">Edit role if applicable.</div>
-            </div>
-        </div>
-        {% endif %}
-
-        <div class="form-group row">
-            {% for message in form.user_division.errors %}
-                <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
-            {% endfor %}
-
-            <label for="quantity" class="col-sm-3 form-control-label">User Division</label>
-            <div class="col-sm-5">
-                {% if current_user.role == "Administrator" %}
-                    {{ form.user_division(id="user_division", class="form-control", default=user.division) }}
-                {% else %}
-                    {{ form.user_division(id="user_division", class="form-control", default=user.division, disabled=true ) }}
-                {% endif %}
-                    <div class="small">Edit division if applicable.</div>
-            </div>
-        </div>
-
-        <div class="form-group row">
-            {% for message in form.user_email.errors %}
-                <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
-            {% endfor %}
-
-            <label for="quantity" class="col-sm-3 form-control-label">User Email</label>
-            <div class="col-sm-5">
-                {{ form.user_email(id="user_email", class="form-control", type="text", value=user.email) }}
-                <div class="small">Edit email if applicable.</div>
-            </div>
-        </div>
-
-        <div class="form-group row">
-            {% for message in form.user_phone.errors %}
-                <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
-            {% endfor %}
-
-            <label for="quantity" class="col-sm-3 form-control-label">User Phone Number</label>
-            <div class="col-sm-5">
-                {{ form.user_phone(id="user_phone", class="form-control", type="text", value=user.phone) }}
-                <div class="small">Edit phone number if applicable.</div>
-            </div>
-        </div>
-
-        <div class="form-group row">
-            {% for message in form.user_address.errors %}
-                <div class="alert alert-danger" id="missing_quantity">{{ message }}</div>
-            {% endfor %}
-
-            <label for="quantity" class="col-sm-3 form-control-label">User Address</label>
-            <div class="col-sm-5">
-                {{ form.user_address(id="user_address", class="form-control", type="text", value=user.address) }}
-                <div class="small">Edit address if applicable.</div>
-            </div>
-        </div>
-
-        {% if current_user.id != user.id %}
-        <div class="form-group row">
-            <label for="quantity" class="col-sm-3 form-control-label">Reset Password</label>
-            <div class="col-sm-5">
-                <a class="btn btn-danger btn-small" href="/manage_users/users/reset/{{ user.id }}">Reset Password</a>
-                <div class="small">Click to reset user password.</div>
-            </div>
-        </div>
-        {% endif %}
-
-        <div class="form-group row">
-            <div class="spacer">
-                <button type="submit" class="btn btn-primary btn-lg btn-block">Save Changes</button>
-            </div>
-        </div>
-
-    </form>
     <!-- end of static form -->
 {% endblock %}
 
 {% block scripts %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="{{ url_for('static', filename='js/plugins/jquery.inputmask.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/request/edit_user.js') }}"></script>
 {% endblock %}

@@ -1,3 +1,5 @@
+.DS_Store
+.env
 *.pyc
 venv/
 .idea/
@@ -5,3 +7,9 @@ venv/
 **/.idea/workspace.xml
 Vagrantfile
 .vagrant/
+/saml/certs/sp.crt
+/saml/certs/sp.key
+/saml/advanced_settings.json
+/saml/settings.json
+/uploads/
+flask_session/

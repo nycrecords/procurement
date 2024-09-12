@@ -1,0 +1,8 @@
+{% for event in events %}
+    <div class="form-group row">
+        <div id="new-status" class="col-sm-12">
+            <label>{{ event.new_value }}</label>
+            <p><small>Updated by: {{ event.user.name }} on {{ event.timestamp }} </small></p>
+        </div>
+    </div>
+{% endfor %}

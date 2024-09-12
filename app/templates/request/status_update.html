@@ -1,10 +1,10 @@
 <p>
     {% if user.role != "Regular User" %}
-    {{ user.role }}:
+        {{ user.role }}:
     {% endif %}
     {{ user.first_name }} {{ user.last_name }}
     has moved Request {{ request.id }} from {{ old_status }} to {{ request.status }}</p>
-<p><a href="{{ url_for('request.display_request', request_id=request.id, _external=True) }}">Click here</a>
+<p><a href="{{ url }}">Click here</a>
     to view this request.
 </p>
 <p>Sincerely,</p>

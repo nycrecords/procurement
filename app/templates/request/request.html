@@ -3,151 +3,213 @@
     Records Procurement - View Request
 {% endblock title %}
 {% block custom_css_links %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-editable.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/request.css') }}"/>
 {% endblock %}
+
 {% block content %}
-
-    <div class="page-header">
-        <h1>{{ request.id }}</h1>
-        {% if current_user.role == "Administrator" %}
-            <a class="btn btn-primary btn-small" href="{{ url_for('request.edit_request', request_id=request.id) }}">Edit
-                Request</a>
-        {% endif %}
-    </div>
-    <div>
-        <div class="col-sm-6">
-            <div class="table-responsive">
-                <table id="requests" class="table table-bordered table-striped">
-                    <colgroup>
-                        <col class="col-xs-2">
-                        <col class="col-xs-4">
-                    </colgroup>
-                    <tbody id="request-table">
-                    <tr>
-                        <th scope="row" colspan="2">Request Information</th>
-                    </tr>
-                    <tr>
-                        <th scope="row">Request ID:</th>
-                        <td>{{ request.id }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Requester:</th>
-                        <td><a href="mailto:{{ user.email }}">{{ user.name }}</a></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Division:</th>
-                        <td>{{ user.division }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Item:</th>
-                        <td>{{ request.item }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Quantity:</th>
-                        <td>{{ request.quantity }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Unit Price:</th>
-                        <td>${{ request.unit_price }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Total Price:</th>
-                        {% if request.total_cost %}
-                            <td>${{ request.total_cost }}</td>
-                        {% else %}
-                            <td>$0.00</td>
-                        {% endif %}
-                    </tr>
-                    <tr>
-                        <th scope="row">Funding Source:</th>
-                        <td>{{ request.funding_source }}</td>
-                    </tr>
-                    {% if request.funding_source == "Grant" %}
-                        <tr>
-                            <th scope="row">Grant Name:</th>
-                            <td>{{ request.grant_name }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Project Name:</th>
-                            <td>{{ request.project_name }}</td>
-                        </tr>
-                    {% elif request.funding_source == "Other" %}
-                        <tr>
-                            <th scope="row">Funding Source Description:</th>
-                            <td>{{ request.funding_source_description }}</td>
-                        </tr>
+    <article class="container overflow-hidden">
+        <div class="my-5">
+            <div class="wide">
+                <div class="form-group">
+                    <h1 id="request-id">{{ request.id }}</h1>
+                    {% if current_user.role == "Administrator" %}
+                        <a class="btn btn-primary btn-small"
+                           href="{{ url_for('request.edit_request', request_id=request.id) }}">Edit
+                            Request</a>
                     {% endif %}
-                    <tr>
-                        <th scope="row">Justification:</th>
-                        <td>{{ request.justification }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Status:</th>
-                        <td>
-                            {{ request.status }}
-                            {% if allowed_to_update %}
-                                <a class="btn btn-primary btn-sm pull-right"
-                                   data-toggle="modal" data-target="#update_status">Update</a>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                </div>
+                <br>
+                <div class="row" id="two-column">
+                    <div class="col-lg border-lg-light">
+                        <div class="narrow">
+                            <table id="requests"
+                                   class="table table-bordered table-responsive-md text-center table-striped">
+                                <colgroup>
+                                    <col class="col-xs-2">
+                                    <col class="col-xs-4">
+                                </colgroup>
+                                <tbody id="request-table">
+                                <tr>
+                                    <th scope="row" colspan="2">Request Information</th>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Request ID</th>
+                                    <td>{{ request.id }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Requester</th>
+                                    <td><a href="mailto:{{ user.email }}">{{ user.name }}</a></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Division</th>
+                                    <td>{{ user.division }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Item</th>
+                                    <td>{{ request.item }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Quantity</th>
+                                    <td>{{ request.quantity }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Unit Price</th>
+                                    <td>${{ request.unit_price }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Total Price</th>
+                                    {% if request.total_cost %}
+                                        <td>${{ request.total_cost }}</td>
+                                    {% else %}
+                                        <td>$0.00</td>
+                                    {% endif %}
+                                </tr>
+                                <tr>
+                                    <th scope="row">Funding Source</th>
+                                    <td>{{ request.funding_source }}</td>
+                                </tr>
+                                {% if request.funding_source == "Grant" %}
+                                    <tr>
+                                        <th scope="row">Grant Name:</th>
+                                        <td>{{ request.grant_name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Project Name:</th>
+                                        <td>{{ request.project_name }}</td>
+                                    </tr>
+                                {% elif request.funding_source == "Other" %}
+                                    <tr>
+                                        <th scope="row">Funding Source Description</th>
+                                        <td>{{ request.funding_source_description }}</td>
+                                    </tr>
+                                {% endif %}
+                                <tr>
+                                    <th scope="row">Justification</th>
+                                    <td>{{ request.justification }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Status</th>
+                                    <td>
+                                        {{ request.status }}
+                                        {% if allowed_to_update %}
+                                            <a class="btn btn-primary btn-sm"
+                                               data-toggle="modal" data-target="#update_status">Update</a>
+                                        {% endif %}
+                                    </td>
+
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-lg overflow-hidden">
+                        <div class="narrow">
+                            <table class="table table-bordered table-responsive-md text-center table-striped">
+                                <colgroup>
+                                    <col class="col-xs-1">
+                                    <col class="col-xs-5">
+                                </colgroup>
+                                <tbody id="vendor-table">
+                                <tr>
+                                    <th scope="row" colspan="2">Vendor Information</th>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Name</th>
+                                    <td>{{ vendor.name }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Address</th>
+                                    <td>{{ vendor.address }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Phone</th>
+                                    <td>{{ vendor.phone }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Fax</th>
+                                    <td>{{ vendor.fax }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Email</th>
+                                    <td><a href="mailto:{{ vendor.email }}" id="vendor_email">{{ vendor.email }}</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Tax ID</th>
+                                    <td>{{ vendor.tax_id }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">M/WBE</th>
+                                    {% if vendor.mwbe %}
+                                        <td>Yes</td>
+                                    {% else %}
+                                        <td>No</td>
+                                    {% endif %}
+                                </tr>
+                                </tbody>
+                            </table>
+                            <a class="btn btn-primary btn-small"
+                               href="{{ url_for('request.index') }}">Return to Request History</a>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div>
+                    <h3>Comments</h3>
+                    {% if current_user.role != "Regular User" or current_user.id == request.creator_id %}
+                        <div class="form-group">
+                            <form action="{{ url_for('request.add_comment', request_id=request.id) }}" method="post"
+                                  enctype="multipart/form-data">
+                                {{ comment_form.hidden_tag() }}
+                                {{ comment_form.content(id="note", rows="3", cols="115", maxlength="500") }} <br>
+                                {{ comment_form.file }} <br>
+                                {{ comment_form.submit(class="btn btn-primary btn-small") }}
+                            </form>
+                        </div>
+                        <br>
+                    {% endif %}
+                    {% if comments | length != 0 %}
+                        {% for comment in comments %}
+                            <div class="comment-box">
+                                <form action="{{ url_for('request.delete_comment') }}"
+                                      method="post" value="{{ comment.id }}">
+                                    <label>{{ comment.timestamp.strftime("%m/%d/%Y %I:%M:%S %p") }} |
+                                        {% if comment.user.role != "Regular User" %}
+                                            {{ comment.user.role }}:
+                                        {% endif %}
+                                        {{ comment.user.first_name }} {{ comment.user.last_name }}
+                                        {% if comment.user_id == current_user.id %}
+                                            (You)
+                                        {% elif comment.user_id == request.creator_id %}
+                                            (Creator)
+                                        {% endif %}
+                                    </label>
+                                    {% if (current_user.role == "Administrator" or current_user.id == comment.user_id) and
+                        comment.editable %}
+                                        {{ delete_form.request_id(value=request.id) }}
+                                        {{ delete_form.comment_id(value=comment.id) }}
+                                        {{ delete_form.submit(class="btn btn-danger btn-small", style="float: right;") }}
+                                    {% endif %}
+                                </form>
+                                <div>{{ comment.content }}</div>
+                                {% if comment.filepath %}
+                                    <div>
+                                        <a href="{{ url_for('request.download', comment_id=comment.id) }}">{{ comment.filepath[13:] }}</a>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <br>
+                        {% endfor %}
+                    {% else %}
+                        <div class="well">There are currently no comments.</div>
+                    {% endif %}
+                </div>
             </div>
         </div>
+    </article>
 
-        <div class="col-sm-6">
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped">
-                    <colgroup>
-                        <col class="col-xs-1">
-                        <col class="col-xs-5">
-                    </colgroup>
-                    <tbody id="vendor-table">
-                    <tr>
-                        <th scope="row" colspan="2">Vendor Information</th>
-                    </tr>
-                    <tr>
-                        <th scope="row">Name:</th>
-                        <td>{{ vendor.name }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Address:</th>
-                        <td>{{ vendor.address }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Phone:</th>
-                        <td>{{ vendor.phone }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Fax:</th>
-                        <td>{{ vendor.fax }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Email:</th>
-                        <td><a href="mailto:{{ vendor.email }}" id="vendor_email">{{ vendor.email }}</a></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Tax ID:</th>
-                        <td>{{ vendor.tax_id }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">M/WBE:</th>
-                        {% if vendor.mwbe %}
-                            <td>Yes</td>
-                        {% else %}
-                            <td>No</td>
-                        {% endif %}
-                    </tr>
-                    </tbody>
-                </table>
-                <a class="btn btn-primary btn-small"
-                   href="{{ url_for('request.display_requests') }}">Return to Request History</a>
-            </div>
-        </div>
-    </div>
 
-    <!-- Modal -->
+    <!-- Modal for update-->
     {% if allowed_to_update %}
         <div id="update_status" class="modal fade" role="dialog">
             <div class="modal-dialog">
@@ -159,95 +221,35 @@
                         <h4 class="modal-title">{{ current_user.role }}: Update Status</h4>
                     </div>
                     <div class="modal-body">
-
                         <form action="{{ url_for('request.update_status', request_id=request.id) }}"
                               name="update_status" class="form-horizontal" id="status" method="POST">
 
                             {{ status_form.hidden_tag() }}
 
                             <div class="form-group row">
-                                <label for="quantity" class="col-sm-3 form-control-label">New Status</label>
-                                <div class="col-sm-5">
+                                <label for="quantity" class="col-sm-5 form-control-label">New Status</label>
+                                <div class="col-sm-9">
                                     {{ status_form.status }}
                                 </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <div class="col-sm-5">
+                                <div class="col-sm-3">
                                     {{ status_form.submit(class="btn btn-primary btn-small") }}
                                 </div>
                             </div>
-
                         </form>
-
+                        <div id="status-history"></div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                 </div>
-
             </div>
         </div>
     {% endif %}
-
-    <div style="display: inline-block; width: 100%;">
-        <h3>Comments</h3>
-        {% if current_user.role != "Regular User" or current_user.id == request.creator_id %}
-            <div class="form-group col">
-                <form action="{{ url_for('request.add_comment', request_id=request.id) }}" method="post"
-                      enctype="multipart/form-data">
-                    {{ comment_form.hidden_tag() }}
-                    {{ comment_form.content(id="note", rows="3", cols="100", maxlength="500") }}
-                    {{ comment_form.file }} <br>
-                    {{ comment_form.submit(class="btn btn-primary btn-small") }}
-                </form>
-            </div><br>
-        {% endif %}
-        {% if comments | length != 0 %}
-            {% for comment in comments %}
-                <div class="well">
-                    <form action="{{ url_for('request.delete_comment') }}"
-                          method="post" value="{{ comment.id }}">
-                        <label>{{ comment.timestamp.strftime("%m/%d/%Y %I:%M:%S %p") }} |
-                            {% if comment.user.role != "Regular User" %}
-                                {{ comment.user.role }}:
-                            {% endif %}
-                            {{ comment.user.first_name }} {{ comment.user.last_name }}
-                            {% if comment.user_id == current_user.id %}
-                                (You)
-                            {% elif comment.user_id == request.creator_id %}
-                                (Creator)
-                            {% endif %}
-                        </label>
-                        {% if (current_user.role == "Administrator" or current_user.id == comment.user_id) and comment.editable %}
-                            {{ delete_form.request_id(value=request.id) }}
-                            {{ delete_form.comment_id(value=comment.id) }}
-                            {{ delete_form.submit(class="btn btn-danger btn-small", style="float: right;") }}
-                        {% endif %}
-                    </form>
-                    <div>{{ comment.content }}</div>
-                    {% if comment.filepath %}
-                        <div>
-                            <a href="{{ url_for('request.download', comment_id=comment.id) }}">{{ comment.filepath[13:] }}</a>
-                        </div>
-                    {% endif %}
-                </div><br>
-            {% endfor %}
-        {% else %}
-            <div class="well">There are currently no comments.</div>
-        {% endif %}
-    </div>
-
 {% endblock %}
 
 {% block scripts %}
-    <script src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
-    <script type="text/javascript"
-            src="{{ url_for('static', filename='js/plugins/bootstrap.min.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap-editable.js') }}"></script>
-    {% block request_xeditable %}
-        {#        {% include "request/request_x-editable.html" %}#}
-    {% endblock %}
+    <script src="{{ url_for('static', filename='js/responsive-table.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/request/request.js') }}"></script>
 {% endblock %}
 
 

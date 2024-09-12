@@ -1,57 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" dir="ltr">
 <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
-    <title>{% block title %}Procurement{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/bootstrap.min.css') }}"/>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}"/>
-    <link rel="stylesheet" href="https://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css"/>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Corrects IE Compatibility Mode -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    {% if title %}
+        <title>{{ title }} • Procurement</title>
+    {% else %}
+        <title>Procurement - DORIS</title>
+    {% endif %}
 
-    {% block custom_css_links %}
-    {% endblock custom_css_links %}
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='fontawesome/css/all.min.css') }}">
+
+    <!-- NYC Theme CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/theme.css') }}">
+
+    {% block custom_css_links %}{% endblock %}
 
 </head>
+
 <body>
-<nav class="navbar navbar-default navbar-static-top">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="/">Records Procurement</a>
-        <ul class="nav navbar-nav pull-right">
-            {% if current_user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link"
-                       href="{{ url_for('main.profile') }}"><b>{{ current_user.first_name }} {{ current_user.last_name }}</b></a>
-                </li>
-                {% if current_user.role == "Administrator" %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.manage_users') }}">Manage Users</a>
-                    </li>
-                {% endif %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('request.display_requests') }}">Request History</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('vendor.display_vendors') }}">Vendor List</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('auth.logout') }}">Sign Out</a>
-                </li>
-            {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('auth.login') }}">Sign In</a>
-                </li>
-            {% endif %}
-            </li>
-        </ul>
-    </div>
-</nav>
-</body>
+{% include 'header.html' %}
 
 {% block flash_message %}
     <div class="container-fluid">
         {% with messages = get_flashed_messages(with_categories=True) %}
             {% if messages %}
-                <div class="container-fluid">
+                <div class="container-fluid pt-3">
                     <div id='flash_message_container'>
                         {% for category, msg in messages %}
                             <div class="alert alert-{{ category }}">
@@ -66,21 +46,43 @@
     </div>
 {% endblock %}
 
-<div class="container-fluid-content">
-    {% block content %}
-    {% endblock %}
-</div>
+<main id="skip-header-target" role="main">
+    {% block content %}{% endblock %}
+</main>
 
-<footer class="footer">
-    <div class="container">
-        <p>&copy; City of New York 2020</p>
-    </div>
-</footer>
+{% include "footer.html" %}
+
+<!-- jQuery (full, compressed version) -->
+<script src="{{ url_for('static', filename='js/plugins/jquery-3.3.1.min.js') }}"></script>
+
+<!-- Popper.js and Bootstrap JS -->
+<script src="{{ url_for('static', filename='js/plugins/popper.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/plugins/bootstrap.min.js') }}"></script>
+
+<!-- Google Translate -->
+<script>
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'en'
+        }, 'google_translate_element');
+    }
+</script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<!--    &lt;!&ndash; NYC template JS (RTL, search and language toggle, back to top)  &ndash;&gt;-->
+<script src="{{ url_for('static', filename='js/plugins/main.js') }}"></script>
+
+<!-- validation.js -->
+<script src="{{ url_for('static', filename='js/validation.js') }}"></script>
+
+<!-- Session Timeout -->
+<script src="{{ url_for('static', filename='js/plugins/session-timeout.min.js') }}"></script>
 
 {% block scripts %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" type="text/javascript"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/bootstrap.min.js') }}"></script>
 {% endblock %}
 
+
+{% include 'auth/concurrent_session_modal.html' %}
+{% include 'base.js.html' %}
+</body>
 </html>
