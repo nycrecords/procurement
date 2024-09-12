@@ -84,4 +84,7 @@ def email_setup(requester, request):
         db.session.commit()
         header = "Request {} has been Resolved".format(request.id)
 
+    elif request.status == status.NPA:
+        header = "Request {} needs Procurement Head Approval".format(request.id)
+
     return receivers, header
