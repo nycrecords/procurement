@@ -35,7 +35,10 @@ def determine_fiscal_id(date_submitted):
 
 def email_setup(requester, request):
     """Returns receivers and header based on the status of a request"""
-    receivers = [requester.email, current_app.config['PROCUREMENT_DL']]
+    receivers = [current_app.config['PROCUREMENT_DL']]
+    if requester.is_active:
+        receivers.append(requester.email)
+
     header = ""
 
     if request.status == status.DEN:
@@ -86,5 +89,8 @@ def email_setup(requester, request):
 
     elif request.status == status.NPA:
         header = "Request {} needs Procurement Head Approval".format(request.id)
+
+    elif request.status == status.OIP:
+        header = "Request {} has been updated to Order in Progress".format(request.id)
 
     return receivers, header

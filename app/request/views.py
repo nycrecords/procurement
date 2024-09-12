@@ -433,7 +433,7 @@ def update_status(request_id):
         else:
             flash('No changes updated', category='danger')
 
-        requester = db.session.query(User).filter(User.id == request.creator_id).first()
+        requester = User.query.filter_by(id=request.creator_id).first()
 
         # Email Notifications
         if old_status != request.status:
