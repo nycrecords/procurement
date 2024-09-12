@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "d7f5df967ed744d4c01ed34c5399ed6c5596c83270438c38ff5d001473892e91"
+            "sha256": "59a68d6aa155c1f00cfec14edd7a48cb237caa5093100d8dd8b6a8f704f78f56"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -409,6 +409,7 @@
                 "sha256:fe8512ed897d5daf089e5bd010c3dc03bb1bdae00b35588c49b98268d4a01e00"
             ],
             "index": "pypi",
+            "markers": "python_version >= '3.7'",
             "version": "==2.1.4"
         },
         "phonenumbers": {
@@ -546,11 +547,12 @@
         },
         "werkzeug": {
             "hashes": [
-                "sha256:2b8c0e447b4b9dbcc85dd97b6eeb4dcbaf6c8b6c3be0bd654e25553e0a2157d8",
-                "sha256:effc12dba7f3bd72e605ce49807bbe692bd729c3bb122a3b91747a6ae77df528"
+                "sha256:097e5bfda9f0aba8da6b8545146def481d06aa7d3266e7448e2cccf67dd8bd18",
+                "sha256:fc9645dc43e03e4d630d23143a04a7f947a9a3b5727cd535fdfe155a17cc48c8"
             ],
             "index": "pypi",
-            "version": "==2.3.7"
+            "markers": "python_version >= '3.8'",
+            "version": "==3.0.3"
         },
         "wtforms": {
             "hashes": [
