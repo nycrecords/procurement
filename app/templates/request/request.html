@@ -23,7 +23,8 @@
                     <div class="col-lg border-lg-light">
                         <div class="narrow">
                             <table id="requests"
-                                   class="table table-bordered table-responsive-md text-center table-striped">
+                                   class="table table-bordered table-responsive-md text-center table-striped"
+                                   style="table-layout: fixed; width: 100%">
                                 <colgroup>
                                     <col class="col-xs-2">
                                     <col class="col-xs-4">
@@ -46,7 +47,7 @@
                                 </tr>
                                 <tr>
                                     <th scope="row">Item</th>
-                                    <td>{{ request.item }}</td>
+                                    <td style="word-wrap: break-word">{{ request.item }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Quantity</th>
