@@ -269,8 +269,11 @@ def edit_request(request_id):
     elif flask_request.method == 'POST' and form.validate_on_submit():
         request.item = form.item.data
         request.quantity = form.quantity.data
-        request.unit_price = Decimal(form.unit_price.data.strip('$'))
-        request.total_cost = Decimal(form.total_cost.data.strip('$'))
+
+        # Strip dollar sign and replace comma from input mask and convert value into Decimal
+        request.unit_price = Decimal(form.unit_price.data.strip('$').replace(',',''))
+        request.total_cost = Decimal(form.total_cost.data.strip('$').replace(',',''))
+
         request.funding_source = form.funding_source.data
         request.justification = form.justification.data
 
